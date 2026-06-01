@@ -152,8 +152,8 @@
         async function loadData() {
             try {
                 // Fetch the JSON metadata
-                const response = await fetch('./data.json'); 
-                if (!response.ok) throw new Error("Could not find data.json");
+                const response = await fetch('./cards.json'); 
+                if (!response.ok) throw new Error("Could not find cards.json");
                 
                 const db = await response.json();
                 
@@ -174,8 +174,8 @@
                 console.error("Error loading data:", error);
                 document.getElementById('cardGrid').innerHTML = `
                     <div class="error-message" style="grid-column: 1 / -1;">
-                        <h3>Failed to load data.json</h3>
-                        <p>Make sure you are viewing this through your local web server or GitHub Pages, and that data.json is in the same folder as index.html.</p>
+                        <h3>Failed to load cards.json</h3>
+                        <p>Make sure you are viewing this through your local web server or GitHub Pages, and that cards.json is in the same folder as index.html.</p>
                         <p>Technical details: ${error.message}</p>
                     </div>`;
             }
