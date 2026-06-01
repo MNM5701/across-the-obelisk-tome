@@ -3,90 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tome of Knowledge</title>
+    <title>Tome of Knowledge - Across the Obelisk</title>
     <style>
-        body { font-family: sans-serif; background: #1e1e1e; color: #eee; padding: 20px; }
-        .controls { display: flex; gap: 15px; margin-bottom: 20px; background: #2d2d2d; padding: 15px; border-radius: 8px; }
-        input, select { padding: 8px; border-radius: 4px; border: 1px solid #444; background: #111; color: white; }
+        :root {
+            --bg-base: #121212;
+            --bg-surface: #1e1e1e;
+            --bg-elevated: #2d2d2d;
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent: #3b82f6;
+            --border: #374151;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-base); 
+            color: var(--text-primary); 
+            margin: 0;
+            padding: 20px; 
+        }
+
+        .controls { 
+            display: flex; 
+            flex-wrap: wrap;
+            gap: 15px; 
+            margin-bottom: 30px; 
+            background-color: var(--bg-surface); 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        input, select { 
+            padding: 10px 15px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border); 
+            background-color: var(--bg-base); 
+            color: var(--text-primary); 
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            min-width: 200px;
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .card-container { 
+            background-color: var(--bg-surface); 
+            padding: 15px; 
+            border-radius: 12px; 
+            text-align: center; 
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-title {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+            text-transform: capitalize;
+            color: var(--text-secondary);
+        }
         
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .card-container { background: #2d2d2d; padding: 10px; border-radius: 8px; text-align: center; }
-        
-        /* Variants container hidden by default, shown on hover/click */
-        .variants { display: flex; gap: 5px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
-        img { max-width: 100%; height: auto; border-radius: 4px; }
-        .variant-img { width: 60px; cursor: pointer; transition: transform 0.2s; }
-        .variant-img:hover { transform: scale(1.1); }
+        img { 
+            max-width: 100%; 
+            height: auto; 
+            border-radius: 8px; 
+            display: block;
+            margin: 0 auto;
+        }
+
+        .variants { 
+            display: flex; 
+            gap: 10px; 
+            justify-content: center; 
+            margin-top: 15px; 
+            flex-wrap: wrap; 
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .variant-img { 
+            width: 50px; 
+            cursor: pointer; 
+            transition: transform 0.2s, opacity 0.2s; 
+            opacity: 0.6;
+            border-radius: 4px;
+        }
+
+        .variant-img:hover, .variant-img.active { 
+            transform: scale(1.1); 
+            opacity: 1;
+        }
+
+        .error-message {
+            color: #ef4444;
+            text-align: center;
+            padding: 20px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 8px;
+            border: 1px solid #ef4444;
+        }
     </style>
 </head>
 <body>
 
     <div class="controls">
-        <input type="text" id="searchInput" placeholder="Search cards..." oninput="filterData()">
+        <input type="text" id="searchInput" placeholder="Search cards by name or ID..." oninput="filterData()">
         
         <select id="typeFilter" onchange="filterData()">
             <option value="all">All Types</option>
             <option value="melee">Melee</option>
             <option value="spell">Spell</option>
-            </select>
+            <option value="skill">Skill</option>
+            <option value="power">Power</option>
+            <option value="attack">Attack</option>
+        </select>
     </div>
 
     <div class="grid" id="cardGrid">
-        </div>
+        <!-- Cards will be dynamically injected here -->
+    </div>
 
     <script>
-        let allCards = []; // Master data array
+        let allCards = [];
 
-        // Phase 1: Fetch and normalize the data
         async function loadData() {
             try {
-                // In production, this points to your giant JSON file
+                // Fetch the JSON metadata
                 const response = await fetch('./data.json'); 
+                if (!response.ok) throw new Error("Could not find data.json");
+                
                 const db = await response.json();
                 
-                // Convert the JSON object into an iterable array
+                // Convert the JSON object into a filterable array
                 allCards = Object.entries(db.cards).map(([key, data]) => {
                     return {
-                        idKey: key,
-                        // Pulling the array of IDs you highlighted
-                        variants: data.IDs || [], 
+                        idKey: key, // e.g., "armageddon (corruptor)"
+                        variants: data.IDs || [], // e.g., ["armageddon","armageddona","..."]
                         related: data.RelatedIDs || [],
-                        // Assuming your JSON has these for filtering:
-                        type: data.type || 'unknown',
-                        cost: data.cost || 0
+                        type: data.type ? data.type.toLowerCase() : 'unknown',
+                        cost: data.cost !== undefined ? data.cost : null
                     };
                 });
 
+                // Initial render of all data
                 renderCards(allCards);
             } catch (error) {
-                console.error("Error loading JSON. Are you running a local server?", error);
+                console.error("Error loading data:", error);
+                document.getElementById('cardGrid').innerHTML = `
+                    <div class="error-message" style="grid-column: 1 / -1;">
+                        <h3>Failed to load data.json</h3>
+                        <p>Make sure you are viewing this through your local web server or GitHub Pages, and that data.json is in the same folder as index.html.</p>
+                        <p>Technical details: ${error.message}</p>
+                    </div>`;
             }
         }
 
-        // Render the UI
         function renderCards(cardsToRender) {
             const grid = document.getElementById('cardGrid');
-            grid.innerHTML = ''; // Clear current grid
+            grid.innerHTML = '';
 
             cardsToRender.forEach(card => {
-                if (card.variants.length === 0) return;
+                if (!card.variants || card.variants.length === 0) return;
 
-                const baseId = card.variants[0]; // The standard un-upgraded card
+                const baseId = card.variants[0]; // The standard, un-upgraded card
                 const upgrades = card.variants.slice(1); // The a, b, and rare upgrades
 
-                // Create the card block
+                // Create the physical card container
                 const cardDiv = document.createElement('div');
                 cardDiv.className = 'card-container';
                 
-                // The main image
-                let htmlStr = `<img src="./images/${baseId}.png" id="main-img-${baseId}" alt="${baseId}">`;
+                // Build the inner HTML structure
+                // Notice the _result appended to the base image string
+                let htmlStr = `
+                    <h3 class="card-title">${card.idKey}</h3>
+                    <img src="./images/${baseId}_result.png" id="main-img-${baseId}" alt="${baseId}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'200\\' height=\\'280\\'><rect width=\\'100%\\' height=\\'100%\\' fill=\\'%23374151\\'/><text x=\\'50%\\' y=\\'50%\\' fill=\\'white\\' text-anchor=\\'middle\\'>Image Not Found</text></svg>'">
+                `;
                 
-                // Phase 3: Upgraded Variants side-by-side
                 if (upgrades.length > 0) {
                     htmlStr += `<div class="variants">`;
-                    htmlStr += `<img class="variant-img" src="./images/${baseId}.png" onclick="swapImage('${baseId}', '${baseId}')">`;
+                    
+                    // Add the base card as the first clickable variant (to swap back)
+                    htmlStr += `
+                        <img class="variant-img active" 
+                             id="thumb-${baseId}-${baseId}"
+                             src="./images/${baseId}_result.png" 
+                             onclick="swapImage('${baseId}', '${baseId}')"
+                             title="${baseId}">
+                    `;
+                    
+                    // Add all other upgrades
                     upgrades.forEach(upgradeId => {
-                        htmlStr += `<img class="variant-img" src="./images/${upgradeId}.png" onclick="swapImage('${baseId}', '${upgradeId}')">`;
+                        htmlStr += `
+                            <img class="variant-img" 
+                                 id="thumb-${baseId}-${upgradeId}"
+                                 src="./images/${upgradeId}_result.png" 
+                                 onclick="swapImage('${baseId}', '${upgradeId}')"
+                                 title="${upgradeId}">
+                        `;
                     });
                     htmlStr += `</div>`;
                 }
@@ -96,23 +232,39 @@
             });
         }
 
-        // Handle variant clicking to swap the main image
+        // Handles variant clicking to swap the main image
         function swapImage(baseId, newId) {
-            document.getElementById(`main-img-${baseId}`).src = `./images/${newId}.png`;
+            // Update the main image source (handling the _result suffix)
+            const mainImg = document.getElementById(`main-img-${baseId}`);
+            if (mainImg) {
+                mainImg.src = `./images/${newId}_result.png`;
+            }
+
+            // Update active state styling on the thumbnails
+            const variantsContainer = mainImg.nextElementSibling;
+            if (variantsContainer && variantsContainer.classList.contains('variants')) {
+                const thumbs = variantsContainer.querySelectorAll('.variant-img');
+                thumbs.forEach(thumb => thumb.classList.remove('active'));
+                
+                const activeThumb = document.getElementById(`thumb-${baseId}-${newId}`);
+                if (activeThumb) {
+                    activeThumb.classList.add('active');
+                }
+            }
         }
 
-        // Phase 3: The Filter Engine
+        // The Filtering Engine
         function filterData() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const typeFilter = document.getElementById('typeFilter').value;
 
             const filtered = allCards.filter(card => {
-                // Check Global Search
+                // Fuzzy search logic (checks the main key and all variant IDs)
                 const matchesSearch = card.idKey.toLowerCase().includes(searchTerm) || 
                                       card.variants.join(' ').toLowerCase().includes(searchTerm);
                 
-                // Check Facets
-                const matchesType = typeFilter === 'all' || card.type === typeFilter;
+                // Facet matching
+                const matchesType = typeFilter === 'all' || card.type.includes(typeFilter);
 
                 return matchesSearch && matchesType;
             });
@@ -120,7 +272,7 @@
             renderCards(filtered);
         }
 
-        // Initialize the app
+        // Kick off the application
         loadData();
     </script>
 </body>
