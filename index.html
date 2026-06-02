@@ -23,9 +23,17 @@
         .remove-btn { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; line-height: 18px; text-align: center; cursor: pointer; border: none; padding: 0; font-weight: bold; }
         .remove-btn:hover { transform: scale(1.1); }
 
+        /* Build Metrics Dashboard */
+        .build-stats { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px; padding: 15px; background: #222; border-radius: 4px; border: 1px dashed #555; }
+        .stat-block { flex: 1; min-width: 140px; }
+        .stat-title { color: #888; font-size: 0.85em; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #444; padding-bottom: 4px; font-weight: bold; }
+        .stat-value { color: #eee; margin-bottom: 4px; font-size: 0.95em; }
+        .stat-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 5px; }
+        .stat-list li { background: #333; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; border: 1px solid #444; }
+
         /* Top Level Controls */
         .controls { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; background: #2d2d2d; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        .controls input[type="text"], select.main-select { padding: 10px; border-radius: 4px; border: 1px solid #444; background: #111; color: white; width: 100%; max-width: 400px; font-size: 1em; }
+        input[type="text"], select.main-select { padding: 10px; border-radius: 4px; border: 1px solid #444; background: #111; color: white; width: 100%; max-width: 400px; font-size: 1em; }
         
         /* Advanced Sub-Menu */
         .sub-menu { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; background: #222; padding: 15px; border-radius: 8px; border: 1px solid #333; }
@@ -43,15 +51,19 @@
         .dropdown-content input { margin-right: 10px; cursor: pointer; }
         
         /* Grid and Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
         .card-container { background: #2d2d2d; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
         .card-title { margin-top: 0; margin-bottom: 15px; font-size: 1.1em; text-transform: capitalize; color: #ccc; }
         
-        .variants { display: flex; gap: 8px; justify-content: center; margin-top: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        /* Variant Thumbnails Sizing & Borders */
+        .variants { display: flex; gap: 5px; justify-content: center; margin-top: 15px; margin-bottom: 15px; flex-wrap: wrap; }
         .card-container img { max-width: 100%; height: auto; border-radius: 4px; }
-        .variant-img { width: 50px; cursor: pointer; transition: transform 0.2s, border 0.2s; border: 2px solid transparent; border-radius: 4px; }
+        .variant-img { width: 48px; cursor: pointer; transition: transform 0.2s, border 0.2s; border: 2px solid transparent; border-radius: 4px; }
         .variant-img:hover { transform: scale(1.1); }
-        .variant-img.active { border: 2px solid #4ade80; }
+        .variant-img.border-a { border-color: rgba(59, 130, 246, 0.6); } /* faint blue */
+        .variant-img.border-b { border-color: rgba(234, 179, 8, 0.6); } /* faint yellow */
+        .variant-img.border-rare { border-color: rgba(168, 85, 247, 0.6); } /* faint purple */
+        .variant-img.active { border-color: #4ade80 !important; } /* green override when selected */
         
         .add-btn { margin-top: auto; padding: 8px; background: #444; border: 1px solid #555; color: #eee; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s; font-weight: bold; }
         .add-btn:hover { background: #4ade80; color: #111; border-color: #4ade80; }
@@ -81,6 +93,10 @@
 
         <div class="build-grid" id="buildGrid">
             <!-- Selected cards inject here -->
+        </div>
+
+        <div id="buildStats" class="build-stats" style="display: none;">
+            <!-- Metrics inject here dynamically -->
         </div>
     </div>
 
@@ -114,7 +130,7 @@
         let currentBuild = []; // Array to store IDs in the deck
 
         // ------------------------------------------------------------------
-        // Build Manager Logic (Hybrid Save/Share)
+        // Build Manager Logic & Metrics Engine
         // ------------------------------------------------------------------
 
         function addCurrentVariantToBuild(baseId) {
@@ -133,14 +149,25 @@
 
         function renderBuild() {
             const grid = document.getElementById('buildGrid');
+            const statsContainer = document.getElementById('buildStats');
             grid.innerHTML = '';
             
             if(currentBuild.length === 0) {
                 grid.innerHTML = '<div style="color:#666; font-style:italic; padding: 10px;">Select cards to start building...</div>';
+                statsContainer.style.display = 'none';
                 return;
             }
 
+            // Metrics tracking variables
+            let totalCost = 0;
+            let costCount = 0;
+            let costDistribution = {};
+            let typeDistribution = {};
+            let uniqueAuras = new Set();
+            let uniqueCurses = new Set();
+
             currentBuild.forEach((cardId, index) => {
+                // 1. Render the tiny icon in the grid
                 const div = document.createElement('div');
                 div.className = 'build-item';
                 div.innerHTML = `
@@ -148,7 +175,56 @@
                     <button class="remove-btn" onclick="removeFromBuild(${index})">x</button>
                 `;
                 grid.appendChild(div);
+
+                // 2. Fetch the corresponding card data for the metrics engine
+                const baseCard = allCards.find(c => c.variants.includes(cardId));
+                if (baseCard) {
+                    if (baseCard.cost !== 'N/A' && !isNaN(baseCard.cost)) {
+                        const c = parseInt(baseCard.cost);
+                        totalCost += c;
+                        costCount++;
+                        costDistribution[c] = (costDistribution[c] || 0) + 1;
+                    }
+                    if (baseCard.cardType && baseCard.cardType !== 'Other') {
+                        typeDistribution[baseCard.cardType] = (typeDistribution[baseCard.cardType] || 0) + 1;
+                    }
+                    baseCard.auras.forEach(a => uniqueAuras.add(a));
+                    baseCard.curses.forEach(c => uniqueCurses.add(c));
+                }
             });
+
+            // Calculate and compile metric blocks
+            statsContainer.style.display = 'flex';
+            const avgCost = costCount > 0 ? (totalCost / costCount).toFixed(1) : 0;
+            
+            let costHtml = Object.keys(costDistribution).sort((a,b)=>a-b).map(k => `<li>Cost ${k}: <b>${costDistribution[k]}</b></li>`).join('');
+            let typeHtml = Object.keys(typeDistribution).sort().map(k => `<li>${k}: <b>${typeDistribution[k]}</b></li>`).join('');
+            let aurasHtml = Array.from(uniqueAuras).sort().map(a => `<li>${a}</li>`).join('');
+            let cursesHtml = Array.from(uniqueCurses).sort().map(c => `<li>${c}</li>`).join('');
+
+            statsContainer.innerHTML = `
+                <div class="stat-block">
+                    <div class="stat-title">Metrics</div>
+                    <div class="stat-value">Total Cards: <b>${currentBuild.length}</b></div>
+                    <div class="stat-value">Avg Cost: <b>${avgCost}</b></div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-title">Cost Curve</div>
+                    <ul class="stat-list">${costHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">N/A</li>'}</ul>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-title">Card Types</div>
+                    <ul class="stat-list">${typeHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">N/A</li>'}</ul>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-title">Auras Applied</div>
+                    <ul class="stat-list">${aurasHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">None</li>'}</ul>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-title">Curses Applied</div>
+                    <ul class="stat-list">${cursesHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">None</li>'}</ul>
+                </div>
+            `;
         }
 
         function saveBuildToLocal() {
@@ -184,7 +260,7 @@
                 currentBuild = [...savedBuilds[name]];
                 document.getElementById('buildName').value = name;
                 renderBuild();
-                document.getElementById('shareLinkContainer').style.display = 'none'; // Hide old share link
+                document.getElementById('shareLinkContainer').style.display = 'none'; 
             }
         }
 
@@ -194,7 +270,6 @@
             const name = encodeURIComponent(document.getElementById('buildName').value.trim() || 'Untitled');
             const cards = currentBuild.join(',');
             
-            // Rebuild the URL without existing query params, then attach the new ones
             const baseUrl = window.location.origin + window.location.pathname;
             const finalUrl = `${baseUrl}?buildName=${name}&cards=${cards}`;
             
@@ -204,7 +279,7 @@
             input.value = finalUrl;
             container.style.display = 'block';
             input.select();
-            document.execCommand('copy'); // Auto-copy to clipboard
+            document.execCommand('copy'); 
         }
 
         function checkUrlForBuild() {
@@ -217,7 +292,6 @@
                 if (name) document.getElementById('buildName').value = decodeURIComponent(name);
                 renderBuild();
                 
-                // Clean the URL bar visually so it doesn't stay cluttered
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         }
@@ -297,7 +371,9 @@
                     token += c;
                 }
             }
-            if (token || current.length > 0) { current.push(token.trim()); results.push(current); }
+            if (token || current.length > 0) {
+                current.push(token.trim()); results.push(current);
+            }
             return results;
         }
 
@@ -313,7 +389,7 @@
                 try {
                     db = JSON.parse(cleanText);
                 } catch (parseError) {
-                    throw new Error(`Syntax error in cards.json: ${parseError.message}`);
+                    throw new Error(`Syntax error in cards.json: ${parseError.message}.`);
                 }
 
                 let statsMap = {};
@@ -325,18 +401,34 @@
                     if (csvRes.ok) {
                         const csvText = await csvRes.text();
                         const rows = parseCSV(csvText);
-                        const headers = rows[0].map(h => h.trim());
+                        const headers = rows[0].map(h => h.toLowerCase().trim());
                         
+                        const nameIdx = headers.indexOf('name') > -1 ? headers.indexOf('name') : 0;
+                        const classIdx = headers.indexOf('class');
+                        
+                        const typeCols = ['attack', 'defense', 'skill', 'spell'].map(t => ({
+                            name: t.charAt(0).toUpperCase() + t.slice(1),
+                            idx: headers.findIndex(h => h.includes(t))
+                        })).filter(t => t.idx > -1);
+
                         typeHeaders = headers.slice(7, 25).filter(h => h);
                         auraHeaders = headers.slice(25, 52).filter(h => h);
                         curseHeaders = headers.slice(52, 77).filter(h => h);
 
                         for (let i = 1; i < rows.length; i++) {
                             const row = rows[i];
-                            if (!row[0]) continue;
+                            if (!row[nameIdx]) continue;
                             
-                            const cleanName = row[0].toLowerCase().trim();
+                            const cleanName = row[nameIdx].toLowerCase().trim();
+                            let cardType = 'Other';
                             
+                            for (const t of typeCols) {
+                                if (row[t.idx] && row[t.idx].toUpperCase() === 'TRUE') {
+                                    cardType = t.name;
+                                    break;
+                                }
+                            }
+
                             if (!statsMap[cleanName]) {
                                 const cardTypes = [];
                                 for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardTypes.push(headers[j]);
@@ -348,9 +440,10 @@
                                 for(let j=52; j<=76; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardCurses.push(headers[j]);
 
                                 statsMap[cleanName] = {
-                                    heroClass: row[4] || 'Other',
+                                    heroClass: classIdx > -1 && row[classIdx] ? row[classIdx] : 'Other',
                                     cost: row[5] !== undefined && row[5] !== '' ? row[5] : 'N/A',
                                     rarity: row[6] || 'Unknown',
+                                    cardType: cardType,
                                     types: cardTypes,
                                     auras: cardAuras,
                                     curses: cardCurses
@@ -362,7 +455,9 @@
                             }
                         }
                     }
-                } catch(e) { console.log("stats.csv not found."); }
+                } catch(e) {
+                    console.log("stats.csv not found or could not be parsed.");
+                }
 
                 createMultiSelect('classFilterContainer', 'Class', uniqueClasses, 'class');
                 createMultiSelect('costFilterContainer', 'Cost', uniqueCosts, 'cost');
@@ -385,7 +480,7 @@
                     categories.add(category);
                     
                     const sheetData = statsMap[cleanName.toLowerCase()] || { 
-                        heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', types: [], auras: [], curses: [] 
+                        heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', cardType: 'Other', types: [], auras: [], curses: [] 
                     };
 
                     return {
@@ -394,6 +489,7 @@
                         heroClass: sheetData.heroClass,
                         cost: sheetData.cost,
                         rarity: sheetData.rarity,
+                        cardType: sheetData.cardType,
                         types: sheetData.types,
                         auras: sheetData.auras,
                         curses: sheetData.curses,
@@ -410,13 +506,13 @@
                     categorySelect.appendChild(option);
                 });
 
-                // Init actions
                 updateSavedBuildsDropdown();
                 checkUrlForBuild();
-                renderBuild();
+                renderBuild(); // Compute metrics immediately if loaded from URL
                 filterData(); 
 
             } catch (error) {
+                console.error("Error loading data:", error);
                 const errorDiv = document.getElementById('error-message');
                 errorDiv.style.display = 'block';
                 errorDiv.innerHTML = `<h3>Failed to load application data</h3><p style="font-size: 0.9em; color: #ccc;">${error.message}</p>`;
@@ -450,18 +546,24 @@
                 cardDiv.className = 'card-container';
                 
                 let htmlStr = `<h3 class="card-title">${card.idKey}</h3>`;
+                
                 htmlStr += `<img src="./card_images/${baseId}_result.png" id="main-img-${baseId}" alt="${baseId}" data-id="${baseId}" onerror="handleImageError(this)">`;
                 
                 if (upgrades.length > 0) {
                     htmlStr += `<div class="variants">`;
                     htmlStr += `<img class="variant-img active" id="thumb-${baseId}-${baseId}" src="./card_images/${baseId}_result.png" onclick="swapImage('${baseId}', '${baseId}')" onerror="handleImageError(this)">`;
                     upgrades.forEach(upgradeId => {
-                        htmlStr += `<img class="variant-img" id="thumb-${baseId}-${upgradeId}" src="./card_images/${upgradeId}_result.png" onclick="swapImage('${baseId}', '${upgradeId}')" onerror="handleImageError(this)">`;
+                        // Apply conditional colored borders to variants
+                        let borderClass = '';
+                        if (upgradeId.endsWith('rare')) borderClass = 'border-rare';
+                        else if (upgradeId.endsWith('b')) borderClass = 'border-b';
+                        else if (upgradeId.endsWith('a')) borderClass = 'border-a';
+
+                        htmlStr += `<img class="variant-img ${borderClass}" id="thumb-${baseId}-${upgradeId}" src="./card_images/${upgradeId}_result.png" onclick="swapImage('${baseId}', '${upgradeId}')" onerror="handleImageError(this)">`;
                     });
                     htmlStr += `</div>`;
                 }
 
-                // Add to Build Button
                 htmlStr += `<button class="add-btn" onclick="addCurrentVariantToBuild('${baseId}')">+ Add to Build</button>`;
 
                 cardDiv.innerHTML = htmlStr;
