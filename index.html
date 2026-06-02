@@ -165,9 +165,12 @@
             else if (variantId.endsWith('b')) vType = 'b';
             else if (variantId.endsWith('a')) vType = 'a';
             
-            let cost = card.vCosts[vType];
-            if (cost === undefined) cost = card.cost; // fallback to base cost if variant cost not found
-            if (cost === 'N/A' || isNaN(cost)) cost = 0;
+            let costStr = card.vCosts[vType];
+            if (costStr === undefined) costStr = card.cost; // fallback to base cost if variant cost not found
+            
+            // Safely parse to an integer for metrics math, default to 0 if it's "N/A"
+            let cost = parseInt(costStr, 10);
+            if (isNaN(cost)) cost = 0;
             
             return { card, cost, vType };
         }
@@ -367,7 +370,14 @@
             
             let sortedOptions = Array.from(optionsList).filter(o => o);
             if (title === 'Cost') {
-                sortedOptions.sort((a, b) => parseInt(a) - parseInt(b));
+                // Safely sort costs numerically, pushing "N/A" or text to the bottom
+                sortedOptions.sort((a, b) => {
+                    let numA = parseInt(a, 10);
+                    let numB = parseInt(b, 10);
+                    if (isNaN(numA)) numA = 999; 
+                    if (isNaN(numB)) numB = 999;
+                    return numA - numB;
+                });
             } else {
                 sortedOptions.sort();
             }
@@ -450,9 +460,12 @@
                             
                             // Initialize master object for this card family
                             if (!statsMap[cleanName]) {
+                                // Keep cost as a raw string to safely handle 'N/A'
+                                let costStr = row[5] !== undefined && row[5] !== '' ? row[5].trim() : 'N/A';
+                                
                                 statsMap[cleanName] = {
                                     heroClass: row[4] || 'Other',
-                                    cost: row[5] !== undefined && row[5] !== '' ? parseInt(row[5], 10) : 'N/A',
+                                    cost: costStr,
                                     rarity: row[6] || 'Unknown',
                                     types: new Set(),
                                     auras: new Set(),
@@ -460,7 +473,7 @@
                                     vCosts: {}
                                 };
                                 if(row[4]) uniqueClasses.add(row[4]);
-                                if(row[5] !== undefined && row[5] !== '') uniqueCosts.add(row[5]);
+                                uniqueCosts.add(costStr);
                                 if(row[6]) uniqueRarities.add(row[6]);
                             }
 
@@ -471,7 +484,7 @@
                             else if (row[3] && row[3].toUpperCase() === 'TRUE') vType = 'rare';
                             
                             if (row[5] !== undefined && row[5] !== '') {
-                                statsMap[cleanName].vCosts[vType] = parseInt(row[5], 10);
+                                statsMap[cleanName].vCosts[vType] = row[5].trim();
                             }
 
                             // Aggregate Arrays (using Set to ensure unique values across all variants)
@@ -490,8 +503,9 @@
                 createMultiSelect('curseFilterContainer', 'Curses', curseHeaders, 'curse');
 
                 const categories = new Set();
+                allCards = []; // Reset array
 
-                allCards = Object.entries(db.cards).map(([key, data]) => {
+                Object.entries(db.cards).forEach(([key, data]) => {
                     let category = "normal";
                     let cleanName = key;
                     
@@ -500,25 +514,33 @@
                         category = match[1].toLowerCase();
                         cleanName = key.replace(/\([^)]+\)/g, '').trim();
                     }
+                    
+                    const sheetData = statsMap[cleanName.toLowerCase()];
+                    
+                    // JUNK DATA RULE: If it's a normal card but missing from our spreadsheet, throw it out.
+                    if (category === "normal" && !sheetData) {
+                        return; 
+                    }
+                    
                     categories.add(category);
                     
-                    const sheetData = statsMap[cleanName.toLowerCase()] || { 
+                    const safeSheetData = sheetData || { 
                         heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', types: new Set(), auras: new Set(), curses: new Set(), vCosts: {} 
                     };
 
-                    return {
+                    allCards.push({
                         idKey: cleanName,
                         category: category,
-                        heroClass: sheetData.heroClass,
-                        cost: sheetData.cost,
-                        rarity: sheetData.rarity,
-                        types: Array.from(sheetData.types),
-                        auras: Array.from(sheetData.auras),
-                        curses: Array.from(sheetData.curses),
-                        vCosts: sheetData.vCosts,
+                        heroClass: safeSheetData.heroClass,
+                        cost: safeSheetData.cost,
+                        rarity: safeSheetData.rarity,
+                        types: Array.from(safeSheetData.types),
+                        auras: Array.from(safeSheetData.auras),
+                        curses: Array.from(safeSheetData.curses),
+                        vCosts: safeSheetData.vCosts,
                         variants: data.IDs || [], 
                         related: data.RelatedIDs || []
-                    };
+                    });
                 });
                 
                 // MAIN MENU AUTO SORT: Alphabetical
@@ -619,8 +641,7 @@
             const getChecked = (className) => Array.from(document.querySelectorAll(`.${className}:checked`)).map(cb => cb.value);
             
             const selectedClasses = getChecked('class-checkbox');
-            // Changed this line to handle string costs like "N/A"
-            const selectedCosts = getChecked('cost-checkbox'); 
+            const selectedCosts = getChecked('cost-checkbox'); // Keep as strings to match "N/A" safely
             const selectedRarities = getChecked('rarity-checkbox');
             const selectedTypes = getChecked('type-checkbox');
             const selectedAuras = getChecked('aura-checkbox');
@@ -634,7 +655,7 @@
 
                 if (selectedCategory === 'normal' || selectedCategory === 'all') {
                     if (selectedClasses.length > 0 && !selectedClasses.includes(card.heroClass)) return false;
-                    // Changed card.cost to card.cost.toString() to match string arrays from checkbox values
+                    // Safely compare cost properties as strings
                     if (selectedCosts.length > 0 && !selectedCosts.includes(card.cost.toString())) return false;
                     if (selectedRarities.length > 0 && !selectedRarities.includes(card.rarity)) return false;
                     
