@@ -105,7 +105,7 @@
         <input type="text" id="searchInput" placeholder="Search cards by name or ID..." oninput="filterData()">
         <select id="categoryFilter" class="main-select" onchange="toggleSubMenu(); filterData()">
             <option value="all">All Categories</option>
-            <option value="normal" selected>Normal Cards</option>
+            <option value="cards" selected>Cards</option>
         </select>
     </div>
 
@@ -128,12 +128,10 @@
     <script>
         let allCards = []; 
         let currentBuild = []; // Array to store IDs in the deck
-        let globalVariantCosts = {}; // Tracks specific energy cost for a/b/rare variants
+        let globalVariantStats = {}; // Tracks specific stats (cost, auras, types, etc) per variant ID
 
         // ------------------------------------------------------------------
         // Build Manager Logic (Hybrid Save/Share)
-        // ------------------------------------------------------------------
-        // Build Manager Logic & Metrics Engine
         // ------------------------------------------------------------------
 
         function addCurrentVariantToBuild(baseId) {
@@ -161,24 +159,18 @@
                 return;
             }
 
-            // NEW: Sort currentBuild array by Cost (Lowest -> Highest), then Alphabetically
+            // Sort currentBuild array by Cost (Lowest -> Highest), then Alphabetically
             currentBuild.sort((a, b) => {
-                let costA = globalVariantCosts[a] !== undefined ? globalVariantCosts[a] : 999;
-                let costB = globalVariantCosts[b] !== undefined ? globalVariantCosts[b] : 999;
+                let costA = globalVariantStats[a] && globalVariantStats[a].cost !== 'N/A' ? parseInt(globalVariantStats[a].cost) : 999;
+                let costB = globalVariantStats[b] && globalVariantStats[b].cost !== 'N/A' ? parseInt(globalVariantStats[b].cost) : 999;
                 
                 let nameA = a, nameB = b;
                 
-                // Fallback to base card info if variant isn't in CSV
+                // Fallback to base card name if needed
                 const baseA = allCards.find(c => c.variants.includes(a));
-                if (baseA) { 
-                    nameA = baseA.idKey; 
-                    if(costA === 999 && baseA.cost !== 'N/A') costA = parseInt(baseA.cost);
-                }
+                if (baseA) nameA = baseA.idKey; 
                 const baseB = allCards.find(c => c.variants.includes(b));
-                if (baseB) { 
-                    nameB = baseB.idKey;
-                    if(costB === 999 && baseB.cost !== 'N/A') costB = parseInt(baseB.cost);
-                }
+                if (baseB) nameB = baseB.idKey;
 
                 if (costA !== costB) return costA - costB; // Sort by Cost first
                 return nameA.localeCompare(nameB); // Break ties alphabetically
@@ -202,20 +194,20 @@
                 `;
                 grid.appendChild(div);
 
-                // 2. Fetch the corresponding card data for the metrics engine
-                const baseCard = allCards.find(c => c.variants.includes(cardId));
-                if (baseCard) {
-                    if (baseCard.cost !== 'N/A' && !isNaN(baseCard.cost)) {
-                        const c = parseInt(baseCard.cost);
+                // 2. Fetch corresponding card data specifically for the exact variant ID
+                const stats = globalVariantStats[cardId];
+                if (stats) {
+                    if (stats.cost !== 'N/A' && !isNaN(stats.cost)) {
+                        const c = parseInt(stats.cost);
                         totalCost += c;
                         costCount++;
                         costDistribution[c] = (costDistribution[c] || 0) + 1;
                     }
-                    if (baseCard.cardType && baseCard.cardType !== 'Other') {
-                        typeDistribution[baseCard.cardType] = (typeDistribution[baseCard.cardType] || 0) + 1;
-                    }
-                    baseCard.auras.forEach(a => uniqueAuras.add(a));
-                    baseCard.curses.forEach(c => uniqueCurses.add(c));
+                    stats.types.forEach(t => {
+                        typeDistribution[t] = (typeDistribution[t] || 0) + 1;
+                    });
+                    stats.auras.forEach(a => uniqueAuras.add(a));
+                    stats.curses.forEach(c => uniqueCurses.add(c));
                 }
             });
 
@@ -329,7 +321,8 @@
         function toggleSubMenu() {
             const cat = document.getElementById('categoryFilter').value;
             const subMenu = document.getElementById('advancedFilters');
-            if (cat === 'normal' || cat === 'all') {
+            // Show filters if "cards" or "all" is selected
+            if (cat === 'cards' || cat === 'all') {
                 subMenu.classList.remove('hidden');
             } else {
                 subMenu.classList.add('hidden');
@@ -405,6 +398,7 @@
 
         async function loadData() {
             try {
+                // 1. Fetch JSON
                 const response = await fetch('./cards.json'); 
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
@@ -415,11 +409,10 @@
                 try {
                     db = JSON.parse(cleanText);
                 } catch (parseError) {
-                    throw new Error(`Syntax error in cards.json: ${parseError.message}. Please run your cards.json file through a JSON validator (like jsonlint.com) to find the typo.`);
+                    throw new Error(`Syntax error in cards.json: ${parseError.message}.`);
                 }
 
-                // 2. Fetch CSV and build stats map
-                let statsMap = {};
+                // 2. Fetch CSV and build variant-specific stats map
                 let typeHeaders = [], auraHeaders = [], curseHeaders = [];
                 let uniqueClasses = new Set(), uniqueCosts = new Set(), uniqueRarities = new Set();
                 
@@ -430,6 +423,7 @@
                         const rows = parseCSV(csvText);
                         const headers = rows[0].map(h => h.trim());
                         
+                        // Extract column headers dynamically based on indexes provided
                         typeHeaders = headers.slice(7, 25).filter(h => h);
                         auraHeaders = headers.slice(25, 52).filter(h => h);
                         curseHeaders = headers.slice(52, 77).filter(h => h);
@@ -439,47 +433,40 @@
                             if (!row[0]) continue; 
                             
                             const rawName = row[0];
-                            const cleanName = rawName.toLowerCase().trim();
+                            // Reconstruct the base string used in JSON IDs
+                            const cleanName = rawName.toLowerCase().replace(/[^a-z0-9]/g, '');
                             
-                            // TRACK SPECIFIC VARIANT COSTS FOR THE DECK BUILDER SORTING
+                            // Determine the variant suffix
                             let suffix = '';
                             if (row[1] && row[1].toUpperCase() === 'TRUE') suffix = 'a';
                             else if (row[2] && row[2].toUpperCase() === 'TRUE') suffix = 'b';
                             else if (row[3] && row[3].toUpperCase() === 'TRUE') suffix = 'rare';
                             
-                            let variantId = cleanName.replace(/[^a-z0-9]/g, '') + suffix;
-                            const costStr = row[5];
-                            globalVariantCosts[variantId] = (costStr !== undefined && costStr !== '') ? parseInt(costStr) : 999;
+                            let variantId = cleanName + suffix;
                             
-                            // GRAB AURAS/CURSES FOR THIS SPECIFIC ROW
+                            // Extract true boolean flags for this exact variant
+                            const cardTypes = [];
+                            for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardTypes.push(headers[j]);
+                            
                             const cardAuras = [];
                             for(let j=25; j<=51; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardAuras.push(headers[j]);
                             
                             const cardCurses = [];
                             for(let j=52; j<=76; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardCurses.push(headers[j]);
 
-                            // AGGREGATE STATS INTO THE MASTER CARD
-                            if (!statsMap[cleanName]) {
-                                const cardTypes = [];
-                                for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardTypes.push(headers[j]);
+                            // Store everything mapped strictly to the Variant ID, not just the base card name
+                            globalVariantStats[variantId] = {
+                                heroClass: row[4] || 'Other',
+                                cost: row[5] !== undefined && row[5] !== '' ? row[5] : 'N/A',
+                                rarity: row[6] || 'Unknown',
+                                types: cardTypes,
+                                auras: cardAuras,
+                                curses: cardCurses
+                            };
 
-                                statsMap[cleanName] = {
-                                    heroClass: row[4] || 'Other',
-                                    cost: row[5] !== undefined && row[5] !== '' ? row[5] : 'N/A',
-                                    rarity: row[6] || 'Unknown',
-                                    types: cardTypes,
-                                    auras: new Set(cardAuras), // Use Set to prevent duplicates
-                                    curses: new Set(cardCurses) // Use Set to prevent duplicates
-                                };
-
-                                if(row[4]) uniqueClasses.add(row[4]);
-                                if(row[5] !== undefined && row[5] !== '') uniqueCosts.add(row[5]);
-                                if(row[6]) uniqueRarities.add(row[6]);
-                            } else {
-                                // Master card exists, fold this variant's auras/curses into the master Sets
-                                cardAuras.forEach(a => statsMap[cleanName].auras.add(a));
-                                cardCurses.forEach(c => statsMap[cleanName].curses.add(c));
-                            }
+                            if(row[4]) uniqueClasses.add(row[4]);
+                            if(row[5] !== undefined && row[5] !== '') uniqueCosts.add(row[5]);
+                            if(row[6]) uniqueRarities.add(row[6]);
                         }
                     }
                 } catch(e) {
@@ -487,6 +474,8 @@
                 }
 
                 // 3. Build UI Multi-Select Dropdowns
+                createMultiSelect('classFilterContainer', 'Class', uniqueClasses, 'class');
+                createMultiSelect('costFilterContainer', 'Cost', uniqueCosts, 'cost');
                 createMultiSelect('rarityFilterContainer', 'Rarity', uniqueRarities, 'rarity');
                 createMultiSelect('typeFilterContainer', 'Card Type', typeHeaders, 'type');
                 createMultiSelect('auraFilterContainer', 'Auras', auraHeaders, 'aura');
@@ -494,8 +483,9 @@
 
                 const categories = new Set();
 
+                // Build main card logic from JSON.
                 allCards = Object.entries(db.cards).map(([key, data]) => {
-                    let category = "normal";
+                    let category = "cards"; // Default base category
                     let cleanName = key;
                     
                     const match = key.match(/\(([^)]+)\)/);
@@ -505,30 +495,20 @@
                     }
                     categories.add(category);
                     
-                    const sheetData = statsMap[cleanName.toLowerCase()] || { 
-                        heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', types: [], auras: new Set(), curses: new Set() 
-                    };
-
                     return {
                         idKey: cleanName,
                         category: category,
-                        heroClass: sheetData.heroClass,
-                        cost: sheetData.cost,
-                        rarity: sheetData.rarity,
-                        types: sheetData.types,
-                        auras: Array.from(sheetData.auras), // Convert aggregated Sets back to Arrays
-                        curses: Array.from(sheetData.curses),
                         variants: data.IDs || [], 
                         related: data.RelatedIDs || []
                     };
                 });
                 
-                // NEW: Sort main menu alphabetically!
+                // Sort main menu alphabetically!
                 allCards.sort((a, b) => a.idKey.localeCompare(b.idKey));
 
                 // Populate Primary Category Dropdown
                 const categorySelect = document.getElementById('categoryFilter');
-                Array.from(categories).filter(c => c !== 'normal').sort().forEach(cat => {
+                Array.from(categories).filter(c => c !== 'cards').sort().forEach(cat => {
                     const option = document.createElement('option');
                     option.value = cat;
                     option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
@@ -635,19 +615,38 @@
             const selectedCurses = getChecked('curse-checkbox');
 
             const filtered = allCards.filter(card => {
+                // 1. Text Search matching
                 const matchesSearch = card.idKey.toLowerCase().includes(searchTerm) || 
                                       card.variants.join(' ').toLowerCase().includes(searchTerm);
                 if (!matchesSearch) return false;
+                
+                // 2. Category matching
                 if (selectedCategory !== 'all' && card.category !== selectedCategory) return false;
 
-                if (selectedCategory === 'normal' || selectedCategory === 'all') {
-                    if (selectedClasses.length > 0 && !selectedClasses.includes(card.heroClass)) return false;
-                    if (selectedCosts.length > 0 && !selectedCosts.includes(card.cost)) return false;
-                    if (selectedRarities.length > 0 && !selectedRarities.includes(card.rarity)) return false;
+                // 3. Advanced Filtering for "cards" (and "all" if filters are applied)
+                if (selectedCategory === 'cards' || selectedCategory === 'all') {
                     
-                    if (selectedTypes.length > 0 && !selectedTypes.some(t => card.types.includes(t))) return false;
-                    if (selectedAuras.length > 0 && !selectedAuras.some(a => card.auras.includes(a))) return false;
-                    if (selectedCurses.length > 0 && !selectedCurses.some(c => card.curses.includes(c))) return false;
+                    // To show a base card, AT LEAST ONE of its variants must pass all active filters
+                    const hasMatchingVariant = card.variants.some(variantId => {
+                        // Fallback object in case JSON variant is missing from CSV
+                        const stats = globalVariantStats[variantId] || { 
+                            heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', types: [], auras: [], curses: [] 
+                        };
+
+                        if (selectedClasses.length > 0 && !selectedClasses.includes(stats.heroClass)) return false;
+                        if (selectedCosts.length > 0 && !selectedCosts.includes(stats.cost)) return false;
+                        if (selectedRarities.length > 0 && !selectedRarities.includes(stats.rarity)) return false;
+                        
+                        // Array overlap matching
+                        if (selectedTypes.length > 0 && !selectedTypes.some(t => stats.types.includes(t))) return false;
+                        if (selectedAuras.length > 0 && !selectedAuras.some(a => stats.auras.includes(a))) return false;
+                        if (selectedCurses.length > 0 && !selectedCurses.some(c => stats.curses.includes(c))) return false;
+
+                        return true; // This specific variant passed all filters!
+                    });
+
+                    // If no variant within this card's family passed the filter, hide the whole card
+                    if (!hasMatchingVariant) return false;
                 }
                 return true;
             });
