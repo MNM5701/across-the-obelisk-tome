@@ -128,7 +128,10 @@
     <script>
         let allCards = []; 
         let currentBuild = []; // Array to store IDs in the deck
+        let globalVariantCosts = {}; // Tracks specific energy cost for a/b/rare variants
 
+        // ------------------------------------------------------------------
+        // Build Manager Logic (Hybrid Save/Share)
         // ------------------------------------------------------------------
         // Build Manager Logic & Metrics Engine
         // ------------------------------------------------------------------
@@ -157,6 +160,29 @@
                 statsContainer.style.display = 'none';
                 return;
             }
+
+            // NEW: Sort currentBuild array by Cost (Lowest -> Highest), then Alphabetically
+            currentBuild.sort((a, b) => {
+                let costA = globalVariantCosts[a] !== undefined ? globalVariantCosts[a] : 999;
+                let costB = globalVariantCosts[b] !== undefined ? globalVariantCosts[b] : 999;
+                
+                let nameA = a, nameB = b;
+                
+                // Fallback to base card info if variant isn't in CSV
+                const baseA = allCards.find(c => c.variants.includes(a));
+                if (baseA) { 
+                    nameA = baseA.idKey; 
+                    if(costA === 999 && baseA.cost !== 'N/A') costA = parseInt(baseA.cost);
+                }
+                const baseB = allCards.find(c => c.variants.includes(b));
+                if (baseB) { 
+                    nameB = baseB.idKey;
+                    if(costB === 999 && baseB.cost !== 'N/A') costB = parseInt(baseB.cost);
+                }
+
+                if (costA !== costB) return costA - costB; // Sort by Cost first
+                return nameA.localeCompare(nameB); // Break ties alphabetically
+            });
 
             // Metrics tracking variables
             let totalCost = 0;
@@ -389,9 +415,10 @@
                 try {
                     db = JSON.parse(cleanText);
                 } catch (parseError) {
-                    throw new Error(`Syntax error in cards.json: ${parseError.message}.`);
+                    throw new Error(`Syntax error in cards.json: ${parseError.message}. Please run your cards.json file through a JSON validator (like jsonlint.com) to find the typo.`);
                 }
 
+                // 2. Fetch CSV and build stats map
                 let statsMap = {};
                 let typeHeaders = [], auraHeaders = [], curseHeaders = [];
                 let uniqueClasses = new Set(), uniqueCosts = new Set(), uniqueRarities = new Set();
@@ -401,66 +428,65 @@
                     if (csvRes.ok) {
                         const csvText = await csvRes.text();
                         const rows = parseCSV(csvText);
-                        const headers = rows[0].map(h => h.toLowerCase().trim());
+                        const headers = rows[0].map(h => h.trim());
                         
-                        const nameIdx = headers.indexOf('name') > -1 ? headers.indexOf('name') : 0;
-                        const classIdx = headers.indexOf('class');
-                        
-                        const typeCols = ['attack', 'defense', 'skill', 'spell'].map(t => ({
-                            name: t.charAt(0).toUpperCase() + t.slice(1),
-                            idx: headers.findIndex(h => h.includes(t))
-                        })).filter(t => t.idx > -1);
-
                         typeHeaders = headers.slice(7, 25).filter(h => h);
                         auraHeaders = headers.slice(25, 52).filter(h => h);
                         curseHeaders = headers.slice(52, 77).filter(h => h);
 
                         for (let i = 1; i < rows.length; i++) {
                             const row = rows[i];
-                            if (!row[nameIdx]) continue;
+                            if (!row[0]) continue; 
                             
-                            const cleanName = row[nameIdx].toLowerCase().trim();
-                            let cardType = 'Other';
+                            const rawName = row[0];
+                            const cleanName = rawName.toLowerCase().trim();
                             
-                            for (const t of typeCols) {
-                                if (row[t.idx] && row[t.idx].toUpperCase() === 'TRUE') {
-                                    cardType = t.name;
-                                    break;
-                                }
-                            }
+                            // TRACK SPECIFIC VARIANT COSTS FOR THE DECK BUILDER SORTING
+                            let suffix = '';
+                            if (row[1] && row[1].toUpperCase() === 'TRUE') suffix = 'a';
+                            else if (row[2] && row[2].toUpperCase() === 'TRUE') suffix = 'b';
+                            else if (row[3] && row[3].toUpperCase() === 'TRUE') suffix = 'rare';
+                            
+                            let variantId = cleanName.replace(/[^a-z0-9]/g, '') + suffix;
+                            const costStr = row[5];
+                            globalVariantCosts[variantId] = (costStr !== undefined && costStr !== '') ? parseInt(costStr) : 999;
+                            
+                            // GRAB AURAS/CURSES FOR THIS SPECIFIC ROW
+                            const cardAuras = [];
+                            for(let j=25; j<=51; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardAuras.push(headers[j]);
+                            
+                            const cardCurses = [];
+                            for(let j=52; j<=76; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardCurses.push(headers[j]);
 
+                            // AGGREGATE STATS INTO THE MASTER CARD
                             if (!statsMap[cleanName]) {
                                 const cardTypes = [];
                                 for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardTypes.push(headers[j]);
-                                
-                                const cardAuras = [];
-                                for(let j=25; j<=51; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardAuras.push(headers[j]);
-                                
-                                const cardCurses = [];
-                                for(let j=52; j<=76; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardCurses.push(headers[j]);
 
                                 statsMap[cleanName] = {
-                                    heroClass: classIdx > -1 && row[classIdx] ? row[classIdx] : 'Other',
+                                    heroClass: row[4] || 'Other',
                                     cost: row[5] !== undefined && row[5] !== '' ? row[5] : 'N/A',
                                     rarity: row[6] || 'Unknown',
-                                    cardType: cardType,
                                     types: cardTypes,
-                                    auras: cardAuras,
-                                    curses: cardCurses
+                                    auras: new Set(cardAuras), // Use Set to prevent duplicates
+                                    curses: new Set(cardCurses) // Use Set to prevent duplicates
                                 };
 
                                 if(row[4]) uniqueClasses.add(row[4]);
                                 if(row[5] !== undefined && row[5] !== '') uniqueCosts.add(row[5]);
                                 if(row[6]) uniqueRarities.add(row[6]);
+                            } else {
+                                // Master card exists, fold this variant's auras/curses into the master Sets
+                                cardAuras.forEach(a => statsMap[cleanName].auras.add(a));
+                                cardCurses.forEach(c => statsMap[cleanName].curses.add(c));
                             }
                         }
                     }
                 } catch(e) {
-                    console.log("stats.csv not found or could not be parsed.");
+                    console.log("stats.csv not found or could not be parsed. Filters will be empty.");
                 }
 
-                createMultiSelect('classFilterContainer', 'Class', uniqueClasses, 'class');
-                createMultiSelect('costFilterContainer', 'Cost', uniqueCosts, 'cost');
+                // 3. Build UI Multi-Select Dropdowns
                 createMultiSelect('rarityFilterContainer', 'Rarity', uniqueRarities, 'rarity');
                 createMultiSelect('typeFilterContainer', 'Card Type', typeHeaders, 'type');
                 createMultiSelect('auraFilterContainer', 'Auras', auraHeaders, 'aura');
@@ -480,7 +506,7 @@
                     categories.add(category);
                     
                     const sheetData = statsMap[cleanName.toLowerCase()] || { 
-                        heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', cardType: 'Other', types: [], auras: [], curses: [] 
+                        heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', types: [], auras: new Set(), curses: new Set() 
                     };
 
                     return {
@@ -489,15 +515,18 @@
                         heroClass: sheetData.heroClass,
                         cost: sheetData.cost,
                         rarity: sheetData.rarity,
-                        cardType: sheetData.cardType,
                         types: sheetData.types,
-                        auras: sheetData.auras,
-                        curses: sheetData.curses,
+                        auras: Array.from(sheetData.auras), // Convert aggregated Sets back to Arrays
+                        curses: Array.from(sheetData.curses),
                         variants: data.IDs || [], 
                         related: data.RelatedIDs || []
                     };
                 });
+                
+                // NEW: Sort main menu alphabetically!
+                allCards.sort((a, b) => a.idKey.localeCompare(b.idKey));
 
+                // Populate Primary Category Dropdown
                 const categorySelect = document.getElementById('categoryFilter');
                 Array.from(categories).filter(c => c !== 'normal').sort().forEach(cat => {
                     const option = document.createElement('option');
