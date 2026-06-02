@@ -619,7 +619,8 @@
             const getChecked = (className) => Array.from(document.querySelectorAll(`.${className}:checked`)).map(cb => cb.value);
             
             const selectedClasses = getChecked('class-checkbox');
-            const selectedCosts = getChecked('cost-checkbox').map(c => parseInt(c, 10)); // Match int type
+            // Changed this line to handle string costs like "N/A"
+            const selectedCosts = getChecked('cost-checkbox'); 
             const selectedRarities = getChecked('rarity-checkbox');
             const selectedTypes = getChecked('type-checkbox');
             const selectedAuras = getChecked('aura-checkbox');
@@ -633,7 +634,8 @@
 
                 if (selectedCategory === 'normal' || selectedCategory === 'all') {
                     if (selectedClasses.length > 0 && !selectedClasses.includes(card.heroClass)) return false;
-                    if (selectedCosts.length > 0 && !selectedCosts.includes(card.cost)) return false;
+                    // Changed card.cost to card.cost.toString() to match string arrays from checkbox values
+                    if (selectedCosts.length > 0 && !selectedCosts.includes(card.cost.toString())) return false;
                     if (selectedRarities.length > 0 && !selectedRarities.includes(card.rarity)) return false;
                     
                     if (selectedTypes.length > 0 && !selectedTypes.some(t => card.types.includes(t))) return false;
