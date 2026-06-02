@@ -7,9 +7,25 @@
     <style>
         body { font-family: sans-serif; background: #1e1e1e; color: #eee; padding: 20px; }
         
+        /* Build Manager / Deck Builder */
+        .build-manager { background: #1a1a1a; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #444; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
+        .build-header { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .build-header input[type="text"] { padding: 8px; border-radius: 4px; border: 1px solid #555; background: #111; color: white; flex: 1; min-width: 200px; }
+        .build-header select { padding: 8px; border-radius: 4px; border: 1px solid #555; background: #111; color: white; }
+        .btn-green { padding: 8px 15px; cursor: pointer; background: #4ade80; color: #111; border: none; border-radius: 4px; font-weight: bold; transition: background 0.2s; }
+        .btn-green:hover { background: #22c55e; }
+        .btn-blue { padding: 8px 15px; cursor: pointer; background: #3b82f6; color: white; border: none; border-radius: 4px; font-weight: bold; transition: background 0.2s; }
+        .btn-blue:hover { background: #2563eb; }
+        
+        .build-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; min-height: 80px; padding: 10px; background: #222; border-radius: 4px; border: 1px dashed #555; }
+        .build-item { position: relative; width: 65px; }
+        .build-item img { width: 100%; border-radius: 4px; border: 1px solid #666; }
+        .remove-btn { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; line-height: 18px; text-align: center; cursor: pointer; border: none; padding: 0; font-weight: bold; }
+        .remove-btn:hover { transform: scale(1.1); }
+
         /* Top Level Controls */
         .controls { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; background: #2d2d2d; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        input[type="text"], select.main-select { padding: 10px; border-radius: 4px; border: 1px solid #444; background: #111; color: white; width: 100%; max-width: 400px; font-size: 1em; }
+        .controls input[type="text"], select.main-select { padding: 10px; border-radius: 4px; border: 1px solid #444; background: #111; color: white; width: 100%; max-width: 400px; font-size: 1em; }
         
         /* Advanced Sub-Menu */
         .sub-menu { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; background: #222; padding: 15px; border-radius: 8px; border: 1px solid #333; }
@@ -27,22 +43,46 @@
         .dropdown-content input { margin-right: 10px; cursor: pointer; }
         
         /* Grid and Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .card-container { background: #2d2d2d; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+        .card-container { background: #2d2d2d; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
         .card-title { margin-top: 0; margin-bottom: 15px; font-size: 1.1em; text-transform: capitalize; color: #ccc; }
         
-        .variants { display: flex; gap: 8px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
-        img { max-width: 100%; height: auto; border-radius: 4px; }
+        .variants { display: flex; gap: 8px; justify-content: center; margin-top: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .card-container img { max-width: 100%; height: auto; border-radius: 4px; }
         .variant-img { width: 50px; cursor: pointer; transition: transform 0.2s, border 0.2s; border: 2px solid transparent; border-radius: 4px; }
         .variant-img:hover { transform: scale(1.1); }
         .variant-img.active { border: 2px solid #4ade80; }
         
+        .add-btn { margin-top: auto; padding: 8px; background: #444; border: 1px solid #555; color: #eee; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s; font-weight: bold; }
+        .add-btn:hover { background: #4ade80; color: #111; border-color: #4ade80; }
+
         /* Error States */
         .error-state { padding: 40px 10px; background: #333; border-radius: 4px; color: #ff6b6b; font-size: 0.9em; display: flex; align-items: center; justify-content: center; flex-direction: column; min-height: 200px; }
         #error-message { display: none; color: #ff6b6b; background: #333; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px solid #ff6b6b; }
     </style>
 </head>
 <body>
+
+    <!-- Build Manager Area -->
+    <div class="build-manager" id="buildManager">
+        <div class="build-header">
+            <input type="text" id="buildName" placeholder="Name your build...">
+            <button class="btn-green" onclick="saveBuildToLocal()">Save to Computer</button>
+            <button class="btn-blue" onclick="generateShareLink()">Generate Link</button>
+            <select id="savedBuildsDropdown" onchange="loadBuildFromLocal(this.value)">
+                <option value="">-- Load Saved Build --</option>
+            </select>
+        </div>
+        
+        <div id="shareLinkContainer" style="display:none; margin-top: 15px;">
+            <input type="text" id="shareLinkInput" readonly style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #555; background: #111; color: #4ade80;" onclick="this.select()">
+            <small style="color: #aaa; display: block; margin-top: 5px;">Link copied to clipboard! Share this URL to send your build.</small>
+        </div>
+
+        <div class="build-grid" id="buildGrid">
+            <!-- Selected cards inject here -->
+        </div>
+    </div>
 
     <!-- Primary Search & Category -->
     <div class="controls">
@@ -53,7 +93,7 @@
         </select>
     </div>
 
-    <!-- Advanced Spreadsheet Filters (Multi-Selects) -->
+    <!-- Advanced Spreadsheet Filters -->
     <div id="advancedFilters" class="sub-menu">
         <div id="classFilterContainer"></div>
         <div id="costFilterContainer"></div>
@@ -71,6 +111,116 @@
 
     <script>
         let allCards = []; 
+        let currentBuild = []; // Array to store IDs in the deck
+
+        // ------------------------------------------------------------------
+        // Build Manager Logic (Hybrid Save/Share)
+        // ------------------------------------------------------------------
+
+        function addCurrentVariantToBuild(baseId) {
+            const img = document.getElementById(`main-img-${baseId}`);
+            if (img) {
+                const variantId = img.getAttribute('data-id');
+                currentBuild.push(variantId);
+                renderBuild();
+            }
+        }
+
+        function removeFromBuild(index) {
+            currentBuild.splice(index, 1);
+            renderBuild();
+        }
+
+        function renderBuild() {
+            const grid = document.getElementById('buildGrid');
+            grid.innerHTML = '';
+            
+            if(currentBuild.length === 0) {
+                grid.innerHTML = '<div style="color:#666; font-style:italic; padding: 10px;">Select cards to start building...</div>';
+                return;
+            }
+
+            currentBuild.forEach((cardId, index) => {
+                const div = document.createElement('div');
+                div.className = 'build-item';
+                div.innerHTML = `
+                    <img src="./card_images/${cardId}_result.png" alt="${cardId}" title="${cardId}">
+                    <button class="remove-btn" onclick="removeFromBuild(${index})">x</button>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        function saveBuildToLocal() {
+            const name = document.getElementById('buildName').value.trim();
+            if (!name) { alert("Please name your build before saving."); return; }
+            if (currentBuild.length === 0) { alert("Add some cards before saving."); return; }
+
+            let savedBuilds = JSON.parse(localStorage.getItem('ato_builds') || '{}');
+            savedBuilds[name] = currentBuild;
+            localStorage.setItem('ato_builds', JSON.stringify(savedBuilds));
+            
+            updateSavedBuildsDropdown();
+            document.getElementById('savedBuildsDropdown').value = name;
+        }
+
+        function updateSavedBuildsDropdown() {
+            const dropdown = document.getElementById('savedBuildsDropdown');
+            const savedBuilds = JSON.parse(localStorage.getItem('ato_builds') || '{}');
+            
+            dropdown.innerHTML = '<option value="">-- Load Saved Build --</option>';
+            for (const name in savedBuilds) {
+                const opt = document.createElement('option');
+                opt.value = name;
+                opt.textContent = name;
+                dropdown.appendChild(opt);
+            }
+        }
+
+        function loadBuildFromLocal(name) {
+            if (!name) return;
+            const savedBuilds = JSON.parse(localStorage.getItem('ato_builds') || '{}');
+            if (savedBuilds[name]) {
+                currentBuild = [...savedBuilds[name]];
+                document.getElementById('buildName').value = name;
+                renderBuild();
+                document.getElementById('shareLinkContainer').style.display = 'none'; // Hide old share link
+            }
+        }
+
+        function generateShareLink() {
+            if (currentBuild.length === 0) { alert("Add some cards to generate a link!"); return; }
+            
+            const name = encodeURIComponent(document.getElementById('buildName').value.trim() || 'Untitled');
+            const cards = currentBuild.join(',');
+            
+            // Rebuild the URL without existing query params, then attach the new ones
+            const baseUrl = window.location.origin + window.location.pathname;
+            const finalUrl = `${baseUrl}?buildName=${name}&cards=${cards}`;
+            
+            const container = document.getElementById('shareLinkContainer');
+            const input = document.getElementById('shareLinkInput');
+            
+            input.value = finalUrl;
+            container.style.display = 'block';
+            input.select();
+            document.execCommand('copy'); // Auto-copy to clipboard
+        }
+
+        function checkUrlForBuild() {
+            const params = new URLSearchParams(window.location.search);
+            const cards = params.get('cards');
+            const name = params.get('buildName');
+            
+            if (cards) {
+                currentBuild = cards.split(',').filter(c => c);
+                if (name) document.getElementById('buildName').value = decodeURIComponent(name);
+                renderBuild();
+                
+                // Clean the URL bar visually so it doesn't stay cluttered
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
 
         // ------------------------------------------------------------------
         // UI & Dropdown Logic
@@ -94,7 +244,6 @@
             document.getElementById(id).classList.toggle('show');
         }
 
-        // Close dropdowns when clicking outside
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.dropdown-content') && !event.target.closest('.select-box')) {
                 document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('show'));
@@ -105,7 +254,6 @@
             const container = document.getElementById(containerId);
             if (!optionsList || optionsList.length === 0) return;
             
-            // Sort options alphabetically (except for Cost which should sort numerically)
             let sortedOptions = Array.from(optionsList).filter(o => o);
             if (title === 'Cost') {
                 sortedOptions.sort((a, b) => parseInt(a) - parseInt(b));
@@ -149,30 +297,25 @@
                     token += c;
                 }
             }
-            if (token || current.length > 0) {
-                current.push(token.trim()); results.push(current);
-            }
+            if (token || current.length > 0) { current.push(token.trim()); results.push(current); }
             return results;
         }
 
         async function loadData() {
             try {
-                // 1. Fetch JSON with sanitization to prevent copy-paste character crashes
                 const response = await fetch('./cards.json'); 
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
                 const rawText = await response.text();
-                // Replace invisible non-breaking spaces (common in copy-paste) with standard spaces
                 const cleanText = rawText.replace(/[\u00A0\u200B\u200C\u200D\uFEFF]/g, ' '); 
                 
                 let db;
                 try {
                     db = JSON.parse(cleanText);
                 } catch (parseError) {
-                    throw new Error(`Syntax error in cards.json: ${parseError.message}. Please run your cards.json file through a JSON validator (like jsonlint.com) to find the typo.`);
+                    throw new Error(`Syntax error in cards.json: ${parseError.message}`);
                 }
 
-                // 2. Fetch CSV and build stats map
                 let statsMap = {};
                 let typeHeaders = [], auraHeaders = [], curseHeaders = [];
                 let uniqueClasses = new Set(), uniqueCosts = new Set(), uniqueRarities = new Set();
@@ -184,18 +327,16 @@
                         const rows = parseCSV(csvText);
                         const headers = rows[0].map(h => h.trim());
                         
-                        // Extract specific column groupings based on your exact specifications
                         typeHeaders = headers.slice(7, 25).filter(h => h);
                         auraHeaders = headers.slice(25, 52).filter(h => h);
                         curseHeaders = headers.slice(52, 77).filter(h => h);
 
                         for (let i = 1; i < rows.length; i++) {
                             const row = rows[i];
-                            if (!row[0]) continue; // Skip empty rows
+                            if (!row[0]) continue;
                             
                             const cleanName = row[0].toLowerCase().trim();
                             
-                            // Only set properties once per card base name
                             if (!statsMap[cleanName]) {
                                 const cardTypes = [];
                                 for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardTypes.push(headers[j]);
@@ -221,11 +362,8 @@
                             }
                         }
                     }
-                } catch(e) {
-                    console.log("stats.csv not found or could not be parsed. Filters will be empty.");
-                }
+                } catch(e) { console.log("stats.csv not found."); }
 
-                // 3. Build UI Multi-Select Dropdowns
                 createMultiSelect('classFilterContainer', 'Class', uniqueClasses, 'class');
                 createMultiSelect('costFilterContainer', 'Cost', uniqueCosts, 'cost');
                 createMultiSelect('rarityFilterContainer', 'Rarity', uniqueRarities, 'rarity');
@@ -233,7 +371,6 @@
                 createMultiSelect('auraFilterContainer', 'Auras', auraHeaders, 'aura');
                 createMultiSelect('curseFilterContainer', 'Curses', curseHeaders, 'curse');
 
-                // 4. Merge JSON and CSV Data
                 const categories = new Set();
 
                 allCards = Object.entries(db.cards).map(([key, data]) => {
@@ -265,7 +402,6 @@
                     };
                 });
 
-                // Populate Primary Category Dropdown
                 const categorySelect = document.getElementById('categoryFilter');
                 Array.from(categories).filter(c => c !== 'normal').sort().forEach(cat => {
                     const option = document.createElement('option');
@@ -274,17 +410,23 @@
                     categorySelect.appendChild(option);
                 });
 
+                // Init actions
+                updateSavedBuildsDropdown();
+                checkUrlForBuild();
+                renderBuild();
                 filterData(); 
 
             } catch (error) {
-                console.error("Error loading data:", error);
                 const errorDiv = document.getElementById('error-message');
                 errorDiv.style.display = 'block';
                 errorDiv.innerHTML = `<h3>Failed to load application data</h3><p style="font-size: 0.9em; color: #ccc;">${error.message}</p>`;
             }
         }
 
-        // Handle missing images gracefully
+        // ------------------------------------------------------------------
+        // Rendering & Filtering
+        // ------------------------------------------------------------------
+
         function handleImageError(img) {
             if (img.classList.contains('variant-img')) {
                 img.style.display = 'none';
@@ -294,7 +436,6 @@
             }
         }
 
-        // Render the UI
         function renderCards(cardsToRender) {
             const grid = document.getElementById('cardGrid');
             grid.innerHTML = ''; 
@@ -309,7 +450,6 @@
                 cardDiv.className = 'card-container';
                 
                 let htmlStr = `<h3 class="card-title">${card.idKey}</h3>`;
-                
                 htmlStr += `<img src="./card_images/${baseId}_result.png" id="main-img-${baseId}" alt="${baseId}" data-id="${baseId}" onerror="handleImageError(this)">`;
                 
                 if (upgrades.length > 0) {
@@ -320,6 +460,9 @@
                     });
                     htmlStr += `</div>`;
                 }
+
+                // Add to Build Button
+                htmlStr += `<button class="add-btn" onclick="addCurrentVariantToBuild('${baseId}')">+ Add to Build</button>`;
 
                 cardDiv.innerHTML = htmlStr;
                 grid.appendChild(cardDiv);
@@ -347,15 +490,10 @@
             document.getElementById(`thumb-${baseId}-${newId}`).classList.add('active');
         }
 
-        // ------------------------------------------------------------------
-        // Master Filter Engine
-        // ------------------------------------------------------------------
-
         function filterData() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const selectedCategory = document.getElementById('categoryFilter').value;
             
-            // Helper to get checked values from our custom dropdowns
             const getChecked = (className) => Array.from(document.querySelectorAll(`.${className}:checked`)).map(cb => cb.value);
             
             const selectedClasses = getChecked('class-checkbox');
@@ -366,32 +504,26 @@
             const selectedCurses = getChecked('curse-checkbox');
 
             const filtered = allCards.filter(card => {
-                // 1. Text Search & Top-level Category
                 const matchesSearch = card.idKey.toLowerCase().includes(searchTerm) || 
                                       card.variants.join(' ').toLowerCase().includes(searchTerm);
                 if (!matchesSearch) return false;
                 if (selectedCategory !== 'all' && card.category !== selectedCategory) return false;
 
-                // 2. Apply advanced multi-selects only if we aren't filtering strictly for non-normal categories
                 if (selectedCategory === 'normal' || selectedCategory === 'all') {
-                    // Logic: If a user checks boxes in a category, the card MUST match at least ONE of those checked boxes (OR logic)
                     if (selectedClasses.length > 0 && !selectedClasses.includes(card.heroClass)) return false;
                     if (selectedCosts.length > 0 && !selectedCosts.includes(card.cost)) return false;
                     if (selectedRarities.length > 0 && !selectedRarities.includes(card.rarity)) return false;
                     
-                    // Arrays: The card must possess at least one of the selected tags
                     if (selectedTypes.length > 0 && !selectedTypes.some(t => card.types.includes(t))) return false;
                     if (selectedAuras.length > 0 && !selectedAuras.some(a => card.auras.includes(a))) return false;
                     if (selectedCurses.length > 0 && !selectedCurses.some(c => card.curses.includes(c))) return false;
                 }
-
                 return true;
             });
 
             renderCards(filtered);
         }
 
-        // Initialize App
         loadData();
     </script>
 </body>
