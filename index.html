@@ -25,6 +25,10 @@
 
     <div class="controls">
         <input type="text" id="searchInput" placeholder="Search cards by name or ID..." oninput="filterData()">
+        <select id="categoryFilter" onchange="filterData()">
+            <option value="all">All Categories</option>
+            <option value="normal" selected>Normal Cards</option>
+        </select>
     </div>
 
     <div id="error-message" style="display: none; color: #ff6b6b; background: #333; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;"></div>
@@ -46,16 +50,41 @@
                 }
                 const db = await response.json();
                 
+                const categories = new Set();
+
                 // Parse the JSON into an array
                 allCards = Object.entries(db.cards).map(([key, data]) => {
+                    let category = "normal";
+                    let cleanName = key;
+                    
+                    // Extract category from parentheses if it exists
+                    const match = key.match(/\(([^)]+)\)/);
+                    if (match) {
+                        category = match[1].toLowerCase();
+                        // Remove the parentheses and anything inside them from the display name
+                        cleanName = key.replace(/\([^)]+\)/g, '').trim();
+                    }
+                    
+                    categories.add(category);
+
                     return {
-                        idKey: key,
+                        idKey: cleanName,
+                        category: category,
                         variants: data.IDs || [], 
                         related: data.RelatedIDs || []
                     };
                 });
 
-                renderCards(allCards);
+                // Populate the dropdown with unique categories dynamically
+                const categorySelect = document.getElementById('categoryFilter');
+                Array.from(categories).filter(c => c !== 'normal').sort().forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+                    categorySelect.appendChild(option);
+                });
+
+                filterData(); // Call filterData instead of renderCards to apply the default 'normal' filter immediately
             } catch (error) {
                 console.error("Error loading JSON:", error);
                 const errorDiv = document.getElementById('error-message');
@@ -137,10 +166,14 @@
         // Simple Search Filter
         function filterData() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const selectedCategory = document.getElementById('categoryFilter').value;
 
             const filtered = allCards.filter(card => {
-                return card.idKey.toLowerCase().includes(searchTerm) || 
-                       card.variants.join(' ').toLowerCase().includes(searchTerm);
+                const matchesSearch = card.idKey.toLowerCase().includes(searchTerm) || 
+                                      card.variants.join(' ').toLowerCase().includes(searchTerm);
+                const matchesCategory = selectedCategory === 'all' || card.category === selectedCategory;
+
+                return matchesSearch && matchesCategory;
             });
 
             renderCards(filtered);
