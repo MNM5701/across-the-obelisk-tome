@@ -24,34 +24,52 @@
         .remove-btn:hover { transform: scale(1.1); }
 
         /* Build Metrics Dashboard */
-        .build-metrics { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px; padding: 15px; background: #252525; border-radius: 6px; font-size: 0.9em; border: 1px solid #333; }
-        
+        .build-stats { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px; padding: 15px; background: #222; border-radius: 4px; border: 1px dashed #555; }
+        .stat-block { flex: 1; min-width: 140px; }
+        .stat-title { color: #888; font-size: 0.85em; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #444; padding-bottom: 4px; font-weight: bold; }
+        .stat-value { color: #eee; margin-bottom: 4px; font-size: 0.95em; }
+        .stat-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 5px; }
+        .stat-list li { background: #333; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; border: 1px solid #444; }
+
         /* Top Level Controls */
-        .controls { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; background: #2d2d2d; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        .controls input[type="text"], select.main-select { padding: 10px; border-radius: 4px; border: 1px solid #444; background: #111; color: white; width: 100%; max-width: 400px; font-size: 1em; }
+        .controls { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; background: #2d2d2d; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        input[type="text"], select.main-select { padding: 10px; border-radius: 4px; border: 1px solid #444; background: #111; color: white; width: 100%; max-width: 400px; font-size: 1em; }
+        
+        /* Advanced Sub-Menu */
+        .sub-menu { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; background: #222; padding: 15px; border-radius: 8px; border: 1px solid #333; }
+        .sub-menu.hidden { display: none; }
+        
+        /* Custom Multi-Select Dropdowns */
+        .multi-select { position: relative; min-width: 160px; flex: 1; }
+        .select-box { padding: 10px; background: #111; border: 1px solid #444; border-radius: 4px; cursor: pointer; color: #ccc; font-size: 0.95em; user-select: none; display: flex; justify-content: space-between; align-items: center; }
+        .select-box:after { content: '▼'; font-size: 0.8em; color: #888; }
+        .select-box:hover { border-color: #666; }
+        .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: #2d2d2d; width: 100%; max-height: 250px; overflow-y: auto; border: 1px solid #444; z-index: 100; box-shadow: 0 8px 16px rgba(0,0,0,0.5); border-radius: 0 0 4px 4px; }
+        .dropdown-content.show { display: block; }
+        .dropdown-content label { display: block; padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #333; font-size: 0.9em; text-transform: capitalize; }
+        .dropdown-content label:hover { background: #3d3d3d; }
+        .dropdown-content input { margin-right: 10px; cursor: pointer; }
         
         /* Grid and Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
         .card-container { background: #2d2d2d; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
         .card-title { margin-top: 0; margin-bottom: 15px; font-size: 1.1em; text-transform: capitalize; color: #ccc; }
         
-        .variants { display: flex; gap: 4px; justify-content: center; margin-top: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-        .card-container img.main-img { max-width: 100%; height: auto; border-radius: 4px; }
-        
-        /* Adjusted Variants for 4-across */
+        /* Variant Thumbnails Sizing & Borders */
+        .variants { display: flex; gap: 5px; justify-content: center; margin-top: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .card-container img { max-width: 100%; height: auto; border-radius: 4px; }
         .variant-img { width: 48px; cursor: pointer; transition: transform 0.2s, border 0.2s; border: 2px solid transparent; border-radius: 4px; }
         .variant-img:hover { transform: scale(1.1); }
-        .variant-img.active { border: 2px solid #4ade80 !important; }
+        .variant-img.border-a { border-color: rgba(59, 130, 246, 0.6); } /* faint blue */
+        .variant-img.border-b { border-color: rgba(234, 179, 8, 0.6); } /* faint yellow */
+        .variant-img.border-rare { border-color: rgba(168, 85, 247, 0.6); } /* faint purple */
+        .variant-img.active { border-color: #4ade80 !important; } /* green override when selected */
         
-        /* Color Coded Borders */
-        .border-a { border: 2px solid rgba(59, 130, 246, 0.4); }      /* Faint Blue */
-        .border-b { border: 2px solid rgba(234, 179, 8, 0.4); }       /* Faint Yellow */
-        .border-rare { border: 2px solid rgba(168, 85, 247, 0.4); }   /* Faint Purple */
-        .border-base { border: 2px solid rgba(255, 255, 255, 0.1); }  /* Very Faint White/Grey */
-
         .add-btn { margin-top: auto; padding: 8px; background: #444; border: 1px solid #555; color: #eee; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s; font-weight: bold; }
         .add-btn:hover { background: #4ade80; color: #111; border-color: #4ade80; }
 
+        /* Error States */
+        .error-state { padding: 40px 10px; background: #333; border-radius: 4px; color: #ff6b6b; font-size: 0.9em; display: flex; align-items: center; justify-content: center; flex-direction: column; min-height: 200px; }
         #error-message { display: none; color: #ff6b6b; background: #333; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px solid #ff6b6b; }
     </style>
 </head>
@@ -77,18 +95,28 @@
             <!-- Selected cards inject here -->
         </div>
 
-        <div class="build-metrics" id="buildMetrics" style="display:none;">
-            <div>Total Cards in Build: <strong id="metricTotal" style="color: #4ade80;">0</strong></div>
+        <div id="buildStats" class="build-stats" style="display: none;">
+            <!-- Metrics inject here dynamically -->
         </div>
     </div>
 
     <!-- Primary Search & Category -->
     <div class="controls">
         <input type="text" id="searchInput" placeholder="Search cards by name or ID..." oninput="filterData()">
-        <select id="categoryFilter" class="main-select" onchange="filterData()">
+        <select id="categoryFilter" class="main-select" onchange="toggleSubMenu(); filterData()">
             <option value="all">All Categories</option>
-            <option value="normal" selected>Normal Cards</option>
+            <option value="cards" selected>Cards</option>
         </select>
+    </div>
+
+    <!-- Advanced Spreadsheet Filters -->
+    <div id="advancedFilters" class="sub-menu">
+        <div id="classFilterContainer"></div>
+        <div id="costFilterContainer"></div>
+        <div id="rarityFilterContainer"></div>
+        <div id="typeFilterContainer"></div>
+        <div id="auraFilterContainer"></div>
+        <div id="curseFilterContainer"></div>
     </div>
 
     <div id="error-message"></div>
@@ -99,10 +127,11 @@
 
     <script>
         let allCards = []; 
-        let currentBuild = []; 
+        let currentBuild = []; // Array to store IDs in the deck
+        let globalVariantStats = {}; // Tracks specific stats (cost, auras, types, etc) per variant ID
 
         // ------------------------------------------------------------------
-        // Build Manager Logic
+        // Build Manager Logic (Hybrid Save/Share)
         // ------------------------------------------------------------------
 
         function addCurrentVariantToBuild(baseId) {
@@ -121,28 +150,42 @@
 
         function renderBuild() {
             const grid = document.getElementById('buildGrid');
-            const metricsPanel = document.getElementById('buildMetrics');
+            const statsContainer = document.getElementById('buildStats');
             grid.innerHTML = '';
             
             if(currentBuild.length === 0) {
                 grid.innerHTML = '<div style="color:#666; font-style:italic; padding: 10px;">Select cards to start building...</div>';
-                metricsPanel.style.display = 'none';
+                statsContainer.style.display = 'none';
                 return;
             }
 
-            metricsPanel.style.display = 'flex';
-            document.getElementById('metricTotal').textContent = currentBuild.length;
+            // Sort currentBuild array by Cost (Lowest -> Highest), then Alphabetically
+            currentBuild.sort((a, b) => {
+                let costA = globalVariantStats[a] && globalVariantStats[a].cost !== 'N/A' ? parseInt(globalVariantStats[a].cost) : 999;
+                let costB = globalVariantStats[b] && globalVariantStats[b].cost !== 'N/A' ? parseInt(globalVariantStats[b].cost) : 999;
+                
+                let nameA = a, nameB = b;
+                
+                // Fallback to base card name if needed
+                const baseA = allCards.find(c => c.variants.includes(a));
+                if (baseA) nameA = baseA.idKey; 
+                const baseB = allCards.find(c => c.variants.includes(b));
+                if (baseB) nameB = baseB.idKey;
 
-            // Sort Alphabetically
-            currentBuild.sort((id1, id2) => {
-                let card1 = allCards.find(c => c.variants.includes(id1));
-                let card2 = allCards.find(c => c.variants.includes(id2));
-                let name1 = card1 ? card1.idKey : id1;
-                let name2 = card2 ? card2.idKey : id2;
-                return name1.localeCompare(name2);
+                if (costA !== costB) return costA - costB; // Sort by Cost first
+                return nameA.localeCompare(nameB); // Break ties alphabetically
             });
 
+            // Metrics tracking variables
+            let totalCost = 0;
+            let costCount = 0;
+            let costDistribution = {};
+            let typeDistribution = {};
+            let uniqueAuras = new Set();
+            let uniqueCurses = new Set();
+
             currentBuild.forEach((cardId, index) => {
+                // 1. Render the tiny icon in the grid
                 const div = document.createElement('div');
                 div.className = 'build-item';
                 div.innerHTML = `
@@ -150,7 +193,56 @@
                     <button class="remove-btn" onclick="removeFromBuild(${index})">x</button>
                 `;
                 grid.appendChild(div);
+
+                // 2. Fetch corresponding card data specifically for the exact variant ID
+                const stats = globalVariantStats[cardId];
+                if (stats) {
+                    if (stats.cost !== 'N/A' && !isNaN(stats.cost)) {
+                        const c = parseInt(stats.cost);
+                        totalCost += c;
+                        costCount++;
+                        costDistribution[c] = (costDistribution[c] || 0) + 1;
+                    }
+                    stats.types.forEach(t => {
+                        typeDistribution[t] = (typeDistribution[t] || 0) + 1;
+                    });
+                    stats.auras.forEach(a => uniqueAuras.add(a));
+                    stats.curses.forEach(c => uniqueCurses.add(c));
+                }
             });
+
+            // Calculate and compile metric blocks
+            statsContainer.style.display = 'flex';
+            const avgCost = costCount > 0 ? (totalCost / costCount).toFixed(1) : 0;
+            
+            let costHtml = Object.keys(costDistribution).sort((a,b)=>a-b).map(k => `<li>Cost ${k}: <b>${costDistribution[k]}</b></li>`).join('');
+            let typeHtml = Object.keys(typeDistribution).sort().map(k => `<li>${k}: <b>${typeDistribution[k]}</b></li>`).join('');
+            let aurasHtml = Array.from(uniqueAuras).sort().map(a => `<li>${a}</li>`).join('');
+            let cursesHtml = Array.from(uniqueCurses).sort().map(c => `<li>${c}</li>`).join('');
+
+            statsContainer.innerHTML = `
+                <div class="stat-block">
+                    <div class="stat-title">Metrics</div>
+                    <div class="stat-value">Total Cards: <b>${currentBuild.length}</b></div>
+                    <div class="stat-value">Avg Cost: <b>${avgCost}</b></div>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-title">Cost Curve</div>
+                    <ul class="stat-list">${costHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">N/A</li>'}</ul>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-title">Card Types</div>
+                    <ul class="stat-list">${typeHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">N/A</li>'}</ul>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-title">Auras Applied</div>
+                    <ul class="stat-list">${aurasHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">None</li>'}</ul>
+                </div>
+                <div class="stat-block">
+                    <div class="stat-title">Curses Applied</div>
+                    <ul class="stat-list">${cursesHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">None</li>'}</ul>
+                </div>
+            `;
         }
 
         function saveBuildToLocal() {
@@ -186,19 +278,22 @@
                 currentBuild = [...savedBuilds[name]];
                 document.getElementById('buildName').value = name;
                 renderBuild();
-                document.getElementById('shareLinkContainer').style.display = 'none';
+                document.getElementById('shareLinkContainer').style.display = 'none'; 
             }
         }
 
         function generateShareLink() {
             if (currentBuild.length === 0) { alert("Add some cards to generate a link!"); return; }
+            
             const name = encodeURIComponent(document.getElementById('buildName').value.trim() || 'Untitled');
             const cards = currentBuild.join(',');
+            
             const baseUrl = window.location.origin + window.location.pathname;
             const finalUrl = `${baseUrl}?buildName=${name}&cards=${cards}`;
             
             const container = document.getElementById('shareLinkContainer');
             const input = document.getElementById('shareLinkInput');
+            
             input.value = finalUrl;
             container.style.display = 'block';
             input.select();
@@ -213,16 +308,97 @@
             if (cards) {
                 currentBuild = cards.split(',').filter(c => c);
                 if (name) document.getElementById('buildName').value = decodeURIComponent(name);
+                renderBuild();
+                
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         }
 
         // ------------------------------------------------------------------
-        // Data Parsing & Loading (SAFE BASELINE)
+        // UI & Dropdown Logic
         // ------------------------------------------------------------------
+
+        function toggleSubMenu() {
+            const cat = document.getElementById('categoryFilter').value;
+            const subMenu = document.getElementById('advancedFilters');
+            // Show filters if "cards" or "all" is selected
+            if (cat === 'cards' || cat === 'all') {
+                subMenu.classList.remove('hidden');
+            } else {
+                subMenu.classList.add('hidden');
+            }
+        }
+
+        function toggleDropdown(id, event) {
+            event.stopPropagation();
+            document.querySelectorAll('.dropdown-content').forEach(el => {
+                if(el.id !== id) el.classList.remove('show');
+            });
+            document.getElementById(id).classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown-content') && !event.target.closest('.select-box')) {
+                document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('show'));
+            }
+        });
+
+        function createMultiSelect(containerId, title, optionsList, filterKey) {
+            const container = document.getElementById(containerId);
+            if (!optionsList || optionsList.length === 0) return;
+            
+            let sortedOptions = Array.from(optionsList).filter(o => o);
+            if (title === 'Cost') {
+                sortedOptions.sort((a, b) => parseInt(a) - parseInt(b));
+            } else {
+                sortedOptions.sort();
+            }
+
+            let html = `<div class="multi-select">
+                <div class="select-box" onclick="toggleDropdown('${containerId}-drop', event)">${title}</div>
+                <div class="dropdown-content" id="${containerId}-drop">`;
+            
+            sortedOptions.forEach(opt => {
+                html += `<label><input type="checkbox" value="${opt}" class="${filterKey}-checkbox" onchange="filterData()"> ${opt}</label>`;
+            });
+            
+            html += `</div></div>`;
+            container.innerHTML = html;
+        }
+
+        // ------------------------------------------------------------------
+        // Data Parsing & Loading
+        // ------------------------------------------------------------------
+
+        function parseCSV(text) {
+            const results = [];
+            let current = [];
+            let token = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const c = text[i];
+                if (c === '"') {
+                    if (inQuotes && text[i + 1] === '"') { token += '"'; i++; } 
+                    else { inQuotes = !inQuotes; }
+                } else if (c === ',' && !inQuotes) {
+                    current.push(token.trim()); token = '';
+                } else if ((c === '\n' || c === '\r') && !inQuotes) {
+                    if (c === '\r' && text[i + 1] === '\n') i++;
+                    current.push(token.trim()); token = '';
+                    if (current.length > 0) { results.push(current); current = []; }
+                } else {
+                    token += c;
+                }
+            }
+            if (token || current.length > 0) {
+                current.push(token.trim()); results.push(current);
+            }
+            return results;
+        }
 
         async function loadData() {
             try {
+                // 1. Fetch JSON
                 const response = await fetch('./cards.json'); 
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
@@ -233,14 +409,83 @@
                 try {
                     db = JSON.parse(cleanText);
                 } catch (parseError) {
-                    throw new Error(`Syntax error in cards.json: ${parseError.message}`);
+                    throw new Error(`Syntax error in cards.json: ${parseError.message}.`);
                 }
 
-                const categories = new Set();
-                allCards = []; 
+                // 2. Fetch CSV and build variant-specific stats map
+                let typeHeaders = [], auraHeaders = [], curseHeaders = [];
+                let uniqueClasses = new Set(), uniqueCosts = new Set(), uniqueRarities = new Set();
+                
+                try {
+                    const csvRes = await fetch('./stats.csv');
+                    if (csvRes.ok) {
+                        const csvText = await csvRes.text();
+                        const rows = parseCSV(csvText);
+                        const headers = rows[0].map(h => h.trim());
+                        
+                        // Extract column headers dynamically based on indexes provided
+                        typeHeaders = headers.slice(7, 25).filter(h => h);
+                        auraHeaders = headers.slice(25, 52).filter(h => h);
+                        curseHeaders = headers.slice(52, 77).filter(h => h);
 
-                Object.entries(db.cards).forEach(([key, data]) => {
-                    let category = "normal";
+                        for (let i = 1; i < rows.length; i++) {
+                            const row = rows[i];
+                            if (!row[0]) continue; 
+                            
+                            const rawName = row[0];
+                            // Reconstruct the base string used in JSON IDs
+                            const cleanName = rawName.toLowerCase().replace(/[^a-z0-9]/g, '');
+                            
+                            // Determine the variant suffix
+                            let suffix = '';
+                            if (row[1] && row[1].toUpperCase() === 'TRUE') suffix = 'a';
+                            else if (row[2] && row[2].toUpperCase() === 'TRUE') suffix = 'b';
+                            else if (row[3] && row[3].toUpperCase() === 'TRUE') suffix = 'rare';
+                            
+                            let variantId = cleanName + suffix;
+                            
+                            // Extract true boolean flags for this exact variant
+                            const cardTypes = [];
+                            for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardTypes.push(headers[j]);
+                            
+                            const cardAuras = [];
+                            for(let j=25; j<=51; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardAuras.push(headers[j]);
+                            
+                            const cardCurses = [];
+                            for(let j=52; j<=76; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardCurses.push(headers[j]);
+
+                            // Store everything mapped strictly to the Variant ID, not just the base card name
+                            globalVariantStats[variantId] = {
+                                heroClass: row[4] || 'Other',
+                                cost: row[5] !== undefined && row[5] !== '' ? row[5] : 'N/A',
+                                rarity: row[6] || 'Unknown',
+                                types: cardTypes,
+                                auras: cardAuras,
+                                curses: cardCurses
+                            };
+
+                            if(row[4]) uniqueClasses.add(row[4]);
+                            if(row[5] !== undefined && row[5] !== '') uniqueCosts.add(row[5]);
+                            if(row[6]) uniqueRarities.add(row[6]);
+                        }
+                    }
+                } catch(e) {
+                    console.log("stats.csv not found or could not be parsed. Filters will be empty.");
+                }
+
+                // 3. Build UI Multi-Select Dropdowns
+                createMultiSelect('classFilterContainer', 'Class', uniqueClasses, 'class');
+                createMultiSelect('costFilterContainer', 'Cost', uniqueCosts, 'cost');
+                createMultiSelect('rarityFilterContainer', 'Rarity', uniqueRarities, 'rarity');
+                createMultiSelect('typeFilterContainer', 'Card Type', typeHeaders, 'type');
+                createMultiSelect('auraFilterContainer', 'Auras', auraHeaders, 'aura');
+                createMultiSelect('curseFilterContainer', 'Curses', curseHeaders, 'curse');
+
+                const categories = new Set();
+
+                // Build main card logic from JSON.
+                allCards = Object.entries(db.cards).map(([key, data]) => {
+                    let category = "cards"; // Default base category
                     let cleanName = key;
                     
                     const match = key.match(/\(([^)]+)\)/);
@@ -248,22 +493,22 @@
                         category = match[1].toLowerCase();
                         cleanName = key.replace(/\([^)]+\)/g, '').trim();
                     }
-                    
                     categories.add(category);
                     
-                    allCards.push({
+                    return {
                         idKey: cleanName,
                         category: category,
                         variants: data.IDs || [], 
                         related: data.RelatedIDs || []
-                    });
+                    };
                 });
                 
-                // Alphabetical Sort
+                // Sort main menu alphabetically!
                 allCards.sort((a, b) => a.idKey.localeCompare(b.idKey));
 
+                // Populate Primary Category Dropdown
                 const categorySelect = document.getElementById('categoryFilter');
-                Array.from(categories).filter(c => c !== 'normal').sort().forEach(cat => {
+                Array.from(categories).filter(c => c !== 'cards').sort().forEach(cat => {
                     const option = document.createElement('option');
                     option.value = cat;
                     option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
@@ -272,10 +517,11 @@
 
                 updateSavedBuildsDropdown();
                 checkUrlForBuild();
-                renderBuild();
+                renderBuild(); // Compute metrics immediately if loaded from URL
                 filterData(); 
 
             } catch (error) {
+                console.error("Error loading data:", error);
                 const errorDiv = document.getElementById('error-message');
                 errorDiv.style.display = 'block';
                 errorDiv.innerHTML = `<h3>Failed to load application data</h3><p style="font-size: 0.9em; color: #ccc;">${error.message}</p>`;
@@ -285,13 +531,6 @@
         // ------------------------------------------------------------------
         // Rendering & Filtering
         // ------------------------------------------------------------------
-
-        function getBorderClass(variantId, baseId) {
-            if (variantId.endsWith('rare')) return 'border-rare';
-            if (variantId.endsWith('b') && variantId !== baseId + 'b' + 'b') return 'border-b'; 
-            if (variantId.endsWith('a') && variantId !== baseId + 'a' + 'a') return 'border-a';
-            return 'border-base';
-        }
 
         function handleImageError(img) {
             if (img.classList.contains('variant-img')) {
@@ -316,19 +555,26 @@
                 cardDiv.className = 'card-container';
                 
                 let htmlStr = `<h3 class="card-title">${card.idKey}</h3>`;
-                htmlStr += `<img src="./card_images/${baseId}_result.png" class="main-img" id="main-img-${baseId}" alt="${baseId}" data-id="${baseId}" onerror="handleImageError(this)">`;
+                
+                htmlStr += `<img src="./card_images/${baseId}_result.png" id="main-img-${baseId}" alt="${baseId}" data-id="${baseId}" onerror="handleImageError(this)">`;
                 
                 if (upgrades.length > 0) {
                     htmlStr += `<div class="variants">`;
-                    htmlStr += `<img class="variant-img border-base active" id="thumb-${baseId}-${baseId}" src="./card_images/${baseId}_result.png" onclick="swapImage('${baseId}', '${baseId}')" onerror="handleImageError(this)">`;
+                    htmlStr += `<img class="variant-img active" id="thumb-${baseId}-${baseId}" src="./card_images/${baseId}_result.png" onclick="swapImage('${baseId}', '${baseId}')" onerror="handleImageError(this)">`;
                     upgrades.forEach(upgradeId => {
-                        let borderCls = getBorderClass(upgradeId, baseId);
-                        htmlStr += `<img class="variant-img ${borderCls}" id="thumb-${baseId}-${upgradeId}" src="./card_images/${upgradeId}_result.png" onclick="swapImage('${baseId}', '${upgradeId}')" onerror="handleImageError(this)">`;
+                        // Apply conditional colored borders to variants
+                        let borderClass = '';
+                        if (upgradeId.endsWith('rare')) borderClass = 'border-rare';
+                        else if (upgradeId.endsWith('b')) borderClass = 'border-b';
+                        else if (upgradeId.endsWith('a')) borderClass = 'border-a';
+
+                        htmlStr += `<img class="variant-img ${borderClass}" id="thumb-${baseId}-${upgradeId}" src="./card_images/${upgradeId}_result.png" onclick="swapImage('${baseId}', '${upgradeId}')" onerror="handleImageError(this)">`;
                     });
                     htmlStr += `</div>`;
                 }
 
                 htmlStr += `<button class="add-btn" onclick="addCurrentVariantToBuild('${baseId}')">+ Add to Build</button>`;
+
                 cardDiv.innerHTML = htmlStr;
                 grid.appendChild(cardDiv);
             });
@@ -344,7 +590,6 @@
                const newImg = document.createElement('img');
                newImg.src = `./card_images/${newId}_result.png`;
                newImg.id = `main-img-${baseId}`;
-               newImg.className = 'main-img';
                newImg.setAttribute('data-id', newId);
                newImg.onerror = function() { handleImageError(this) };
                mainImgElement.parentNode.replaceChild(newImg, mainImgElement);
@@ -359,13 +604,50 @@
         function filterData() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const selectedCategory = document.getElementById('categoryFilter').value;
+            
+            const getChecked = (className) => Array.from(document.querySelectorAll(`.${className}:checked`)).map(cb => cb.value);
+            
+            const selectedClasses = getChecked('class-checkbox');
+            const selectedCosts = getChecked('cost-checkbox');
+            const selectedRarities = getChecked('rarity-checkbox');
+            const selectedTypes = getChecked('type-checkbox');
+            const selectedAuras = getChecked('aura-checkbox');
+            const selectedCurses = getChecked('curse-checkbox');
 
             const filtered = allCards.filter(card => {
+                // 1. Text Search matching
                 const matchesSearch = card.idKey.toLowerCase().includes(searchTerm) || 
                                       card.variants.join(' ').toLowerCase().includes(searchTerm);
                 if (!matchesSearch) return false;
+                
+                // 2. Category matching
                 if (selectedCategory !== 'all' && card.category !== selectedCategory) return false;
 
+                // 3. Advanced Filtering for "cards" (and "all" if filters are applied)
+                if (selectedCategory === 'cards' || selectedCategory === 'all') {
+                    
+                    // To show a base card, AT LEAST ONE of its variants must pass all active filters
+                    const hasMatchingVariant = card.variants.some(variantId => {
+                        // Fallback object in case JSON variant is missing from CSV
+                        const stats = globalVariantStats[variantId] || { 
+                            heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', types: [], auras: [], curses: [] 
+                        };
+
+                        if (selectedClasses.length > 0 && !selectedClasses.includes(stats.heroClass)) return false;
+                        if (selectedCosts.length > 0 && !selectedCosts.includes(stats.cost)) return false;
+                        if (selectedRarities.length > 0 && !selectedRarities.includes(stats.rarity)) return false;
+                        
+                        // Array overlap matching
+                        if (selectedTypes.length > 0 && !selectedTypes.some(t => stats.types.includes(t))) return false;
+                        if (selectedAuras.length > 0 && !selectedAuras.some(a => stats.auras.includes(a))) return false;
+                        if (selectedCurses.length > 0 && !selectedCurses.some(c => stats.curses.includes(c))) return false;
+
+                        return true; // This specific variant passed all filters!
+                    });
+
+                    // If no variant within this card's family passed the filter, hide the whole card
+                    if (!hasMatchingVariant) return false;
+                }
                 return true;
             });
 
