@@ -292,12 +292,13 @@
                     grid.appendChild(div);
 
                     let d = getVariantDetails(cardId);
-                    if (d) {
+                    if (d && d.card) {
                         totalCost += d.cost;
                         costCurve[d.cost] = (costCurve[d.cost] || 0) + 1;
-                        d.card.types.forEach(t => { typeCounts[t] = (typeCounts[t] || 0) + 1; });
-                        d.card.auras.forEach(a => allEffects.add(a));
-                        d.card.curses.forEach(c => allEffects.add(c));
+                        // Null-check protections for legacy saves that might have had items mixed into the deck
+                        if (d.card.types) d.card.types.forEach(t => { typeCounts[t] = (typeCounts[t] || 0) + 1; });
+                        if (d.card.auras) d.card.auras.forEach(a => allEffects.add(a));
+                        if (d.card.curses) d.card.curses.forEach(c => allEffects.add(c));
                     }
                 });
 
@@ -549,10 +550,12 @@
         function updateAvailableOptions(validCards, filterPrefix, attributeArrayName) {
             const availableOptions = new Set();
             validCards.forEach(c => {
-                if(Array.isArray(c[attributeArrayName])) {
-                    c[attributeArrayName].forEach(attr => availableOptions.add(attr));
-                } else if(c[attributeArrayName]) {
-                    availableOptions.add(c[attributeArrayName]);
+                if(c[attributeArrayName] !== undefined) {
+                    if(Array.isArray(c[attributeArrayName])) {
+                        c[attributeArrayName].forEach(attr => availableOptions.add(attr));
+                    } else if(c[attributeArrayName]) {
+                        availableOptions.add(c[attributeArrayName]);
+                    }
                 }
             });
 
@@ -786,6 +789,7 @@
         // ------------------------------------------------------------------
         // Rendering 
         // ------------------------------------------------------------------
+        
         function handleImageError(img) {
             if (img.classList.contains('variant-img')) img.style.display = 'none';
             else img.outerHTML = `<div class="error-state" id="${img.id}">Image Not Found<br><small style="margin-top: 10px; color: #aaa;">${img.getAttribute('data-id')}_result.png</small></div>`;
