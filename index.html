@@ -151,6 +151,48 @@
             });
             document.getElementById(id).classList.toggle('show');
         }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown-content') && !event.target.closest('.select-box')) {
+                document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('show'));
+            }
+        });
+
+        function createMultiSelect(containerId, title, optionsList, filterKey) {
+            const container = document.getElementById(containerId);
+            if (!optionsList || optionsList.length === 0 || !container) return;
+            
+            let sortedOptions = Array.from(optionsList).filter(o => o);
+            if (title === 'Cost') {
+                sortedOptions.sort((a, b) => parseInt(a) - parseInt(b));
+            } else {
+                sortedOptions.sort();
+            }
+
+            let html = `<div class="multi-select">
+                <div class="select-box" onclick="toggleDropdown('${containerId}-drop', event)">${title}</div>
+                <div class="dropdown-content" id="${containerId}-drop">`;
+            
+            sortedOptions.forEach(opt => {
+                html += `<label><input type="checkbox" value="${opt}" class="${filterKey}-checkbox" onchange="filterData()"> ${opt}</label>`;
+            });
+            
+            html += `</div></div>`;
+            container.innerHTML = html;
+        }
+
+        // ------------------------------------------------------------------
+        // Build Manager Logic
+        // ------------------------------------------------------------------
+
+        function addCurrentVariantToBuild(baseId) {
+            const img = document.getElementById(`main-img-${baseId}`);
+            if (img) {
+                const variantId = img.getAttribute('data-id');
+                currentBuild.push(variantId);
+                renderBuild();
+            }
         }
 
         function removeFromBuild(index) {
@@ -165,14 +207,13 @@
             
             if(currentBuild.length === 0) {
                 grid.innerHTML = '<div style="color:#666; font-style:italic; padding: 10px;">Select cards to start building...</div>';
-                metricsPanel.style.display = 'none';
+                if(metricsPanel) metricsPanel.style.display = 'none';
                 return;
             }
 
-            metricsPanel.style.display = 'flex';
-            document.getElementById('metricTotal').textContent = currentBuild.length;
+            if(metricsPanel) metricsPanel.style.display = 'flex';
+            if(document.getElementById('metricTotal')) document.getElementById('metricTotal').textContent = currentBuild.length;
 
-            // Sort Alphabetically
             currentBuild.sort((id1, id2) => {
                 let card1 = allCards.find(c => c.variants.includes(id1));
                 let card2 = allCards.find(c => c.variants.includes(id2));
@@ -257,8 +298,32 @@
         }
 
         // ------------------------------------------------------------------
-        // Data Parsing & Loading (SAFE BASELINE)
+        // Data Parsing & Loading
         // ------------------------------------------------------------------
+
+        function parseCSV(text) {
+            const results = [];
+            let current = [];
+            let token = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                const c = text[i];
+                if (c === '"') {
+                    if (inQuotes && text[i + 1] === '"') { token += '"'; i++; } 
+                    else { inQuotes = !inQuotes; }
+                } else if (c === ',' && !inQuotes) {
+                    current.push(token.trim()); token = '';
+                } else if ((c === '\n' || c === '\r') && !inQuotes) {
+                    if (c === '\r' && text[i + 1] === '\n') i++;
+                    current.push(token.trim()); token = '';
+                    if (current.length > 0) { results.push(current); current = []; }
+                } else {
+                    token += c;
+                }
+            }
+            if (token || current.length > 0) { current.push(token.trim()); results.push(current); }
+            return results;
+        }
 
         async function loadData() {
             try {
@@ -272,7 +337,6 @@
                 let db;
                 try {
                     db = JSON.parse(cleanText);
-                    console.log("JSON successfully parsed.");
                 } catch (parseError) {
                     throw new Error(`Syntax error in cards.json: ${parseError.message}`);
                 }
@@ -315,15 +379,6 @@
                                 if(row[6]) uniqueRarities.add(row[6]);
                             }
 
-                            let vType = 'base';
-                            if (row[1] && row[1].toUpperCase() === 'TRUE') vType = 'a';
-                            else if (row[2] && row[2].toUpperCase() === 'TRUE') vType = 'b';
-                            else if (row[3] && row[3].toUpperCase() === 'TRUE') vType = 'rare';
-                            
-                            if (row[5] !== undefined && row[5] !== '') {
-                                statsMap[cleanName].vCosts[vType] = row[5];
-                            }
-
                             for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') statsMap[cleanName].types.add(headers[j]);
                             for(let j=25; j<=51; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') statsMap[cleanName].auras.add(headers[j]);
                             for(let j=52; j<=76; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') statsMap[cleanName].curses.add(headers[j]);
@@ -344,11 +399,11 @@
                         const itemRows = parseCSV(itemCsvText);
                         const itemHeaders = itemRows[0].map(h => h.trim());
 
-                        itemBasicsHeaders = itemHeaders.slice(4, 12).filter(h => h); // Cols E-L (Index 4-11)
-                        itemDamageHeaders = itemHeaders.slice(12, 21).filter(h => h); // Cols M-U (Index 12-20)
-                        itemResistHeaders = itemHeaders.slice(21, 30).filter(h => h); // Cols V-AD (Index 21-29)
-                        itemAuraHeaders = itemHeaders.slice(30, 59).filter(h => h); // Cols AE-BG (Index 30-58)
-                        itemCurseHeaders = itemHeaders.slice(59, 86).filter(h => h); // Cols BH-CH (Index 59-85)
+                        itemBasicsHeaders = itemHeaders.slice(4, 12).filter(h => h); 
+                        itemDamageHeaders = itemHeaders.slice(12, 21).filter(h => h); 
+                        itemResistHeaders = itemHeaders.slice(21, 30).filter(h => h); 
+                        itemAuraHeaders = itemHeaders.slice(30, 59).filter(h => h); 
+                        itemCurseHeaders = itemHeaders.slice(59, 86).filter(h => h); 
 
                         for (let i = 1; i < itemRows.length; i++) {
                             const row = itemRows[i];
@@ -450,7 +505,6 @@
                     });
                 });
                 
-                console.log(`Successfully processed ${allCards.length} cards. Sorting...`);
                 // Alphabetical Sort
                 allCards.sort((a, b) => a.idKey.localeCompare(b.idKey));
 
@@ -466,12 +520,10 @@
                 updateSavedBuildsDropdown();
                 checkUrlForBuild();
                 renderBuild();
-                
-                console.log("Triggering initial filter...");
                 filterData(); 
 
             } catch (error) {
-                console.error("FATAL ERROR IN LOADDATA:", error);
+                console.error("FATAL ERROR:", error);
                 const errorDiv = document.getElementById('error-message');
                 errorDiv.style.display = 'block';
                 errorDiv.innerHTML = `<h3>Failed to load application data</h3><p style="font-size: 0.9em; color: #ccc;">${error.message}</p>`;
@@ -481,8 +533,77 @@
         // ------------------------------------------------------------------
         // Rendering & Filtering
         // ------------------------------------------------------------------
-        // Master Filter Engine
-        // ------------------------------------------------------------------
+
+        function getBorderClass(variantId, baseId) {
+            if (variantId.endsWith('rare')) return 'border-rare';
+            if (variantId.endsWith('b') && variantId !== baseId + 'b' + 'b') return 'border-b';
+            if (variantId.endsWith('a') && variantId !== baseId + 'a' + 'a') return 'border-a';
+            return 'border-base';
+        }
+
+        function handleImageError(img) {
+            if (img.classList.contains('variant-img')) {
+                img.style.display = 'none';
+            } else {
+                const missingId = img.getAttribute('data-id');
+                img.outerHTML = `<div class="error-state" id="${img.id}">Image Not Found<br><small style="margin-top: 10px; color: #aaa;">${missingId}_result.png</small></div>`;
+            }
+        }
+
+        function renderCards(cardsToRender) {
+            const grid = document.getElementById('cardGrid');
+            grid.innerHTML = ''; 
+
+            cardsToRender.forEach(card => {
+                if (card.variants.length === 0) return;
+
+                const baseId = card.variants[0]; 
+                const upgrades = card.variants.slice(1); 
+
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card-container';
+                
+                let htmlStr = `<h3 class="card-title">${card.idKey}</h3>`;
+                htmlStr += `<img src="./card_images/${baseId}_result.png" class="main-img" id="main-img-${baseId}" alt="${baseId}" data-id="${baseId}" onerror="handleImageError(this)">`;
+                
+                if (upgrades.length > 0) {
+                    htmlStr += `<div class="variants">`;
+                    htmlStr += `<img class="variant-img border-base active" id="thumb-${baseId}-${baseId}" src="./card_images/${baseId}_result.png" onclick="swapImage('${baseId}', '${baseId}')" onerror="handleImageError(this)">`;
+                    upgrades.forEach(upgradeId => {
+                        let borderCls = getBorderClass(upgradeId, baseId);
+                        htmlStr += `<img class="variant-img ${borderCls}" id="thumb-${baseId}-${upgradeId}" src="./card_images/${upgradeId}_result.png" onclick="swapImage('${baseId}', '${upgradeId}')" onerror="handleImageError(this)">`;
+                    });
+                    htmlStr += `</div>`;
+                }
+
+                htmlStr += `<button class="add-btn" onclick="addCurrentVariantToBuild('${baseId}')">+ Add to Build</button>`;
+
+                cardDiv.innerHTML = htmlStr;
+                grid.appendChild(cardDiv);
+            });
+        }
+
+        function swapImage(baseId, newId) {
+            const mainImgElement = document.getElementById(`main-img-${baseId}`);
+            
+            if(mainImgElement.tagName === 'IMG') {
+               mainImgElement.src = `./card_images/${newId}_result.png`;
+               mainImgElement.setAttribute('data-id', newId);
+            } else {
+               const newImg = document.createElement('img');
+               newImg.src = `./card_images/${newId}_result.png`;
+               newImg.id = `main-img-${baseId}`;
+               newImg.className = 'main-img';
+               newImg.setAttribute('data-id', newId);
+               newImg.onerror = function() { handleImageError(this) };
+               mainImgElement.parentNode.replaceChild(newImg, mainImgElement);
+            }
+            
+            const variantsContainer = document.getElementById(`thumb-${baseId}-${newId}`).parentElement;
+            const thumbs = variantsContainer.querySelectorAll('.variant-img');
+            thumbs.forEach(t => t.classList.remove('active'));
+            document.getElementById(`thumb-${baseId}-${newId}`).classList.add('active');
+        }
 
         function filterData() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
@@ -517,7 +638,6 @@
                 if (selectedCategory === 'normal') {
                     if (selectedClasses.length > 0 && !selectedClasses.includes(card.heroClass)) return false;
                     
-                    // Cost string parsing
                     if (selectedCosts.length > 0) {
                         let matchCost = false;
                         for (let c of selectedCosts) {
