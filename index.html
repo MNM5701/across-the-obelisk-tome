@@ -348,7 +348,6 @@
             });
         }
 
-        // Local Storage & Link Gen (Updated to include items)
         function saveBuildToLocal() {
             const name = document.getElementById('buildName').value.trim();
             if (!name) { alert("Please name your build before saving."); return; }
@@ -533,9 +532,6 @@
             container.innerHTML = html;
         }
 
-        // ------------------------------------------------------------------
-        // Dynamic Filter Logic (AND/OR, Highlighting, Gray-Out)
-        // ------------------------------------------------------------------
         function getChecked(className) {
             return Array.from(document.querySelectorAll(`.${className}:checked`)).map(cb => cb.value);
         }
@@ -550,7 +546,6 @@
             });
         }
 
-        // A function to disable dead-end checkboxes
         function updateAvailableOptions(validCards, filterPrefix, attributeArrayName) {
             const availableOptions = new Set();
             validCards.forEach(c => {
@@ -852,9 +847,6 @@
             document.getElementById(`thumb-${baseId}-${newId}`).classList.add('active');
         }
 
-        // ------------------------------------------------------------------
-        // Filter Execution
-        // ------------------------------------------------------------------
         function filterData() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const selectedCategory = document.getElementById('categoryFilter').value;
