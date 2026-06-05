@@ -9,53 +9,68 @@
         
         /* Build Manager / Deck Builder */
         .build-manager { background: #1a1a1a; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #444; box-shadow: 0 4px 6px rgba(0,0,0,0.4); }
-        .build-header { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .build-header { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+        .build-header-left { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; flex: 1; }
         .build-header input[type="text"] { padding: 8px; border-radius: 4px; border: 1px solid #555; background: #111; color: white; flex: 1; min-width: 200px; }
         .build-header select { padding: 8px; border-radius: 4px; border: 1px solid #555; background: #111; color: white; }
+        
         .btn-green { padding: 8px 15px; cursor: pointer; background: #4ade80; color: #111; border: none; border-radius: 4px; font-weight: bold; transition: background 0.2s; }
         .btn-green:hover { background: #22c55e; }
         .btn-blue { padding: 8px 15px; cursor: pointer; background: #3b82f6; color: white; border: none; border-radius: 4px; font-weight: bold; transition: background 0.2s; }
         .btn-blue:hover { background: #2563eb; }
+        .btn-toggle { padding: 8px 12px; cursor: pointer; background: #444; color: #eee; border: 1px solid #666; border-radius: 4px; transition: background 0.2s; }
+        .btn-toggle:hover { background: #555; }
+
+        #buildContent { margin-top: 15px; transition: all 0.3s ease; }
+        #buildContent.collapsed { display: none; }
         
-        .build-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; min-height: 80px; padding: 10px; background: #222; border-radius: 4px; border: 1px dashed #555; }
+        .build-grid { display: flex; gap: 10px; flex-wrap: wrap; min-height: 80px; padding: 10px; background: #222; border-radius: 4px; border: 1px dashed #555; margin-bottom: 15px; }
         .build-item { position: relative; width: 65px; }
         .build-item img { width: 100%; border-radius: 4px; border: 1px solid #666; }
         .remove-btn { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; line-height: 18px; text-align: center; cursor: pointer; border: none; padding: 0; font-weight: bold; }
         .remove-btn:hover { transform: scale(1.1); }
 
         /* Build Metrics Dashboard */
-        .build-metrics { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px; padding: 15px; background: #252525; border-radius: 6px; font-size: 0.9em; border: 1px solid #333; }
+        .build-metrics { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 15px; padding: 15px; background: #252525; border-radius: 6px; font-size: 0.9em; border: 1px solid #333; }
         .metric-col { flex: 1; min-width: 150px; }
         .metric-col h4 { margin: 0 0 8px 0; color: #4ade80; border-bottom: 1px solid #444; padding-bottom: 4px; }
         .metric-list { margin: 0; padding: 0; list-style: none; color: #ccc; }
         .metric-list li { margin-bottom: 3px; display: flex; justify-content: space-between; }
         .badge-container { display: flex; flex-wrap: wrap; gap: 4px; }
         .badge { background: #333; border: 1px solid #555; padding: 2px 6px; border-radius: 4px; font-size: 0.85em; }
-        
+
+        /* Equipment Slots */
+        .equipment-grid { display: flex; gap: 15px; justify-content: space-around; padding: 15px; background: #222; border-radius: 6px; border: 1px solid #333; }
+        .equip-slot-container { display: flex; flex-direction: column; align-items: center; width: 80px; }
+        .equip-label { font-size: 0.8em; color: #888; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .equip-slot { width: 65px; height: 85px; border: 1px dashed #555; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; background: #1a1a1a; }
+        .equip-slot img { width: 100%; height: 100%; object-fit: contain; border-radius: 4px; }
+        .equip-empty-text { color: #555; font-size: 0.8em; }
+
         /* Top Level Controls */
-        .controls { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; background: #2d2d2d; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); align-items: center; }
+        .controls { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; background: #2d2d2d; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); align-items: center;}
         .controls input[type="text"], select.main-select { padding: 10px; border-radius: 4px; border: 1px solid #444; background: #111; color: white; width: 100%; max-width: 400px; font-size: 1em; }
-        
-        /* Advanced Sub-Menu & Dropdowns */
+        .btn-reset { padding: 10px 15px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.2s;}
+        .btn-reset:hover { background: #2563eb; }
+
+        /* Advanced Sub-Menu */
         .sub-menu { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; background: #222; padding: 15px; border-radius: 8px; border: 1px solid #333; }
-        .hidden { display: none !important; }
+        .sub-menu.hidden { display: none !important; }
         
         /* Custom Multi-Select Dropdowns */
-        .multi-select { position: relative; min-width: 160px; flex: 1; }
-        .select-box { padding: 10px; background: #111; border: 1px solid #444; border-radius: 4px; cursor: pointer; color: #ccc; font-size: 0.95em; user-select: none; display: flex; justify-content: space-between; align-items: center; transition: border 0.2s, color 0.2s; }
+        .multi-select { position: relative; min-width: 140px; flex: 1; }
+        .select-box { padding: 10px; background: #111; border: 1px solid #444; border-radius: 4px; cursor: pointer; color: #ccc; font-size: 0.95em; user-select: none; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s; }
         .select-box:after { content: '▼'; font-size: 0.8em; color: #888; }
         .select-box:hover { border-color: #666; }
-        .select-box.has-selections { border-color: #4ade80 !important; color: #4ade80 !important; font-weight: bold; }
+        .select-box.has-selection { border-color: #4ade80; color: #4ade80; }
         
         .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: #2d2d2d; width: 100%; max-height: 250px; overflow-y: auto; border: 1px solid #444; z-index: 100; box-shadow: 0 8px 16px rgba(0,0,0,0.5); border-radius: 0 0 4px 4px; }
         .dropdown-content.show { display: block; }
-        .dropdown-content label { display: block; padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #333; font-size: 0.9em; text-transform: capitalize; }
+        .dropdown-content label { display: block; padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #333; font-size: 0.9em; text-transform: capitalize; color: #ccc; transition: background 0.2s, color 0.2s; }
         .dropdown-content label:hover { background: #3d3d3d; }
+        .dropdown-content label.disabled { color: #555; text-decoration: line-through; cursor: not-allowed; }
         .dropdown-content input { margin-right: 10px; cursor: pointer; }
-        
-        /* Disabled Dropdown Options */
-        .disabled-option { color: #555 !important; text-decoration: line-through; cursor: not-allowed !important; }
-        .disabled-option input { cursor: not-allowed; opacity: 0.5; }
+        .dropdown-content input:disabled { cursor: not-allowed; }
         
         /* Grid and Cards */
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
@@ -65,35 +80,36 @@
         .variants { display: flex; gap: 4px; justify-content: center; margin-top: 15px; flex-wrap: wrap; margin-bottom: 15px; }
         .card-container img.main-img { max-width: 100%; height: auto; border-radius: 4px; }
         
-        /* Adjusted Variants for 4-across */
         .variant-img { width: 48px; cursor: pointer; transition: transform 0.2s, border 0.2s; border: 2px solid transparent; border-radius: 4px; }
         .variant-img:hover { transform: scale(1.1); }
         .variant-img.active { border: 2px solid #4ade80 !important; }
         
-        /* Color Coded Borders */
-        .border-a { border: 2px solid rgba(59, 130, 246, 0.4); }      /* Faint Blue */
-        .border-b { border: 2px solid rgba(234, 179, 8, 0.4); }       /* Faint Yellow */
-        .border-rare { border: 2px solid rgba(168, 85, 247, 0.4); }   /* Faint Purple */
-        .border-base { border: 2px solid rgba(255, 255, 255, 0.1); }  /* Very Faint White/Grey */
+        .border-a { border: 2px solid rgba(59, 130, 246, 0.4); }      
+        .border-b { border: 2px solid rgba(234, 179, 8, 0.4); }       
+        .border-rare { border: 2px solid rgba(168, 85, 247, 0.4); }   
+        .border-base { border: 2px solid rgba(255, 255, 255, 0.1); }  
 
         .add-btn { margin-top: auto; padding: 8px; background: #444; border: 1px solid #555; color: #eee; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s; font-weight: bold; }
         .add-btn:hover { background: #4ade80; color: #111; border-color: #4ade80; }
 
-        /* Error States */
         .error-state { padding: 40px 10px; background: #333; border-radius: 4px; color: #ff6b6b; font-size: 0.9em; display: flex; align-items: center; justify-content: center; flex-direction: column; min-height: 200px; }
         #error-message { display: none; color: #ff6b6b; background: #333; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px solid #ff6b6b; }
     </style>
 </head>
 <body>
 
+    <!-- Build Manager Area -->
     <div class="build-manager" id="buildManager">
         <div class="build-header">
-            <input type="text" id="buildName" placeholder="Name your build...">
-            <button class="btn-green" onclick="saveBuildToLocal()">Save to Computer</button>
-            <button class="btn-blue" onclick="generateShareLink()">Generate Link</button>
-            <select id="savedBuildsDropdown" onchange="loadBuildFromLocal(this.value)">
-                <option value="">-- Load Saved Build --</option>
-            </select>
+            <div class="build-header-left">
+                <input type="text" id="buildName" placeholder="Name your build...">
+                <button class="btn-green" onclick="saveBuildToLocal()">Save to Computer</button>
+                <button class="btn-blue" onclick="generateShareLink()">Generate Link</button>
+                <select id="savedBuildsDropdown" onchange="loadBuildFromLocal(this.value)">
+                    <option value="">-- Load Saved Build --</option>
+                </select>
+            </div>
+            <button class="btn-toggle" onclick="toggleBuildContent()">▼ Collapse</button>
         </div>
         
         <div id="shareLinkContainer" style="display:none; margin-top: 15px;">
@@ -101,30 +117,36 @@
             <small style="color: #aaa; display: block; margin-top: 5px;">Link copied to clipboard! Share this URL to send your build.</small>
         </div>
 
-        <div class="build-grid" id="buildGrid">
-            <!-- Selected cards inject here -->
-        </div>
+        <div id="buildContent">
+            <!-- Deck Grid -->
+            <div class="build-grid" id="buildGrid"></div>
 
-        <!-- Metrics Dashboard -->
-        <div class="build-metrics" id="buildMetrics" style="display:none;">
-            <div class="metric-col">
-                <h4>Stats</h4>
-                <ul class="metric-list">
-                    <li><span>Total Cards:</span> <strong id="metricTotal">0</strong></li>
-                    <li><span>Avg Cost:</span> <strong id="metricAvg">0.0</strong></li>
-                </ul>
+            <!-- Metrics Dashboard -->
+            <div class="build-metrics" id="buildMetrics" style="display:none;">
+                <div class="metric-col">
+                    <h4>Stats</h4>
+                    <ul class="metric-list">
+                        <li><span>Total Cards:</span> <strong id="metricTotal">0</strong></li>
+                        <li><span>Avg Cost:</span> <strong id="metricAvg">0.0</strong></li>
+                    </ul>
+                </div>
+                <div class="metric-col">
+                    <h4>Cost Curve</h4>
+                    <ul class="metric-list" id="metricCurve"></ul>
+                </div>
+                <div class="metric-col">
+                    <h4>Types</h4>
+                    <ul class="metric-list" id="metricTypes"></ul>
+                </div>
+                <div class="metric-col" style="flex: 2;">
+                    <h4>Auras & Curses</h4>
+                    <div class="badge-container" id="metricEffects"></div>
+                </div>
             </div>
-            <div class="metric-col">
-                <h4>Cost Curve</h4>
-                <ul class="metric-list" id="metricCurve"></ul>
-            </div>
-            <div class="metric-col">
-                <h4>Types</h4>
-                <ul class="metric-list" id="metricTypes"></ul>
-            </div>
-            <div class="metric-col" style="flex: 2;">
-                <h4>Auras & Curses</h4>
-                <div class="badge-container" id="metricEffects"></div>
+
+            <!-- Equipment Grid -->
+            <div class="equipment-grid" id="equipmentGrid">
+                <!-- Slots injected via JS -->
             </div>
         </div>
     </div>
@@ -132,16 +154,16 @@
     <!-- Primary Search & Category -->
     <div class="controls">
         <input type="text" id="searchInput" placeholder="Search cards by name or ID..." oninput="filterData()">
-        <select id="categoryFilter" class="main-select" onchange="toggleSubMenu(); filterData()" style="max-width: 200px;">
+        <select id="categoryFilter" class="main-select" onchange="toggleSubMenu(); filterData()">
             <option value="all">All Categories</option>
             <option value="normal" selected>Normal Cards</option>
-            <option value="item">Items</option>
+            <option value="items">Items</option>
         </select>
-        <button class="btn-blue" onclick="resetFilters()" style="padding: 10px 15px;">Reset Filters</button>
+        <button class="btn-reset" onclick="resetFilters()">Reset Filters</button>
     </div>
 
     <!-- Advanced Spreadsheet Filters (Cards) -->
-    <div id="advancedFilters" class="sub-menu">
+    <div id="cardFilters" class="sub-menu">
         <div id="classFilterContainer"></div>
         <div id="costFilterContainer"></div>
         <div id="rarityFilterContainer"></div>
@@ -169,86 +191,23 @@
 
     <script>
         let allCards = []; 
-        let currentBuild = []; 
+        let currentBuild = []; // Deck cards
+        let currentItems = { Weapon: null, Armor: null, Ring: null, Trinket: null, Pet: null };
 
         // ------------------------------------------------------------------
-        // UI & Dropdown Logic
+        // Build Manager & Equipment Logic
         // ------------------------------------------------------------------
 
-        function toggleSubMenu() {
-            const cat = document.getElementById('categoryFilter').value;
-            const subMenu = document.getElementById('advancedFilters');
-            const itemMenu = document.getElementById('itemFilters');
-            
-            if (cat === 'normal') {
-                subMenu.classList.remove('hidden');
-                itemMenu.classList.add('hidden');
-            } else if (cat === 'item') {
-                subMenu.classList.add('hidden');
-                itemMenu.classList.remove('hidden');
+        function toggleBuildContent() {
+            const content = document.getElementById('buildContent');
+            const btn = document.querySelector('.btn-toggle');
+            content.classList.toggle('collapsed');
+            if (content.classList.contains('collapsed')) {
+                btn.textContent = '▲ Expand Build';
             } else {
-                // Hide both for Corruptors, Monsters, or "All" to prevent UI clutter
-                subMenu.classList.add('hidden');
-                itemMenu.classList.add('hidden');
+                btn.textContent = '▼ Collapse';
             }
         }
-
-        function toggleDropdown(id, event) {
-            event.stopPropagation();
-            document.querySelectorAll('.dropdown-content').forEach(el => {
-                if(el.id !== id) el.classList.remove('show');
-            });
-            document.getElementById(id).classList.toggle('show');
-        }
-
-        function resetFilters() {
-            // Uncheck all boxes and remove disabled states
-            document.querySelectorAll('.dropdown-content input[type="checkbox"]').forEach(cb => {
-                cb.checked = false;
-                cb.disabled = false;
-                cb.parentElement.classList.remove('disabled-option');
-            });
-            // Clear search
-            document.getElementById('searchInput').value = '';
-            
-            // Remove active highlights
-            document.querySelectorAll('.select-box').forEach(box => box.classList.remove('has-selections'));
-            
-            filterData();
-        }
-
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.dropdown-content') && !event.target.closest('.select-box')) {
-                document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('show'));
-            }
-        });
-
-        function createMultiSelect(containerId, title, optionsList, filterKey) {
-            const container = document.getElementById(containerId);
-            if (!optionsList || optionsList.length === 0 || !container) return;
-            
-            let sortedOptions = Array.from(optionsList).filter(o => o);
-            if (title === 'Cost') {
-                sortedOptions.sort((a, b) => parseInt(a) - parseInt(b));
-            } else {
-                sortedOptions.sort();
-            }
-
-            let html = `<div class="multi-select">
-                <div class="select-box" onclick="toggleDropdown('${containerId}-drop', event)">${title}</div>
-                <div class="dropdown-content" id="${containerId}-drop">`;
-            
-            sortedOptions.forEach(opt => {
-                html += `<label><input type="checkbox" value="${opt}" class="${filterKey}-checkbox" onchange="filterData()"> ${opt}</label>`;
-            });
-            
-            html += `</div></div>`;
-            container.innerHTML = html;
-        }
-
-        // ------------------------------------------------------------------
-        // Build Manager Logic
-        // ------------------------------------------------------------------
 
         function getVariantDetails(variantId) {
             let card = allCards.find(c => c.variants.includes(variantId));
@@ -259,7 +218,8 @@
             else if (variantId.endsWith('b')) vType = 'b';
             else if (variantId.endsWith('a')) vType = 'a';
             
-            let cost = card.vCosts && card.vCosts[vType] !== undefined ? card.vCosts[vType] : card.cost;
+            let cost = card.vCosts[vType];
+            if (cost === undefined) cost = card.cost; 
             if (cost === 'N/A' || isNaN(cost)) cost = 0;
             
             return { card, cost, vType };
@@ -267,93 +227,137 @@
 
         function addCurrentVariantToBuild(baseId) {
             const img = document.getElementById(`main-img-${baseId}`);
-            if (img) {
-                const variantId = img.getAttribute('data-id');
+            if (!img) return;
+            const variantId = img.getAttribute('data-id');
+            const cardObj = allCards.find(c => c.variants.includes(variantId));
+            
+            if (cardObj && cardObj.category === 'items' && cardObj.itemType) {
+                // It's an item - slot it
+                const slot = cardObj.itemType;
+                if (currentItems.hasOwnProperty(slot)) {
+                    currentItems[slot] = variantId;
+                }
+            } else {
+                // It's a deck card
                 currentBuild.push(variantId);
-                renderBuild();
             }
+            renderBuild();
         }
 
-        function removeFromBuild(index) {
+        function removeFromDeck(index) {
             currentBuild.splice(index, 1);
             renderBuild();
         }
 
+        function unequipItem(slot) {
+            currentItems[slot] = null;
+            renderBuild();
+        }
+
         function renderBuild() {
+            // 1. Render Deck
             const grid = document.getElementById('buildGrid');
             const metricsPanel = document.getElementById('buildMetrics');
             grid.innerHTML = '';
             
             if(currentBuild.length === 0) {
-                grid.innerHTML = '<div style="color:#666; font-style:italic; padding: 10px;">Select cards to start building...</div>';
-                if(metricsPanel) metricsPanel.style.display = 'none';
-                return;
+                grid.innerHTML = '<div style="color:#666; font-style:italic; padding: 10px;">Select cards to start building your deck...</div>';
+                metricsPanel.style.display = 'none';
+            } else {
+                metricsPanel.style.display = 'flex';
+                
+                // Auto-Sort: Lowest Cost -> Alphabetical
+                currentBuild.sort((id1, id2) => {
+                    let d1 = getVariantDetails(id1);
+                    let d2 = getVariantDetails(id2);
+                    if (!d1 || !d2) return 0;
+                    
+                    if (d1.cost !== d2.cost) return d1.cost - d2.cost;
+                    return d1.card.idKey.localeCompare(d2.card.idKey);
+                });
+
+                let totalCards = currentBuild.length;
+                let totalCost = 0;
+                let costCurve = {};
+                let typeCounts = {};
+                let allEffects = new Set();
+
+                currentBuild.forEach((cardId, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'build-item';
+                    div.innerHTML = `
+                        <img src="./card_images/${cardId}_result.png" alt="${cardId}" title="${cardId}">
+                        <button class="remove-btn" onclick="removeFromDeck(${index})">x</button>
+                    `;
+                    grid.appendChild(div);
+
+                    let d = getVariantDetails(cardId);
+                    if (d) {
+                        totalCost += d.cost;
+                        costCurve[d.cost] = (costCurve[d.cost] || 0) + 1;
+                        d.card.types.forEach(t => { typeCounts[t] = (typeCounts[t] || 0) + 1; });
+                        d.card.auras.forEach(a => allEffects.add(a));
+                        d.card.curses.forEach(c => allEffects.add(c));
+                    }
+                });
+
+                // Update Metrics UI
+                document.getElementById('metricTotal').textContent = totalCards;
+                document.getElementById('metricAvg').textContent = totalCards > 0 ? (totalCost / totalCards).toFixed(1) : "0.0";
+                
+                let curveHtml = '';
+                Object.keys(costCurve).sort((a,b)=>a-b).forEach(cost => { curveHtml += `<li><span>Cost ${cost}:</span> <strong>${costCurve[cost]}</strong></li>`; });
+                document.getElementById('metricCurve').innerHTML = curveHtml;
+
+                let typesHtml = '';
+                Object.keys(typeCounts).sort().forEach(type => { typesHtml += `<li><span>${type}:</span> <strong>${typeCounts[type]}</strong></li>`; });
+                document.getElementById('metricTypes').innerHTML = typesHtml;
+
+                let effectsHtml = '';
+                Array.from(allEffects).sort().forEach(eff => { effectsHtml += `<span class="badge">${eff}</span>`; });
+                document.getElementById('metricEffects').innerHTML = effectsHtml || '<span style="color:#666">None</span>';
             }
 
-            if(metricsPanel) metricsPanel.style.display = 'flex';
-
-            currentBuild.sort((id1, id2) => {
-                let d1 = getVariantDetails(id1);
-                let d2 = getVariantDetails(id2);
-                if (!d1 || !d2) return 0;
-                if (d1.cost !== d2.cost) return d1.cost - d2.cost;
-                return d1.card.idKey.localeCompare(d2.card.idKey);
-            });
-
-            let totalCards = currentBuild.length;
-            let totalCost = 0;
-            let costCurve = {};
-            let typeCounts = {};
-            let allEffects = new Set();
-
-            currentBuild.forEach((cardId, index) => {
-                const div = document.createElement('div');
-                div.className = 'build-item';
-                div.innerHTML = `
-                    <img src="./card_images/${cardId}_result.png" alt="${cardId}" title="${cardId}">
-                    <button class="remove-btn" onclick="removeFromBuild(${index})">x</button>
-                `;
-                grid.appendChild(div);
-
-                let d = getVariantDetails(cardId);
-                if (d) {
-                    totalCost += d.cost;
-                    costCurve[d.cost] = (costCurve[d.cost] || 0) + 1;
-                    if(d.card.types) d.card.types.forEach(t => { typeCounts[t] = (typeCounts[t] || 0) + 1; });
-                    if(d.card.auras) d.card.auras.forEach(a => allEffects.add(a));
-                    if(d.card.curses) d.card.curses.forEach(c => allEffects.add(c));
-                }
-            });
-
-            if(document.getElementById('metricTotal')) document.getElementById('metricTotal').textContent = totalCards;
-            if(document.getElementById('metricAvg')) document.getElementById('metricAvg').textContent = totalCards > 0 ? (totalCost / totalCards).toFixed(1) : "0.0";
+            // 2. Render Equipment Slots
+            const equipGrid = document.getElementById('equipmentGrid');
+            equipGrid.innerHTML = '';
             
-            let curveHtml = '';
-            Object.keys(costCurve).sort((a,b)=>a-b).forEach(cost => {
-                curveHtml += `<li><span>Cost ${cost}:</span> <strong>${costCurve[cost]}</strong></li>`;
+            ['Weapon', 'Armor', 'Ring', 'Trinket', 'Pet'].forEach(slot => {
+                const container = document.createElement('div');
+                container.className = 'equip-slot-container';
+                
+                const label = document.createElement('div');
+                label.className = 'equip-label';
+                label.textContent = slot;
+                
+                const slotDiv = document.createElement('div');
+                slotDiv.className = 'equip-slot';
+                
+                if (currentItems[slot]) {
+                    slotDiv.innerHTML = `
+                        <img src="./card_images/${currentItems[slot]}_result.png" alt="${currentItems[slot]}" title="${currentItems[slot]}">
+                        <button class="remove-btn" onclick="unequipItem('${slot}')">x</button>
+                    `;
+                } else {
+                    slotDiv.innerHTML = `<span class="equip-empty-text">[ ]</span>`;
+                }
+                
+                container.appendChild(label);
+                container.appendChild(slotDiv);
+                equipGrid.appendChild(container);
             });
-            if(document.getElementById('metricCurve')) document.getElementById('metricCurve').innerHTML = curveHtml;
-
-            let typesHtml = '';
-            Object.keys(typeCounts).sort().forEach(type => {
-                typesHtml += `<li><span>${type}:</span> <strong>${typeCounts[type]}</strong></li>`;
-            });
-            if(document.getElementById('metricTypes')) document.getElementById('metricTypes').innerHTML = typesHtml;
-
-            let effectsHtml = '';
-            Array.from(allEffects).sort().forEach(eff => {
-                effectsHtml += `<span class="badge">${eff}</span>`;
-            });
-            if(document.getElementById('metricEffects')) document.getElementById('metricEffects').innerHTML = effectsHtml || '<span style="color:#666">None</span>';
         }
 
+        // Local Storage & Link Gen (Updated to include items)
         function saveBuildToLocal() {
             const name = document.getElementById('buildName').value.trim();
             if (!name) { alert("Please name your build before saving."); return; }
-            if (currentBuild.length === 0) { alert("Add some cards before saving."); return; }
+            if (currentBuild.length === 0 && !Object.values(currentItems).some(x => x !== null)) { 
+                alert("Add some cards or items before saving."); return; 
+            }
 
             let savedBuilds = JSON.parse(localStorage.getItem('ato_builds') || '{}');
-            savedBuilds[name] = currentBuild;
+            savedBuilds[name] = { deck: currentBuild, items: currentItems };
             localStorage.setItem('ato_builds', JSON.stringify(savedBuilds));
             
             updateSavedBuildsDropdown();
@@ -377,7 +381,16 @@
             if (!name) return;
             const savedBuilds = JSON.parse(localStorage.getItem('ato_builds') || '{}');
             if (savedBuilds[name]) {
-                currentBuild = [...savedBuilds[name]];
+                const data = savedBuilds[name];
+                // Handle legacy arrays or new objects
+                if (Array.isArray(data)) {
+                    currentBuild = [...data];
+                    currentItems = { Weapon: null, Armor: null, Ring: null, Trinket: null, Pet: null };
+                } else {
+                    currentBuild = [...(data.deck || [])];
+                    currentItems = Object.assign({ Weapon: null, Armor: null, Ring: null, Trinket: null, Pet: null }, data.items);
+                }
+                
                 document.getElementById('buildName').value = name;
                 renderBuild();
                 document.getElementById('shareLinkContainer').style.display = 'none';
@@ -385,11 +398,26 @@
         }
 
         function generateShareLink() {
-            if (currentBuild.length === 0) { alert("Add some cards to generate a link!"); return; }
+            if (currentBuild.length === 0 && !Object.values(currentItems).some(x=>x)) { 
+                alert("Add some cards or items to generate a link!"); return; 
+            }
             const name = encodeURIComponent(document.getElementById('buildName').value.trim() || 'Untitled');
-            const cards = currentBuild.join(',');
+            
+            // Compress Deck
+            const counts = {};
+            currentBuild.forEach(c => counts[c] = (counts[c] || 0) + 1);
+            const deckString = Object.entries(counts).map(([c, count]) => count > 1 ? `${c}*${count}` : c).join(',');
+            
+            // Compress Items (w:sword,a:tunic,etc)
+            const itemMap = { Weapon: 'w', Armor: 'a', Ring: 'r', Trinket: 't', Pet: 'p' };
+            const itemParts = [];
+            for (const [slot, id] of Object.entries(currentItems)) {
+                if (id) itemParts.push(`${itemMap[slot]}:${id}`);
+            }
+            const itemString = itemParts.join(',');
+            
             const baseUrl = window.location.origin + window.location.pathname;
-            const finalUrl = `${baseUrl}?buildName=${name}&cards=${cards}`;
+            const finalUrl = `${baseUrl}?buildName=${name}&cards=${deckString}&items=${itemString}`;
             
             const container = document.getElementById('shareLinkContainer');
             const input = document.getElementById('shareLinkInput');
@@ -402,13 +430,148 @@
         function checkUrlForBuild() {
             const params = new URLSearchParams(window.location.search);
             const cards = params.get('cards');
+            const items = params.get('items');
             const name = params.get('buildName');
             
+            let loadedAnything = false;
+
             if (cards) {
-                currentBuild = cards.split(',').filter(c => c);
+                const decodedCards = [];
+                cards.split(',').forEach(item => {
+                    if (!item) return;
+                    const parts = item.split('*');
+                    const cardId = parts[0];
+                    const count = parts.length > 1 ? parseInt(parts[1], 10) : 1;
+                    for (let i = 0; i < count; i++) decodedCards.push(cardId);
+                });
+                currentBuild = decodedCards;
+                loadedAnything = true;
+            }
+
+            if (items) {
+                const reverseMap = { 'w': 'Weapon', 'a': 'Armor', 'r': 'Ring', 't': 'Trinket', 'p': 'Pet' };
+                currentItems = { Weapon: null, Armor: null, Ring: null, Trinket: null, Pet: null };
+                items.split(',').forEach(part => {
+                    if(!part) return;
+                    const [slotKey, id] = part.split(':');
+                    if (reverseMap[slotKey] && id) {
+                        currentItems[reverseMap[slotKey]] = id;
+                    }
+                });
+                loadedAnything = true;
+            }
+
+            if (loadedAnything) {
                 if (name) document.getElementById('buildName').value = decodeURIComponent(name);
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
+        }
+
+        // ------------------------------------------------------------------
+        // UI & Dropdown Logic
+        // ------------------------------------------------------------------
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = 'all';
+            
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+                cb.disabled = false;
+            });
+            document.querySelectorAll('.dropdown-content label').forEach(lbl => {
+                lbl.classList.remove('disabled');
+            });
+            
+            toggleSubMenu();
+            filterData();
+        }
+
+        function toggleSubMenu() {
+            const cat = document.getElementById('categoryFilter').value;
+            const cardMenu = document.getElementById('cardFilters');
+            const itemMenu = document.getElementById('itemFilters');
+            
+            cardMenu.classList.add('hidden');
+            itemMenu.classList.add('hidden');
+            
+            if (cat === 'normal' || cat === 'all') cardMenu.classList.remove('hidden');
+            if (cat === 'items') itemMenu.classList.remove('hidden');
+        }
+
+        function toggleDropdown(id, event) {
+            event.stopPropagation();
+            document.querySelectorAll('.dropdown-content').forEach(el => {
+                if(el.id !== id) el.classList.remove('show');
+            });
+            document.getElementById(id).classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.dropdown-content') && !event.target.closest('.select-box')) {
+                document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('show'));
+            }
+        });
+
+        function createMultiSelect(containerId, title, optionsList, filterKey) {
+            const container = document.getElementById(containerId);
+            if (!optionsList || optionsList.length === 0) return;
+            
+            let sortedOptions = Array.from(optionsList).filter(o => o);
+            if (title === 'Cost') sortedOptions.sort((a, b) => parseInt(a) - parseInt(b));
+            else sortedOptions.sort();
+
+            let html = `<div class="multi-select">
+                <div class="select-box" id="box-${filterKey}" onclick="toggleDropdown('${containerId}-drop', event)">${title}</div>
+                <div class="dropdown-content" id="${containerId}-drop">`;
+            
+            sortedOptions.forEach(opt => {
+                html += `<label><input type="checkbox" value="${opt}" class="${filterKey}-checkbox" onchange="filterData()"> <span>${opt}</span></label>`;
+            });
+            
+            html += `</div></div>`;
+            container.innerHTML = html;
+        }
+
+        // ------------------------------------------------------------------
+        // Dynamic Filter Logic (AND/OR, Highlighting, Gray-Out)
+        // ------------------------------------------------------------------
+        function getChecked(className) {
+            return Array.from(document.querySelectorAll(`.${className}:checked`)).map(cb => cb.value);
+        }
+
+        function updateDropdownHighlights(keys) {
+            keys.forEach(key => {
+                const box = document.getElementById(`box-${key}`);
+                if (box) {
+                    if (getChecked(`${key}-checkbox`).length > 0) box.classList.add('has-selection');
+                    else box.classList.remove('has-selection');
+                }
+            });
+        }
+
+        // A function to disable dead-end checkboxes
+        function updateAvailableOptions(validCards, filterPrefix, attributeArrayName) {
+            const availableOptions = new Set();
+            validCards.forEach(c => {
+                if(Array.isArray(c[attributeArrayName])) {
+                    c[attributeArrayName].forEach(attr => availableOptions.add(attr));
+                } else if(c[attributeArrayName]) {
+                    availableOptions.add(c[attributeArrayName]);
+                }
+            });
+
+            document.querySelectorAll(`.${filterPrefix}-checkbox`).forEach(cb => {
+                if (!cb.checked) {
+                    if (availableOptions.has(cb.value)) {
+                        cb.disabled = false;
+                        cb.parentElement.classList.remove('disabled');
+                    } else {
+                        cb.disabled = true;
+                        cb.parentElement.classList.add('disabled');
+                    }
+                }
+            });
         }
 
         // ------------------------------------------------------------------
@@ -431,9 +594,7 @@
                     if (c === '\r' && text[i + 1] === '\n') i++;
                     current.push(token.trim()); token = '';
                     if (current.length > 0) { results.push(current); current = []; }
-                } else {
-                    token += c;
-                }
+                } else { token += c; }
             }
             if (token || current.length > 0) { current.push(token.trim()); results.push(current); }
             return results;
@@ -441,19 +602,15 @@
 
         async function loadData() {
             try {
-                // Fetch JSON
+                // 1. JSON 
                 const response = await fetch('./cards.json'); 
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                
                 const rawText = await response.text();
                 const cleanText = rawText.replace(/[\u00A0\u200B\u200C\u200D\uFEFF]/g, ' '); 
-                
-                let db;
-                try { db = JSON.parse(cleanText); } 
-                catch (parseError) { throw new Error(`Syntax error in cards.json: ${parseError.message}`); }
+                let db = JSON.parse(cleanText);
 
-                // --- Parse Card Stats (stats.csv) ---
-                let statsMap = {};
+                // 2. Load stats.csv (Cards)
+                let cardStatsMap = {};
                 let typeHeaders = [], auraHeaders = [], curseHeaders = [];
                 let uniqueClasses = new Set(), uniqueCosts = new Set(), uniqueRarities = new Set();
                 
@@ -473,15 +630,15 @@
                             if (!row[0]) continue;
                             const cleanName = row[0].toLowerCase().trim();
                             
-                            if (!statsMap[cleanName]) {
-                                statsMap[cleanName] = {
+                            if (!cardStatsMap[cleanName]) {
+                                cardStatsMap[cleanName] = {
                                     heroClass: row[4] || 'Other',
-                                    cost: row[5] !== undefined && row[5] !== '' ? row[5] : 'N/A',
+                                    cost: row[5] !== undefined && row[5] !== '' ? row[5].toString() : 'N/A',
                                     rarity: row[6] || 'Unknown',
                                     types: new Set(), auras: new Set(), curses: new Set(), vCosts: {}
                                 };
                                 if(row[4]) uniqueClasses.add(row[4]);
-                                if(row[5] !== undefined && row[5] !== '') uniqueCosts.add(row[5]);
+                                if(row[5] !== undefined && row[5] !== '') uniqueCosts.add(row[5].toString());
                                 if(row[6]) uniqueRarities.add(row[6]);
                             }
 
@@ -490,58 +647,60 @@
                             else if (row[2] && row[2].toUpperCase() === 'TRUE') vType = 'b';
                             else if (row[3] && row[3].toUpperCase() === 'TRUE') vType = 'rare';
                             
-                            if (row[5] !== undefined && row[5] !== '') statsMap[cleanName].vCosts[vType] = parseInt(row[5], 10);
+                            if (row[5] !== undefined && row[5] !== '') {
+                                cardStatsMap[cleanName].vCosts[vType] = parseInt(row[5], 10);
+                            }
 
-                            for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') statsMap[cleanName].types.add(headers[j]);
-                            for(let j=25; j<=51; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') statsMap[cleanName].auras.add(headers[j]);
-                            for(let j=52; j<=76; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') statsMap[cleanName].curses.add(headers[j]);
+                            for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardStatsMap[cleanName].types.add(headers[j]);
+                            for(let j=25; j<=51; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardStatsMap[cleanName].auras.add(headers[j]);
+                            for(let j=52; j<=76; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardStatsMap[cleanName].curses.add(headers[j]);
                         }
                     }
                 } catch(e) { console.log("stats.csv not found."); }
 
-                // --- Parse Item Stats (Item Export.csv) ---
+                // 3. Load Item Export.csv (Items)
                 let itemStatsMap = {};
+                let itemTypeHeaders = new Set(), itemRarityHeaders = new Set();
                 let itemBasicsHeaders = [], itemDamageHeaders = [], itemResistHeaders = [], itemAuraHeaders = [], itemCurseHeaders = [];
-                let uniqueItemTypes = new Set(), uniqueItemRarities = new Set();
 
                 try {
-                    const itemCsvRes = await fetch('./Item Export.csv');
-                    if (itemCsvRes.ok) {
-                        const itemCsvText = await itemCsvRes.text();
-                        const itemRows = parseCSV(itemCsvText);
-                        const itemHeaders = itemRows[0].map(h => h.trim());
+                    const itemRes = await fetch('./Item Export.csv');
+                    if (itemRes.ok) {
+                        const itemText = await itemRes.text();
+                        const rows = parseCSV(itemText);
+                        const headers = rows[0].map(h => h.trim());
+                        
+                        itemBasicsHeaders = headers.slice(4, 12).filter(h => h);
+                        itemDamageHeaders = headers.slice(12, 21).filter(h => h);
+                        itemResistHeaders = headers.slice(21, 30).filter(h => h);
+                        itemAuraHeaders = headers.slice(30, 59).filter(h => h);
+                        itemCurseHeaders = headers.slice(59, 86).filter(h => h);
 
-                        itemBasicsHeaders = itemHeaders.slice(4, 12).filter(h => h); 
-                        itemDamageHeaders = itemHeaders.slice(12, 21).filter(h => h); 
-                        itemResistHeaders = itemHeaders.slice(21, 30).filter(h => h); 
-                        itemAuraHeaders = itemHeaders.slice(30, 59).filter(h => h); 
-                        itemCurseHeaders = itemHeaders.slice(59, 86).filter(h => h); 
-
-                        for (let i = 1; i < itemRows.length; i++) {
-                            const row = itemRows[i];
+                        for (let i = 1; i < rows.length; i++) {
+                            const row = rows[i];
                             if (!row[0]) continue;
                             const cleanName = row[0].toLowerCase().trim();
-
+                            
                             if (!itemStatsMap[cleanName]) {
                                 itemStatsMap[cleanName] = {
-                                    type: row[2] || 'Unknown',
-                                    rarity: row[3] || 'Unknown',
-                                    basics: new Set(), damage: new Set(), resist: new Set(), auras: new Set(), curses: new Set()
+                                    itemType: row[2] ? row[2].charAt(0).toUpperCase() + row[2].slice(1) : 'Unknown',
+                                    itemRarity: row[3] ? row[3].charAt(0).toUpperCase() + row[3].slice(1) : 'Unknown',
+                                    basics: new Set(), damage: new Set(), resists: new Set(), auras: new Set(), curses: new Set()
                                 };
-                                if(row[2]) uniqueItemTypes.add(row[2]);
-                                if(row[3]) uniqueItemRarities.add(row[3]);
+                                if(row[2]) itemTypeHeaders.add(itemStatsMap[cleanName].itemType);
+                                if(row[3]) itemRarityHeaders.add(itemStatsMap[cleanName].itemRarity);
                             }
 
-                            for(let j=4; j<=11; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].basics.add(itemHeaders[j]);
-                            for(let j=12; j<=20; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].damage.add(itemHeaders[j]);
-                            for(let j=21; j<=29; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].resist.add(itemHeaders[j]);
-                            for(let j=30; j<=58; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].auras.add(itemHeaders[j]);
-                            for(let j=59; j<=85; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].curses.add(itemHeaders[j]);
+                            for(let j=4; j<=11; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].basics.add(headers[j]);
+                            for(let j=12; j<=20; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].damage.add(headers[j]);
+                            for(let j=21; j<=29; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].resists.add(headers[j]);
+                            for(let j=30; j<=58; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].auras.add(headers[j]);
+                            for(let j=59; j<=85; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].curses.add(headers[j]);
                         }
                     }
                 } catch(e) { console.log("Item Export.csv not found."); }
 
-                // --- Build UI Dropdowns ---
+                // 4. Create Dropdowns (Cards)
                 createMultiSelect('classFilterContainer', 'Class', uniqueClasses, 'class');
                 createMultiSelect('costFilterContainer', 'Cost', uniqueCosts, 'cost');
                 createMultiSelect('rarityFilterContainer', 'Rarity', uniqueRarities, 'rarity');
@@ -549,18 +708,18 @@
                 createMultiSelect('auraFilterContainer', 'Auras', auraHeaders, 'aura');
                 createMultiSelect('curseFilterContainer', 'Curses', curseHeaders, 'curse');
 
-                createMultiSelect('itemTypeFilterContainer', 'Item Type', uniqueItemTypes, 'item-type');
-                createMultiSelect('itemRarityFilterContainer', 'Rarity', uniqueItemRarities, 'item-rarity');
-                createMultiSelect('itemBasicsFilterContainer', 'Basics', itemBasicsHeaders, 'item-basics');
-                createMultiSelect('itemDamageFilterContainer', 'Damage', itemDamageHeaders, 'item-damage');
-                createMultiSelect('itemResistFilterContainer', 'Resistances', itemResistHeaders, 'item-resist');
-                createMultiSelect('itemAuraFilterContainer', 'Auras', itemAuraHeaders, 'item-aura');
-                createMultiSelect('itemCurseFilterContainer', 'Curses', itemCurseHeaders, 'item-curse');
+                // 5. Create Dropdowns (Items)
+                createMultiSelect('itemTypeFilterContainer', 'Item Type', itemTypeHeaders, 'itemType');
+                createMultiSelect('itemRarityFilterContainer', 'Rarity', itemRarityHeaders, 'itemRarity');
+                createMultiSelect('itemBasicsFilterContainer', 'Basics', itemBasicsHeaders, 'itemBasics');
+                createMultiSelect('itemDamageFilterContainer', 'Damage', itemDamageHeaders, 'itemDamage');
+                createMultiSelect('itemResistFilterContainer', 'Resistances', itemResistHeaders, 'itemResist');
+                createMultiSelect('itemAuraFilterContainer', 'Auras', itemAuraHeaders, 'itemAura');
+                createMultiSelect('itemCurseFilterContainer', 'Curses', itemCurseHeaders, 'itemCurse');
 
+                // 6. Merge Everything
                 const categories = new Set();
-                allCards = []; 
-
-                Object.entries(db.cards).forEach(([key, data]) => {
+                allCards = Object.entries(db.cards).map(([key, data]) => {
                     let category = "normal";
                     let cleanName = key;
                     
@@ -569,32 +728,47 @@
                         category = match[1].toLowerCase();
                         cleanName = key.replace(/\([^)]+\)/g, '').trim();
                     }
+                    if (category === 'item') category = 'items'; // Force plural for consistency
                     categories.add(category);
                     
-                    const sheetData = statsMap[cleanName.toLowerCase()] || { 
-                        heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', types: new Set(), auras: new Set(), curses: new Set(), vCosts: {} 
-                    };
-                    const itemSheetData = itemStatsMap[cleanName.toLowerCase()] || {
-                        type: 'Unknown', rarity: 'Unknown', basics: new Set(), damage: new Set(), resist: new Set(), auras: new Set(), curses: new Set()
-                    };
-
-                    // Purge developer cards: Skip if Normal and not found in stats.csv
-                    if (category === "normal" && sheetData.heroClass === 'Other' && Array.from(sheetData.types).length === 0) return;
-
-                    allCards.push({
+                    let cardData = {
                         idKey: cleanName,
                         category: category,
-                        heroClass: sheetData.heroClass, cost: sheetData.cost, rarity: sheetData.rarity,
-                        types: Array.from(sheetData.types), auras: Array.from(sheetData.auras), curses: Array.from(sheetData.curses), vCosts: sheetData.vCosts,
-                        itemType: itemSheetData.type, itemRarity: itemSheetData.rarity, itemBasics: Array.from(itemSheetData.basics), itemDamage: Array.from(itemSheetData.damage), itemResist: Array.from(itemSheetData.resist), itemAuras: Array.from(itemSheetData.auras), itemCurses: Array.from(itemSheetData.curses),
-                        variants: data.IDs || [], related: data.RelatedIDs || []
-                    });
+                        variants: data.IDs || [], 
+                        related: data.RelatedIDs || []
+                    };
+
+                    if (category === 'normal' || category === 'all') {
+                        const sData = cardStatsMap[cleanName.toLowerCase()] || { heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', types: new Set(), auras: new Set(), curses: new Set(), vCosts: {} };
+                        cardData.heroClass = sData.heroClass;
+                        cardData.cost = sData.cost;
+                        cardData.rarity = sData.rarity;
+                        cardData.types = Array.from(sData.types);
+                        cardData.auras = Array.from(sData.auras);
+                        cardData.curses = Array.from(sData.curses);
+                        cardData.vCosts = sData.vCosts;
+                    } 
+                    
+                    if (category === 'items') {
+                        const iData = itemStatsMap[cleanName.toLowerCase()] || { itemType: 'Unknown', itemRarity: 'Unknown', basics: new Set(), damage: new Set(), resists: new Set(), auras: new Set(), curses: new Set() };
+                        cardData.itemType = iData.itemType;
+                        cardData.itemRarity = iData.itemRarity;
+                        cardData.itemBasics = Array.from(iData.basics);
+                        cardData.itemDamage = Array.from(iData.damage);
+                        cardData.itemResist = Array.from(iData.resists);
+                        cardData.itemAura = Array.from(iData.auras);
+                        cardData.itemCurse = Array.from(iData.curses);
+                        cardData.vCosts = {}; // Items don't use vCosts
+                    }
+
+                    return cardData;
                 });
                 
                 allCards.sort((a, b) => a.idKey.localeCompare(b.idKey));
 
+                // Clean "items" out of dynamic population since we hardcoded it
                 const categorySelect = document.getElementById('categoryFilter');
-                Array.from(categories).filter(c => c !== 'normal').sort().forEach(cat => {
+                Array.from(categories).filter(c => c !== 'normal' && c !== 'items').sort().forEach(cat => {
                     const option = document.createElement('option');
                     option.value = cat;
                     option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
@@ -607,29 +781,26 @@
                 filterData(); 
 
             } catch (error) {
-                document.getElementById('error-message').style.display = 'block';
-                document.getElementById('error-message').innerHTML = `<h3>Error</h3><p>${error.message}</p>`;
+                console.error("Error:", error);
+                const errorDiv = document.getElementById('error-message');
+                errorDiv.style.display = 'block';
+                errorDiv.innerHTML = `<h3>Failed to load data</h3><p style="font-size: 0.9em;">${error.message}</p>`;
             }
         }
 
         // ------------------------------------------------------------------
-        // Rendering & Filtering
+        // Rendering 
         // ------------------------------------------------------------------
+        function handleImageError(img) {
+            if (img.classList.contains('variant-img')) img.style.display = 'none';
+            else img.outerHTML = `<div class="error-state" id="${img.id}">Image Not Found<br><small style="margin-top: 10px; color: #aaa;">${img.getAttribute('data-id')}_result.png</small></div>`;
+        }
 
         function getBorderClass(variantId, baseId) {
             if (variantId.endsWith('rare')) return 'border-rare';
-            if (variantId.endsWith('b') && variantId !== baseId + 'b' + 'b') return 'border-b';
+            if (variantId.endsWith('b') && variantId !== baseId + 'b' + 'b') return 'border-b'; 
             if (variantId.endsWith('a') && variantId !== baseId + 'a' + 'a') return 'border-a';
             return 'border-base';
-        }
-
-        function handleImageError(img) {
-            if (img.classList.contains('variant-img')) {
-                img.style.display = 'none';
-            } else {
-                const missingId = img.getAttribute('data-id');
-                img.outerHTML = `<div class="error-state" id="${img.id}">Image Not Found<br><small style="margin-top: 10px; color: #aaa;">${missingId}_result.png</small></div>`;
-            }
         }
 
         function renderCards(cardsToRender) {
@@ -638,7 +809,6 @@
 
             cardsToRender.forEach(card => {
                 if (card.variants.length === 0) return;
-
                 const baseId = card.variants[0]; 
                 const upgrades = card.variants.slice(1); 
 
@@ -652,14 +822,12 @@
                     htmlStr += `<div class="variants">`;
                     htmlStr += `<img class="variant-img border-base active" id="thumb-${baseId}-${baseId}" src="./card_images/${baseId}_result.png" onclick="swapImage('${baseId}', '${baseId}')" onerror="handleImageError(this)">`;
                     upgrades.forEach(upgradeId => {
-                        let borderCls = getBorderClass(upgradeId, baseId);
-                        htmlStr += `<img class="variant-img ${borderCls}" id="thumb-${baseId}-${upgradeId}" src="./card_images/${upgradeId}_result.png" onclick="swapImage('${baseId}', '${upgradeId}')" onerror="handleImageError(this)">`;
+                        htmlStr += `<img class="variant-img ${getBorderClass(upgradeId, baseId)}" id="thumb-${baseId}-${upgradeId}" src="./card_images/${upgradeId}_result.png" onclick="swapImage('${baseId}', '${upgradeId}')" onerror="handleImageError(this)">`;
                     });
                     htmlStr += `</div>`;
                 }
 
                 htmlStr += `<button class="add-btn" onclick="addCurrentVariantToBuild('${baseId}')">+ Add to Build</button>`;
-
                 cardDiv.innerHTML = htmlStr;
                 grid.appendChild(cardDiv);
             });
@@ -674,119 +842,99 @@
                const newImg = document.createElement('img');
                newImg.src = `./card_images/${newId}_result.png`;
                newImg.id = `main-img-${baseId}`;
+               newImg.className = 'main-img';
                newImg.setAttribute('data-id', newId);
                newImg.onerror = function() { handleImageError(this) };
                mainImgElement.parentNode.replaceChild(newImg, mainImgElement);
             }
             const variantsContainer = document.getElementById(`thumb-${baseId}-${newId}`).parentElement;
-            const thumbs = variantsContainer.querySelectorAll('.variant-img');
-            thumbs.forEach(t => t.classList.remove('active'));
+            variantsContainer.querySelectorAll('.variant-img').forEach(t => t.classList.remove('active'));
             document.getElementById(`thumb-${baseId}-${newId}`).classList.add('active');
         }
 
         // ------------------------------------------------------------------
-        // Master Filter Engine (Dynamic Facets & AND/OR Logic)
+        // Filter Execution
         // ------------------------------------------------------------------
-
         function filterData() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const selectedCategory = document.getElementById('categoryFilter').value;
             
-            const getChecked = (className) => Array.from(document.querySelectorAll(`.${className}:checked`)).map(cb => cb.value);
-            
-            // Map our specific dropdowns to their corresponding object fields in the allCards data
-            const filters = {
-                'class': { vals: getChecked('class-checkbox'), field: 'heroClass' },
-                'cost': { vals: getChecked('cost-checkbox'), field: 'cost' },
-                'rarity': { vals: getChecked('rarity-checkbox'), field: 'rarity' },
-                'type': { vals: getChecked('type-checkbox'), field: 'types' },
-                'aura': { vals: getChecked('aura-checkbox'), field: 'auras' },
-                'curse': { vals: getChecked('curse-checkbox'), field: 'curses' },
-                'item-type': { vals: getChecked('item-type-checkbox'), field: 'itemType' },
-                'item-rarity': { vals: getChecked('item-rarity-checkbox'), field: 'itemRarity' },
-                'item-basics': { vals: getChecked('item-basics-checkbox'), field: 'itemBasics' },
-                'item-damage': { vals: getChecked('item-damage-checkbox'), field: 'itemDamage' },
-                'item-resist': { vals: getChecked('item-resist-checkbox'), field: 'itemResist' },
-                'item-aura': { vals: getChecked('item-aura-checkbox'), field: 'itemAuras' },
-                'item-curse': { vals: getChecked('item-curse-checkbox'), field: 'itemCurses' }
-            };
+            updateDropdownHighlights(['class', 'cost', 'rarity', 'type', 'aura', 'curse', 'itemType', 'itemRarity', 'itemBasics', 'itemDamage', 'itemResist', 'itemAura', 'itemCurse']);
 
-            // Logic Gate: Returns true if the card passes all currently active filters
-            function passesFilters(card, skipKey = null) {
+            // Card Checkboxes
+            const sClasses = getChecked('class-checkbox');
+            const sCosts = getChecked('cost-checkbox');
+            const sRarities = getChecked('rarity-checkbox');
+            const sTypes = getChecked('type-checkbox');
+            const sAuras = getChecked('aura-checkbox');
+            const sCurses = getChecked('curse-checkbox');
+
+            // Item Checkboxes
+            const iTypes = getChecked('itemType-checkbox');
+            const iRarities = getChecked('itemRarity-checkbox');
+            const iBasics = getChecked('itemBasics-checkbox');
+            const iDamage = getChecked('itemDamage-checkbox');
+            const iResists = getChecked('itemResist-checkbox');
+            const iAuras = getChecked('itemAura-checkbox');
+            const iCurses = getChecked('itemCurse-checkbox');
+
+            const filtered = allCards.filter(card => {
                 const matchesSearch = card.idKey.toLowerCase().includes(searchTerm) || card.variants.join(' ').toLowerCase().includes(searchTerm);
                 if (!matchesSearch) return false;
                 if (selectedCategory !== 'all' && card.category !== selectedCategory) return false;
 
+                // Normal Cards Logic
                 if (selectedCategory === 'normal' || selectedCategory === 'all') {
-                    // Scalar fields (OR logic)
-                    if (skipKey !== 'class' && filters['class'].vals.length > 0 && !filters['class'].vals.includes(card.heroClass)) return false;
-                    if (skipKey !== 'cost' && filters['cost'].vals.length > 0 && !filters['cost'].vals.includes(card.cost.toString())) return false;
-                    if (skipKey !== 'rarity' && filters['rarity'].vals.length > 0 && !filters['rarity'].vals.includes(card.rarity)) return false;
-                    
-                    // Array fields (AND logic - must contain EVERY selected tag)
-                    if (skipKey !== 'type' && filters['type'].vals.length > 0 && !filters['type'].vals.every(t => card.types.includes(t))) return false;
-                    if (skipKey !== 'aura' && filters['aura'].vals.length > 0 && !filters['aura'].vals.every(a => card.auras.includes(a))) return false;
-                    if (skipKey !== 'curse' && filters['curse'].vals.length > 0 && !filters['curse'].vals.every(c => card.curses.includes(c))) return false;
+                    if (card.category === 'normal') {
+                        if (sClasses.length > 0 && !sClasses.includes(card.heroClass)) return false;
+                        if (sCosts.length > 0 && !sCosts.includes(card.cost)) return false;
+                        if (sRarities.length > 0 && !sRarities.includes(card.rarity)) return false;
+                        
+                        // AND logic for arrays
+                        if (sTypes.length > 0 && !sTypes.every(t => card.types && card.types.includes(t))) return false;
+                        if (sAuras.length > 0 && !sAuras.every(a => card.auras && card.auras.includes(a))) return false;
+                        if (sCurses.length > 0 && !sCurses.every(c => card.curses && card.curses.includes(c))) return false;
+                    }
                 }
 
-                if (selectedCategory === 'item' || selectedCategory === 'all') {
-                    if (skipKey !== 'item-type' && filters['item-type'].vals.length > 0 && !filters['item-type'].vals.includes(card.itemType)) return false;
-                    if (skipKey !== 'item-rarity' && filters['item-rarity'].vals.length > 0 && !filters['item-rarity'].vals.includes(card.itemRarity)) return false;
-                    
-                    if (skipKey !== 'item-basics' && filters['item-basics'].vals.length > 0 && !filters['item-basics'].vals.every(t => card.itemBasics.includes(t))) return false;
-                    if (skipKey !== 'item-damage' && filters['item-damage'].vals.length > 0 && !filters['item-damage'].vals.every(t => card.itemDamage.includes(t))) return false;
-                    if (skipKey !== 'item-resist' && filters['item-resist'].vals.length > 0 && !filters['item-resist'].vals.every(t => card.itemResist.includes(t))) return false;
-                    if (skipKey !== 'item-aura' && filters['item-aura'].vals.length > 0 && !filters['item-aura'].vals.every(t => card.itemAuras.includes(t))) return false;
-                    if (skipKey !== 'item-curse' && filters['item-curse'].vals.length > 0 && !filters['item-curse'].vals.every(t => card.itemCurses.includes(t))) return false;
+                // Items Logic
+                if (selectedCategory === 'items' || selectedCategory === 'all') {
+                    if (card.category === 'items') {
+                        if (iTypes.length > 0 && !iTypes.includes(card.itemType)) return false;
+                        if (iRarities.length > 0 && !iRarities.includes(card.itemRarity)) return false;
+                        
+                        // AND logic for arrays
+                        if (iBasics.length > 0 && !iBasics.every(b => card.itemBasics && card.itemBasics.includes(b))) return false;
+                        if (iDamage.length > 0 && !iDamage.every(d => card.itemDamage && card.itemDamage.includes(d))) return false;
+                        if (iResists.length > 0 && !iResists.every(r => card.itemResist && card.itemResist.includes(r))) return false;
+                        if (iAuras.length > 0 && !iAuras.every(a => card.itemAura && card.itemAura.includes(a))) return false;
+                        if (iCurses.length > 0 && !iCurses.every(c => card.itemCurse && card.itemCurse.includes(c))) return false;
+                    }
                 }
+
                 return true;
+            });
+
+            // Update disabled states for dead-end checking
+            if (selectedCategory === 'normal') {
+                updateAvailableOptions(filtered, 'class', 'heroClass');
+                updateAvailableOptions(filtered, 'cost', 'cost');
+                updateAvailableOptions(filtered, 'rarity', 'rarity');
+                updateAvailableOptions(filtered, 'type', 'types');
+                updateAvailableOptions(filtered, 'aura', 'auras');
+                updateAvailableOptions(filtered, 'curse', 'curses');
+            } else if (selectedCategory === 'items') {
+                updateAvailableOptions(filtered, 'itemType', 'itemType');
+                updateAvailableOptions(filtered, 'itemRarity', 'itemRarity');
+                updateAvailableOptions(filtered, 'itemBasics', 'itemBasics');
+                updateAvailableOptions(filtered, 'itemDamage', 'itemDamage');
+                updateAvailableOptions(filtered, 'itemResist', 'itemResist');
+                updateAvailableOptions(filtered, 'itemAura', 'itemAura');
+                updateAvailableOptions(filtered, 'itemCurse', 'itemCurse');
             }
 
-            // 1. Render actual results
-            const filtered = allCards.filter(c => passesFilters(c));
             renderCards(filtered);
-
-            // 2. Highlight active dropdown menus
-            document.querySelectorAll('.multi-select').forEach(ms => {
-                const hasChecked = ms.querySelectorAll('input:checked').length > 0;
-                const box = ms.querySelector('.select-box');
-                if(hasChecked) box.classList.add('has-selections');
-                else box.classList.remove('has-selections');
-            });
-
-            // 3. Dynamic Facet Math (Gray out invalid options to prevent zero-result dead ends)
-            Object.keys(filters).forEach(key => {
-                const isOrFilter = ['class', 'cost', 'rarity', 'item-type', 'item-rarity'].includes(key);
-                
-                // Get all cards that pass the test for this specific dropdown calculation
-                const validCards = allCards.filter(c => passesFilters(c, isOrFilter ? key : null));
-                
-                // Extract every available property from that subset
-                const validValues = new Set();
-                validCards.forEach(c => {
-                    let val = c[filters[key].field];
-                    if (Array.isArray(val)) {
-                        val.forEach(v => validValues.add(v));
-                    } else {
-                        validValues.add(val !== undefined && val !== null ? val.toString() : '');
-                    }
-                });
-
-                // Disable checkboxes that are not present in the valid subset
-                document.querySelectorAll(`.${key}-checkbox`).forEach(cb => {
-                    const label = cb.parentElement;
-                    if (!validValues.has(cb.value)) {
-                        label.classList.add('disabled-option');
-                        cb.disabled = true;
-                    } else {
-                        label.classList.remove('disabled-option');
-                        cb.disabled = false;
-                    }
-                });
-            });
         }
-
-        loadData();
     </script>
 </body>
 </html>
