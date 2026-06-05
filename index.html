@@ -24,52 +24,34 @@
         .remove-btn:hover { transform: scale(1.1); }
 
         /* Build Metrics Dashboard */
-        .build-stats { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px; padding: 15px; background: #222; border-radius: 4px; border: 1px dashed #555; }
-        .stat-block { flex: 1; min-width: 140px; }
-        .stat-title { color: #888; font-size: 0.85em; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #444; padding-bottom: 4px; font-weight: bold; }
-        .stat-value { color: #eee; margin-bottom: 4px; font-size: 0.95em; }
-        .stat-list { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 5px; }
-        .stat-list li { background: #333; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; border: 1px solid #444; }
-
+        .build-metrics { display: flex; flex-wrap: wrap; gap: 20px; margin-top: 15px; padding: 15px; background: #252525; border-radius: 6px; font-size: 0.9em; border: 1px solid #333; }
+        
         /* Top Level Controls */
-        .controls { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; background: #2d2d2d; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        input[type="text"], select.main-select { padding: 10px; border-radius: 4px; border: 1px solid #444; background: #111; color: white; width: 100%; max-width: 400px; font-size: 1em; }
-        
-        /* Advanced Sub-Menu */
-        .sub-menu { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; background: #222; padding: 15px; border-radius: 8px; border: 1px solid #333; }
-        .sub-menu.hidden { display: none; }
-        
-        /* Custom Multi-Select Dropdowns */
-        .multi-select { position: relative; min-width: 160px; flex: 1; }
-        .select-box { padding: 10px; background: #111; border: 1px solid #444; border-radius: 4px; cursor: pointer; color: #ccc; font-size: 0.95em; user-select: none; display: flex; justify-content: space-between; align-items: center; }
-        .select-box:after { content: '▼'; font-size: 0.8em; color: #888; }
-        .select-box:hover { border-color: #666; }
-        .dropdown-content { display: none; position: absolute; top: 100%; left: 0; background: #2d2d2d; width: 100%; max-height: 250px; overflow-y: auto; border: 1px solid #444; z-index: 100; box-shadow: 0 8px 16px rgba(0,0,0,0.5); border-radius: 0 0 4px 4px; }
-        .dropdown-content.show { display: block; }
-        .dropdown-content label { display: block; padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #333; font-size: 0.9em; text-transform: capitalize; }
-        .dropdown-content label:hover { background: #3d3d3d; }
-        .dropdown-content input { margin-right: 10px; cursor: pointer; }
+        .controls { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 20px; background: #2d2d2d; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
+        .controls input[type="text"], select.main-select { padding: 10px; border-radius: 4px; border: 1px solid #444; background: #111; color: white; width: 100%; max-width: 400px; font-size: 1em; }
         
         /* Grid and Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
         .card-container { background: #2d2d2d; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; flex-direction: column; }
         .card-title { margin-top: 0; margin-bottom: 15px; font-size: 1.1em; text-transform: capitalize; color: #ccc; }
         
-        /* Variant Thumbnails Sizing & Borders */
-        .variants { display: flex; gap: 5px; justify-content: center; margin-top: 15px; margin-bottom: 15px; flex-wrap: wrap; }
-        .card-container img { max-width: 100%; height: auto; border-radius: 4px; }
+        .variants { display: flex; gap: 4px; justify-content: center; margin-top: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+        .card-container img.main-img { max-width: 100%; height: auto; border-radius: 4px; }
+        
+        /* Adjusted Variants for 4-across */
         .variant-img { width: 48px; cursor: pointer; transition: transform 0.2s, border 0.2s; border: 2px solid transparent; border-radius: 4px; }
         .variant-img:hover { transform: scale(1.1); }
-        .variant-img.border-a { border-color: rgba(59, 130, 246, 0.6); } /* faint blue */
-        .variant-img.border-b { border-color: rgba(234, 179, 8, 0.6); } /* faint yellow */
-        .variant-img.border-rare { border-color: rgba(168, 85, 247, 0.6); } /* faint purple */
-        .variant-img.active { border-color: #4ade80 !important; } /* green override when selected */
+        .variant-img.active { border: 2px solid #4ade80 !important; }
         
+        /* Color Coded Borders */
+        .border-a { border: 2px solid rgba(59, 130, 246, 0.4); }      /* Faint Blue */
+        .border-b { border: 2px solid rgba(234, 179, 8, 0.4); }       /* Faint Yellow */
+        .border-rare { border: 2px solid rgba(168, 85, 247, 0.4); }   /* Faint Purple */
+        .border-base { border: 2px solid rgba(255, 255, 255, 0.1); }  /* Very Faint White/Grey */
+
         .add-btn { margin-top: auto; padding: 8px; background: #444; border: 1px solid #555; color: #eee; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s; font-weight: bold; }
         .add-btn:hover { background: #4ade80; color: #111; border-color: #4ade80; }
 
-        /* Error States */
-        .error-state { padding: 40px 10px; background: #333; border-radius: 4px; color: #ff6b6b; font-size: 0.9em; display: flex; align-items: center; justify-content: center; flex-direction: column; min-height: 200px; }
         #error-message { display: none; color: #ff6b6b; background: #333; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px solid #ff6b6b; }
     </style>
 </head>
@@ -95,8 +77,8 @@
             <!-- Selected cards inject here -->
         </div>
 
-        <div id="buildStats" class="build-stats" style="display: none;">
-            <!-- Metrics inject here dynamically -->
+        <div class="build-metrics" id="buildMetrics" style="display:none;">
+            <div>Total Cards in Build: <strong id="metricTotal" style="color: #4ade80;">0</strong></div>
         </div>
     </div>
 
@@ -105,11 +87,12 @@
         <input type="text" id="searchInput" placeholder="Search cards by name or ID..." oninput="filterData()">
         <select id="categoryFilter" class="main-select" onchange="toggleSubMenu(); filterData()">
             <option value="all">All Categories</option>
-            <option value="cards" selected>Cards</option>
+            <option value="normal" selected>Normal Cards</option>
+            <option value="item">Items</option>
         </select>
     </div>
 
-    <!-- Advanced Spreadsheet Filters -->
+    <!-- Advanced Spreadsheet Filters (Cards) -->
     <div id="advancedFilters" class="sub-menu">
         <div id="classFilterContainer"></div>
         <div id="costFilterContainer"></div>
@@ -117,6 +100,17 @@
         <div id="typeFilterContainer"></div>
         <div id="auraFilterContainer"></div>
         <div id="curseFilterContainer"></div>
+    </div>
+
+    <!-- Advanced Spreadsheet Filters (Items) -->
+    <div id="itemFilters" class="sub-menu hidden">
+        <div id="itemTypeFilterContainer"></div>
+        <div id="itemRarityFilterContainer"></div>
+        <div id="itemBasicsFilterContainer"></div>
+        <div id="itemDamageFilterContainer"></div>
+        <div id="itemResistFilterContainer"></div>
+        <div id="itemAuraFilterContainer"></div>
+        <div id="itemCurseFilterContainer"></div>
     </div>
 
     <div id="error-message"></div>
@@ -127,20 +121,36 @@
 
     <script>
         let allCards = []; 
-        let currentBuild = []; // Array to store IDs in the deck
-        let globalVariantStats = {}; // Tracks specific stats (cost, auras, types, etc) per variant ID
+        let currentBuild = []; 
 
         // ------------------------------------------------------------------
-        // Build Manager Logic (Hybrid Save/Share)
+        // UI & Dropdown Logic
         // ------------------------------------------------------------------
 
-        function addCurrentVariantToBuild(baseId) {
-            const img = document.getElementById(`main-img-${baseId}`);
-            if (img) {
-                const variantId = img.getAttribute('data-id');
-                currentBuild.push(variantId);
-                renderBuild();
+        function toggleSubMenu() {
+            const cat = document.getElementById('categoryFilter').value;
+            const subMenu = document.getElementById('advancedFilters');
+            const itemMenu = document.getElementById('itemFilters');
+            
+            if (cat === 'normal') {
+                subMenu.classList.remove('hidden');
+                itemMenu.classList.add('hidden');
+            } else if (cat === 'item') {
+                subMenu.classList.add('hidden');
+                itemMenu.classList.remove('hidden');
+            } else {
+                subMenu.classList.add('hidden');
+                itemMenu.classList.add('hidden');
             }
+        }
+
+        function toggleDropdown(id, event) {
+            event.stopPropagation();
+            document.querySelectorAll('.dropdown-content').forEach(el => {
+                if(el.id !== id) el.classList.remove('show');
+            });
+            document.getElementById(id).classList.toggle('show');
+        }
         }
 
         function removeFromBuild(index) {
@@ -150,42 +160,28 @@
 
         function renderBuild() {
             const grid = document.getElementById('buildGrid');
-            const statsContainer = document.getElementById('buildStats');
+            const metricsPanel = document.getElementById('buildMetrics');
             grid.innerHTML = '';
             
             if(currentBuild.length === 0) {
                 grid.innerHTML = '<div style="color:#666; font-style:italic; padding: 10px;">Select cards to start building...</div>';
-                statsContainer.style.display = 'none';
+                metricsPanel.style.display = 'none';
                 return;
             }
 
-            // Sort currentBuild array by Cost (Lowest -> Highest), then Alphabetically
-            currentBuild.sort((a, b) => {
-                let costA = globalVariantStats[a] && globalVariantStats[a].cost !== 'N/A' ? parseInt(globalVariantStats[a].cost) : 999;
-                let costB = globalVariantStats[b] && globalVariantStats[b].cost !== 'N/A' ? parseInt(globalVariantStats[b].cost) : 999;
-                
-                let nameA = a, nameB = b;
-                
-                // Fallback to base card name if needed
-                const baseA = allCards.find(c => c.variants.includes(a));
-                if (baseA) nameA = baseA.idKey; 
-                const baseB = allCards.find(c => c.variants.includes(b));
-                if (baseB) nameB = baseB.idKey;
+            metricsPanel.style.display = 'flex';
+            document.getElementById('metricTotal').textContent = currentBuild.length;
 
-                if (costA !== costB) return costA - costB; // Sort by Cost first
-                return nameA.localeCompare(nameB); // Break ties alphabetically
+            // Sort Alphabetically
+            currentBuild.sort((id1, id2) => {
+                let card1 = allCards.find(c => c.variants.includes(id1));
+                let card2 = allCards.find(c => c.variants.includes(id2));
+                let name1 = card1 ? card1.idKey : id1;
+                let name2 = card2 ? card2.idKey : id2;
+                return name1.localeCompare(name2);
             });
 
-            // Metrics tracking variables
-            let totalCost = 0;
-            let costCount = 0;
-            let costDistribution = {};
-            let typeDistribution = {};
-            let uniqueAuras = new Set();
-            let uniqueCurses = new Set();
-
             currentBuild.forEach((cardId, index) => {
-                // 1. Render the tiny icon in the grid
                 const div = document.createElement('div');
                 div.className = 'build-item';
                 div.innerHTML = `
@@ -193,56 +189,7 @@
                     <button class="remove-btn" onclick="removeFromBuild(${index})">x</button>
                 `;
                 grid.appendChild(div);
-
-                // 2. Fetch corresponding card data specifically for the exact variant ID
-                const stats = globalVariantStats[cardId];
-                if (stats) {
-                    if (stats.cost !== 'N/A' && !isNaN(stats.cost)) {
-                        const c = parseInt(stats.cost);
-                        totalCost += c;
-                        costCount++;
-                        costDistribution[c] = (costDistribution[c] || 0) + 1;
-                    }
-                    stats.types.forEach(t => {
-                        typeDistribution[t] = (typeDistribution[t] || 0) + 1;
-                    });
-                    stats.auras.forEach(a => uniqueAuras.add(a));
-                    stats.curses.forEach(c => uniqueCurses.add(c));
-                }
             });
-
-            // Calculate and compile metric blocks
-            statsContainer.style.display = 'flex';
-            const avgCost = costCount > 0 ? (totalCost / costCount).toFixed(1) : 0;
-            
-            let costHtml = Object.keys(costDistribution).sort((a,b)=>a-b).map(k => `<li>Cost ${k}: <b>${costDistribution[k]}</b></li>`).join('');
-            let typeHtml = Object.keys(typeDistribution).sort().map(k => `<li>${k}: <b>${typeDistribution[k]}</b></li>`).join('');
-            let aurasHtml = Array.from(uniqueAuras).sort().map(a => `<li>${a}</li>`).join('');
-            let cursesHtml = Array.from(uniqueCurses).sort().map(c => `<li>${c}</li>`).join('');
-
-            statsContainer.innerHTML = `
-                <div class="stat-block">
-                    <div class="stat-title">Metrics</div>
-                    <div class="stat-value">Total Cards: <b>${currentBuild.length}</b></div>
-                    <div class="stat-value">Avg Cost: <b>${avgCost}</b></div>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-title">Cost Curve</div>
-                    <ul class="stat-list">${costHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">N/A</li>'}</ul>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-title">Card Types</div>
-                    <ul class="stat-list">${typeHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">N/A</li>'}</ul>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-title">Auras Applied</div>
-                    <ul class="stat-list">${aurasHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">None</li>'}</ul>
-                </div>
-                <div class="stat-block">
-                    <div class="stat-title">Curses Applied</div>
-                    <ul class="stat-list">${cursesHtml || '<li style="background:transparent; color:#666; border:none; padding:0;">None</li>'}</ul>
-                </div>
-            `;
         }
 
         function saveBuildToLocal() {
@@ -278,22 +225,19 @@
                 currentBuild = [...savedBuilds[name]];
                 document.getElementById('buildName').value = name;
                 renderBuild();
-                document.getElementById('shareLinkContainer').style.display = 'none'; 
+                document.getElementById('shareLinkContainer').style.display = 'none';
             }
         }
 
         function generateShareLink() {
             if (currentBuild.length === 0) { alert("Add some cards to generate a link!"); return; }
-            
             const name = encodeURIComponent(document.getElementById('buildName').value.trim() || 'Untitled');
             const cards = currentBuild.join(',');
-            
             const baseUrl = window.location.origin + window.location.pathname;
             const finalUrl = `${baseUrl}?buildName=${name}&cards=${cards}`;
             
             const container = document.getElementById('shareLinkContainer');
             const input = document.getElementById('shareLinkInput');
-            
             input.value = finalUrl;
             container.style.display = 'block';
             input.select();
@@ -308,97 +252,17 @@
             if (cards) {
                 currentBuild = cards.split(',').filter(c => c);
                 if (name) document.getElementById('buildName').value = decodeURIComponent(name);
-                renderBuild();
-                
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         }
 
         // ------------------------------------------------------------------
-        // UI & Dropdown Logic
+        // Data Parsing & Loading (SAFE BASELINE)
         // ------------------------------------------------------------------
-
-        function toggleSubMenu() {
-            const cat = document.getElementById('categoryFilter').value;
-            const subMenu = document.getElementById('advancedFilters');
-            // Show filters if "cards" or "all" is selected
-            if (cat === 'cards' || cat === 'all') {
-                subMenu.classList.remove('hidden');
-            } else {
-                subMenu.classList.add('hidden');
-            }
-        }
-
-        function toggleDropdown(id, event) {
-            event.stopPropagation();
-            document.querySelectorAll('.dropdown-content').forEach(el => {
-                if(el.id !== id) el.classList.remove('show');
-            });
-            document.getElementById(id).classList.toggle('show');
-        }
-
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.dropdown-content') && !event.target.closest('.select-box')) {
-                document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('show'));
-            }
-        });
-
-        function createMultiSelect(containerId, title, optionsList, filterKey) {
-            const container = document.getElementById(containerId);
-            if (!optionsList || optionsList.length === 0) return;
-            
-            let sortedOptions = Array.from(optionsList).filter(o => o);
-            if (title === 'Cost') {
-                sortedOptions.sort((a, b) => parseInt(a) - parseInt(b));
-            } else {
-                sortedOptions.sort();
-            }
-
-            let html = `<div class="multi-select">
-                <div class="select-box" onclick="toggleDropdown('${containerId}-drop', event)">${title}</div>
-                <div class="dropdown-content" id="${containerId}-drop">`;
-            
-            sortedOptions.forEach(opt => {
-                html += `<label><input type="checkbox" value="${opt}" class="${filterKey}-checkbox" onchange="filterData()"> ${opt}</label>`;
-            });
-            
-            html += `</div></div>`;
-            container.innerHTML = html;
-        }
-
-        // ------------------------------------------------------------------
-        // Data Parsing & Loading
-        // ------------------------------------------------------------------
-
-        function parseCSV(text) {
-            const results = [];
-            let current = [];
-            let token = '';
-            let inQuotes = false;
-            for (let i = 0; i < text.length; i++) {
-                const c = text[i];
-                if (c === '"') {
-                    if (inQuotes && text[i + 1] === '"') { token += '"'; i++; } 
-                    else { inQuotes = !inQuotes; }
-                } else if (c === ',' && !inQuotes) {
-                    current.push(token.trim()); token = '';
-                } else if ((c === '\n' || c === '\r') && !inQuotes) {
-                    if (c === '\r' && text[i + 1] === '\n') i++;
-                    current.push(token.trim()); token = '';
-                    if (current.length > 0) { results.push(current); current = []; }
-                } else {
-                    token += c;
-                }
-            }
-            if (token || current.length > 0) {
-                current.push(token.trim()); results.push(current);
-            }
-            return results;
-        }
 
         async function loadData() {
             try {
-                // 1. Fetch JSON
+                console.log("Fetching cards.json...");
                 const response = await fetch('./cards.json'); 
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
@@ -408,72 +272,115 @@
                 let db;
                 try {
                     db = JSON.parse(cleanText);
+                    console.log("JSON successfully parsed.");
                 } catch (parseError) {
-                    throw new Error(`Syntax error in cards.json: ${parseError.message}.`);
+                    throw new Error(`Syntax error in cards.json: ${parseError.message}`);
                 }
 
-                // 2. Fetch CSV and build variant-specific stats map
+                // --- Parse Card Stats (stats.csv) ---
+                let statsMap = {};
                 let typeHeaders = [], auraHeaders = [], curseHeaders = [];
                 let uniqueClasses = new Set(), uniqueCosts = new Set(), uniqueRarities = new Set();
                 
                 try {
+                    console.log("Fetching stats.csv...");
                     const csvRes = await fetch('./stats.csv');
                     if (csvRes.ok) {
                         const csvText = await csvRes.text();
                         const rows = parseCSV(csvText);
                         const headers = rows[0].map(h => h.trim());
                         
-                        // Extract column headers dynamically based on indexes provided
                         typeHeaders = headers.slice(7, 25).filter(h => h);
                         auraHeaders = headers.slice(25, 52).filter(h => h);
                         curseHeaders = headers.slice(52, 77).filter(h => h);
 
                         for (let i = 1; i < rows.length; i++) {
                             const row = rows[i];
-                            if (!row[0]) continue; 
+                            if (!row[0]) continue;
                             
-                            const rawName = row[0];
-                            // Reconstruct the base string used in JSON IDs
-                            const cleanName = rawName.toLowerCase().replace(/[^a-z0-9]/g, '');
+                            const cleanName = row[0].toLowerCase().trim();
                             
-                            // Determine the variant suffix
-                            let suffix = '';
-                            if (row[1] && row[1].toUpperCase() === 'TRUE') suffix = 'a';
-                            else if (row[2] && row[2].toUpperCase() === 'TRUE') suffix = 'b';
-                            else if (row[3] && row[3].toUpperCase() === 'TRUE') suffix = 'rare';
-                            
-                            let variantId = cleanName + suffix;
-                            
-                            // Extract true boolean flags for this exact variant
-                            const cardTypes = [];
-                            for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardTypes.push(headers[j]);
-                            
-                            const cardAuras = [];
-                            for(let j=25; j<=51; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardAuras.push(headers[j]);
-                            
-                            const cardCurses = [];
-                            for(let j=52; j<=76; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') cardCurses.push(headers[j]);
+                            if (!statsMap[cleanName]) {
+                                statsMap[cleanName] = {
+                                    heroClass: row[4] || 'Other',
+                                    cost: row[5] !== undefined && row[5] !== '' ? row[5] : 'N/A',
+                                    rarity: row[6] || 'Unknown',
+                                    types: new Set(),
+                                    auras: new Set(),
+                                    curses: new Set(),
+                                    vCosts: {}
+                                };
+                                if(row[4]) uniqueClasses.add(row[4]);
+                                if(row[5] !== undefined && row[5] !== '') uniqueCosts.add(row[5]);
+                                if(row[6]) uniqueRarities.add(row[6]);
+                            }
 
-                            // Store everything mapped strictly to the Variant ID, not just the base card name
-                            globalVariantStats[variantId] = {
-                                heroClass: row[4] || 'Other',
-                                cost: row[5] !== undefined && row[5] !== '' ? row[5] : 'N/A',
-                                rarity: row[6] || 'Unknown',
-                                types: cardTypes,
-                                auras: cardAuras,
-                                curses: cardCurses
-                            };
+                            let vType = 'base';
+                            if (row[1] && row[1].toUpperCase() === 'TRUE') vType = 'a';
+                            else if (row[2] && row[2].toUpperCase() === 'TRUE') vType = 'b';
+                            else if (row[3] && row[3].toUpperCase() === 'TRUE') vType = 'rare';
+                            
+                            if (row[5] !== undefined && row[5] !== '') {
+                                statsMap[cleanName].vCosts[vType] = row[5];
+                            }
 
-                            if(row[4]) uniqueClasses.add(row[4]);
-                            if(row[5] !== undefined && row[5] !== '') uniqueCosts.add(row[5]);
-                            if(row[6]) uniqueRarities.add(row[6]);
+                            for(let j=7; j<=24; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') statsMap[cleanName].types.add(headers[j]);
+                            for(let j=25; j<=51; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') statsMap[cleanName].auras.add(headers[j]);
+                            for(let j=52; j<=76; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') statsMap[cleanName].curses.add(headers[j]);
                         }
                     }
-                } catch(e) {
-                    console.log("stats.csv not found or could not be parsed. Filters will be empty.");
-                }
+                } catch(e) { console.log("stats.csv not found or could not be parsed."); }
 
-                // 3. Build UI Multi-Select Dropdowns
+                // --- Parse Item Stats (Item Export.csv) ---
+                let itemStatsMap = {};
+                let itemBasicsHeaders = [], itemDamageHeaders = [], itemResistHeaders = [], itemAuraHeaders = [], itemCurseHeaders = [];
+                let uniqueItemTypes = new Set(), uniqueItemRarities = new Set();
+
+                try {
+                    console.log("Fetching Item Export.csv...");
+                    const itemCsvRes = await fetch('./Item Export.csv');
+                    if (itemCsvRes.ok) {
+                        const itemCsvText = await itemCsvRes.text();
+                        const itemRows = parseCSV(itemCsvText);
+                        const itemHeaders = itemRows[0].map(h => h.trim());
+
+                        itemBasicsHeaders = itemHeaders.slice(4, 12).filter(h => h); // Cols E-L (Index 4-11)
+                        itemDamageHeaders = itemHeaders.slice(12, 21).filter(h => h); // Cols M-U (Index 12-20)
+                        itemResistHeaders = itemHeaders.slice(21, 30).filter(h => h); // Cols V-AD (Index 21-29)
+                        itemAuraHeaders = itemHeaders.slice(30, 59).filter(h => h); // Cols AE-BG (Index 30-58)
+                        itemCurseHeaders = itemHeaders.slice(59, 86).filter(h => h); // Cols BH-CH (Index 59-85)
+
+                        for (let i = 1; i < itemRows.length; i++) {
+                            const row = itemRows[i];
+                            if (!row[0]) continue;
+
+                            const cleanName = row[0].toLowerCase().trim();
+
+                            if (!itemStatsMap[cleanName]) {
+                                itemStatsMap[cleanName] = {
+                                    type: row[2] || 'Unknown',
+                                    rarity: row[3] || 'Unknown',
+                                    basics: new Set(),
+                                    damage: new Set(),
+                                    resist: new Set(),
+                                    auras: new Set(),
+                                    curses: new Set()
+                                };
+                                if(row[2]) uniqueItemTypes.add(row[2]);
+                                if(row[3]) uniqueItemRarities.add(row[3]);
+                            }
+
+                            for(let j=4; j<=11; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].basics.add(itemHeaders[j]);
+                            for(let j=12; j<=20; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].damage.add(itemHeaders[j]);
+                            for(let j=21; j<=29; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].resist.add(itemHeaders[j]);
+                            for(let j=30; j<=58; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].auras.add(itemHeaders[j]);
+                            for(let j=59; j<=85; j++) if(row[j] && row[j].toUpperCase() === 'TRUE') itemStatsMap[cleanName].curses.add(itemHeaders[j]);
+                        }
+                    }
+                } catch(e) { console.log("Item Export.csv not found or could not be parsed."); }
+
+
+                // --- Build UI Dropdowns ---
                 createMultiSelect('classFilterContainer', 'Class', uniqueClasses, 'class');
                 createMultiSelect('costFilterContainer', 'Cost', uniqueCosts, 'cost');
                 createMultiSelect('rarityFilterContainer', 'Rarity', uniqueRarities, 'rarity');
@@ -481,11 +388,20 @@
                 createMultiSelect('auraFilterContainer', 'Auras', auraHeaders, 'aura');
                 createMultiSelect('curseFilterContainer', 'Curses', curseHeaders, 'curse');
 
-                const categories = new Set();
+                createMultiSelect('itemTypeFilterContainer', 'Item Type', uniqueItemTypes, 'item-type');
+                createMultiSelect('itemRarityFilterContainer', 'Rarity', uniqueItemRarities, 'item-rarity');
+                createMultiSelect('itemBasicsFilterContainer', 'Basics', itemBasicsHeaders, 'item-basics');
+                createMultiSelect('itemDamageFilterContainer', 'Damage', itemDamageHeaders, 'item-damage');
+                createMultiSelect('itemResistFilterContainer', 'Resistances', itemResistHeaders, 'item-resist');
+                createMultiSelect('itemAuraFilterContainer', 'Auras', itemAuraHeaders, 'item-aura');
+                createMultiSelect('itemCurseFilterContainer', 'Curses', itemCurseHeaders, 'item-curse');
 
-                // Build main card logic from JSON.
-                allCards = Object.entries(db.cards).map(([key, data]) => {
-                    let category = "cards"; // Default base category
+                const categories = new Set();
+                allCards = []; 
+
+                console.log("Processing cards and items...");
+                Object.entries(db.cards).forEach(([key, data]) => {
+                    let category = "normal";
                     let cleanName = key;
                     
                     const match = key.match(/\(([^)]+)\)/);
@@ -493,22 +409,54 @@
                         category = match[1].toLowerCase();
                         cleanName = key.replace(/\([^)]+\)/g, '').trim();
                     }
+                    
                     categories.add(category);
                     
-                    return {
+                    const sheetData = statsMap[cleanName.toLowerCase()] || { 
+                        heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', types: new Set(), auras: new Set(), curses: new Set(), vCosts: {} 
+                    };
+
+                    const itemSheetData = itemStatsMap[cleanName.toLowerCase()] || {
+                        type: 'Unknown', rarity: 'Unknown', basics: new Set(), damage: new Set(), resist: new Set(), auras: new Set(), curses: new Set()
+                    };
+
+                    // Skip "Normal" category cards if they aren't in stats.csv
+                    if (category === "normal" && sheetData.heroClass === 'Other' && Array.from(sheetData.types).length === 0) {
+                        return; // Skip developer cards
+                    }
+
+                    allCards.push({
                         idKey: cleanName,
                         category: category,
+                        // Card Stats
+                        heroClass: sheetData.heroClass,
+                        cost: sheetData.cost,
+                        rarity: sheetData.rarity,
+                        types: Array.from(sheetData.types),
+                        auras: Array.from(sheetData.auras),
+                        curses: Array.from(sheetData.curses),
+                        vCosts: sheetData.vCosts,
+                        // Item Stats
+                        itemType: itemSheetData.type,
+                        itemRarity: itemSheetData.rarity,
+                        itemBasics: Array.from(itemSheetData.basics),
+                        itemDamage: Array.from(itemSheetData.damage),
+                        itemResist: Array.from(itemSheetData.resist),
+                        itemAuras: Array.from(itemSheetData.auras),
+                        itemCurses: Array.from(itemSheetData.curses),
+                        // JSON Base
                         variants: data.IDs || [], 
                         related: data.RelatedIDs || []
-                    };
+                    });
                 });
                 
-                // Sort main menu alphabetically!
+                console.log(`Successfully processed ${allCards.length} cards. Sorting...`);
+                // Alphabetical Sort
                 allCards.sort((a, b) => a.idKey.localeCompare(b.idKey));
 
-                // Populate Primary Category Dropdown
+                // Populate Dropdown
                 const categorySelect = document.getElementById('categoryFilter');
-                Array.from(categories).filter(c => c !== 'cards').sort().forEach(cat => {
+                Array.from(categories).filter(c => c !== 'normal').sort().forEach(cat => {
                     const option = document.createElement('option');
                     option.value = cat;
                     option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
@@ -517,11 +465,13 @@
 
                 updateSavedBuildsDropdown();
                 checkUrlForBuild();
-                renderBuild(); // Compute metrics immediately if loaded from URL
+                renderBuild();
+                
+                console.log("Triggering initial filter...");
                 filterData(); 
 
             } catch (error) {
-                console.error("Error loading data:", error);
+                console.error("FATAL ERROR IN LOADDATA:", error);
                 const errorDiv = document.getElementById('error-message');
                 errorDiv.style.display = 'block';
                 errorDiv.innerHTML = `<h3>Failed to load application data</h3><p style="font-size: 0.9em; color: #ccc;">${error.message}</p>`;
@@ -531,75 +481,8 @@
         // ------------------------------------------------------------------
         // Rendering & Filtering
         // ------------------------------------------------------------------
-
-        function handleImageError(img) {
-            if (img.classList.contains('variant-img')) {
-                img.style.display = 'none';
-            } else {
-                const missingId = img.getAttribute('data-id');
-                img.outerHTML = `<div class="error-state" id="${img.id}">Image Not Found<br><small style="margin-top: 10px; color: #aaa;">${missingId}_result.png</small></div>`;
-            }
-        }
-
-        function renderCards(cardsToRender) {
-            const grid = document.getElementById('cardGrid');
-            grid.innerHTML = ''; 
-
-            cardsToRender.forEach(card => {
-                if (card.variants.length === 0) return;
-
-                const baseId = card.variants[0]; 
-                const upgrades = card.variants.slice(1); 
-
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'card-container';
-                
-                let htmlStr = `<h3 class="card-title">${card.idKey}</h3>`;
-                
-                htmlStr += `<img src="./card_images/${baseId}_result.png" id="main-img-${baseId}" alt="${baseId}" data-id="${baseId}" onerror="handleImageError(this)">`;
-                
-                if (upgrades.length > 0) {
-                    htmlStr += `<div class="variants">`;
-                    htmlStr += `<img class="variant-img active" id="thumb-${baseId}-${baseId}" src="./card_images/${baseId}_result.png" onclick="swapImage('${baseId}', '${baseId}')" onerror="handleImageError(this)">`;
-                    upgrades.forEach(upgradeId => {
-                        // Apply conditional colored borders to variants
-                        let borderClass = '';
-                        if (upgradeId.endsWith('rare')) borderClass = 'border-rare';
-                        else if (upgradeId.endsWith('b')) borderClass = 'border-b';
-                        else if (upgradeId.endsWith('a')) borderClass = 'border-a';
-
-                        htmlStr += `<img class="variant-img ${borderClass}" id="thumb-${baseId}-${upgradeId}" src="./card_images/${upgradeId}_result.png" onclick="swapImage('${baseId}', '${upgradeId}')" onerror="handleImageError(this)">`;
-                    });
-                    htmlStr += `</div>`;
-                }
-
-                htmlStr += `<button class="add-btn" onclick="addCurrentVariantToBuild('${baseId}')">+ Add to Build</button>`;
-
-                cardDiv.innerHTML = htmlStr;
-                grid.appendChild(cardDiv);
-            });
-        }
-
-        function swapImage(baseId, newId) {
-            const mainImgElement = document.getElementById(`main-img-${baseId}`);
-            
-            if(mainImgElement.tagName === 'IMG') {
-               mainImgElement.src = `./card_images/${newId}_result.png`;
-               mainImgElement.setAttribute('data-id', newId);
-            } else {
-               const newImg = document.createElement('img');
-               newImg.src = `./card_images/${newId}_result.png`;
-               newImg.id = `main-img-${baseId}`;
-               newImg.setAttribute('data-id', newId);
-               newImg.onerror = function() { handleImageError(this) };
-               mainImgElement.parentNode.replaceChild(newImg, mainImgElement);
-            }
-            
-            const variantsContainer = document.getElementById(`thumb-${baseId}-${newId}`).parentElement;
-            const thumbs = variantsContainer.querySelectorAll('.variant-img');
-            thumbs.forEach(t => t.classList.remove('active'));
-            document.getElementById(`thumb-${baseId}-${newId}`).classList.add('active');
-        }
+        // Master Filter Engine
+        // ------------------------------------------------------------------
 
         function filterData() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
@@ -607,6 +490,7 @@
             
             const getChecked = (className) => Array.from(document.querySelectorAll(`.${className}:checked`)).map(cb => cb.value);
             
+            // Card Filters
             const selectedClasses = getChecked('class-checkbox');
             const selectedCosts = getChecked('cost-checkbox');
             const selectedRarities = getChecked('rarity-checkbox');
@@ -614,40 +498,52 @@
             const selectedAuras = getChecked('aura-checkbox');
             const selectedCurses = getChecked('curse-checkbox');
 
+            // Item Filters
+            const selectedItemTypes = getChecked('item-type-checkbox');
+            const selectedItemRarities = getChecked('item-rarity-checkbox');
+            const selectedItemBasics = getChecked('item-basics-checkbox');
+            const selectedItemDamage = getChecked('item-damage-checkbox');
+            const selectedItemResist = getChecked('item-resist-checkbox');
+            const selectedItemAuras = getChecked('item-aura-checkbox');
+            const selectedItemCurses = getChecked('item-curse-checkbox');
+
             const filtered = allCards.filter(card => {
-                // 1. Text Search matching
                 const matchesSearch = card.idKey.toLowerCase().includes(searchTerm) || 
                                       card.variants.join(' ').toLowerCase().includes(searchTerm);
                 if (!matchesSearch) return false;
-                
-                // 2. Category matching
                 if (selectedCategory !== 'all' && card.category !== selectedCategory) return false;
 
-                // 3. Advanced Filtering for "cards" (and "all" if filters are applied)
-                if (selectedCategory === 'cards' || selectedCategory === 'all') {
+                // Card Specific Filtering
+                if (selectedCategory === 'normal') {
+                    if (selectedClasses.length > 0 && !selectedClasses.includes(card.heroClass)) return false;
                     
-                    // To show a base card, AT LEAST ONE of its variants must pass all active filters
-                    const hasMatchingVariant = card.variants.some(variantId => {
-                        // Fallback object in case JSON variant is missing from CSV
-                        const stats = globalVariantStats[variantId] || { 
-                            heroClass: 'Other', cost: 'N/A', rarity: 'Unknown', types: [], auras: [], curses: [] 
-                        };
-
-                        if (selectedClasses.length > 0 && !selectedClasses.includes(stats.heroClass)) return false;
-                        if (selectedCosts.length > 0 && !selectedCosts.includes(stats.cost)) return false;
-                        if (selectedRarities.length > 0 && !selectedRarities.includes(stats.rarity)) return false;
-                        
-                        // Array overlap matching
-                        if (selectedTypes.length > 0 && !selectedTypes.some(t => stats.types.includes(t))) return false;
-                        if (selectedAuras.length > 0 && !selectedAuras.some(a => stats.auras.includes(a))) return false;
-                        if (selectedCurses.length > 0 && !selectedCurses.some(c => stats.curses.includes(c))) return false;
-
-                        return true; // This specific variant passed all filters!
-                    });
-
-                    // If no variant within this card's family passed the filter, hide the whole card
-                    if (!hasMatchingVariant) return false;
+                    // Cost string parsing
+                    if (selectedCosts.length > 0) {
+                        let matchCost = false;
+                        for (let c of selectedCosts) {
+                            if (card.cost.toString() === c) { matchCost = true; break; }
+                        }
+                        if (!matchCost) return false;
+                    }
+                    
+                    if (selectedRarities.length > 0 && !selectedRarities.includes(card.rarity)) return false;
+                    if (selectedTypes.length > 0 && !selectedTypes.some(t => card.types.includes(t))) return false;
+                    if (selectedAuras.length > 0 && !selectedAuras.some(a => card.auras.includes(a))) return false;
+                    if (selectedCurses.length > 0 && !selectedCurses.some(c => card.curses.includes(c))) return false;
                 }
+
+                // Item Specific Filtering
+                if (selectedCategory === 'item') {
+                    if (selectedItemTypes.length > 0 && !selectedItemTypes.includes(card.itemType)) return false;
+                    if (selectedItemRarities.length > 0 && !selectedItemRarities.includes(card.itemRarity)) return false;
+                    
+                    if (selectedItemBasics.length > 0 && !selectedItemBasics.some(t => card.itemBasics.includes(t))) return false;
+                    if (selectedItemDamage.length > 0 && !selectedItemDamage.some(t => card.itemDamage.includes(t))) return false;
+                    if (selectedItemResist.length > 0 && !selectedItemResist.some(t => card.itemResist.includes(t))) return false;
+                    if (selectedItemAuras.length > 0 && !selectedItemAuras.some(t => card.itemAuras.includes(t))) return false;
+                    if (selectedItemCurses.length > 0 && !selectedItemCurses.some(t => card.itemCurses.includes(t))) return false;
+                }
+
                 return true;
             });
 
