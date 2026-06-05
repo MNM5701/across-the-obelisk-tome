@@ -67,13 +67,13 @@
         .add-btn { margin-top: auto; padding: 8px; background: #444; border: 1px solid #555; color: #eee; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s; font-weight: bold; }
         .add-btn:hover { background: #4ade80; color: #111; border-color: #4ade80; }
 
-        #error-message { display: none; color: #ff6b6b; background: #333; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; border: 1px solid #ff6b6b; }
-    </style>
-</head>
-<body>
+        /* Filter UI Enhancements */
+        .select-box.has-selections { border-color: #4ade80 !important; color: #4ade80 !important; font-weight: bold; }
+        .disabled-option { color: #555 !important; cursor: not-allowed !important; text-decoration: line-through; }
+        .disabled-option input { cursor: not-allowed; opacity: 0.5; }
 
-    <!-- Build Manager Area -->
-    <div class="build-manager" id="buildManager">
+        /* Error States */
+        .error-state { padding: 40px 10px; background: #333; border-radius: 4px; color: #ff6b6b; font-size: 0.9em; display: flex; align-items: center; justify-content: center; flex-direction: column; min-height: 200px; }
         <div class="build-header">
             <input type="text" id="buildName" placeholder="Name your build...">
             <button class="btn-green" onclick="saveBuildToLocal()">Save to Computer</button>
@@ -100,11 +100,12 @@
     <!-- Primary Search & Category -->
     <div class="controls">
         <input type="text" id="searchInput" placeholder="Search cards by name or ID..." oninput="filterData()">
-        <select id="categoryFilter" class="main-select" onchange="toggleSubMenu(); filterData()">
+        <select id="categoryFilter" class="main-select" onchange="toggleSubMenu(); filterData()" style="max-width: 200px;">
             <option value="all">All Categories</option>
             <option value="normal" selected>Normal Cards</option>
             <option value="item">Items</option>
         </select>
+        <button class="btn-blue" onclick="resetFilters()" style="padding: 10px 15px;">Reset Filters</button>
     </div>
 
     <!-- Advanced Spreadsheet Filters (Cards) -->
@@ -167,7 +168,22 @@
             document.getElementById(id).classList.toggle('show');
         }
 
-        // Close dropdowns when clicking outside
+        function resetFilters() {
+            // Uncheck all boxes and remove disabled states
+            document.querySelectorAll('.dropdown-content input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+                cb.disabled = false;
+                cb.parentElement.classList.remove('disabled-option');
+            });
+            // Clear search
+            document.getElementById('searchInput').value = '';
+            
+            // Remove active highlights
+            document.querySelectorAll('.select-box').forEach(box => box.classList.remove('has-selections'));
+            
+            filterData();
+        }
+
         document.addEventListener('click', function(event) {
             if (!event.target.closest('.dropdown-content') && !event.target.closest('.select-box')) {
                 document.querySelectorAll('.dropdown-content').forEach(el => el.classList.remove('show'));
@@ -620,69 +636,110 @@
             document.getElementById(`thumb-${baseId}-${newId}`).classList.add('active');
         }
 
+        // ------------------------------------------------------------------
+        // Master Filter Engine (Dynamic Facets & AND/OR Logic)
+        // ------------------------------------------------------------------
+
         function filterData() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const selectedCategory = document.getElementById('categoryFilter').value;
             
             const getChecked = (className) => Array.from(document.querySelectorAll(`.${className}:checked`)).map(cb => cb.value);
             
-            // Card Filters
-            const selectedClasses = getChecked('class-checkbox');
-            const selectedCosts = getChecked('cost-checkbox');
-            const selectedRarities = getChecked('rarity-checkbox');
-            const selectedTypes = getChecked('type-checkbox');
-            const selectedAuras = getChecked('aura-checkbox');
-            const selectedCurses = getChecked('curse-checkbox');
+            // Configuration for all filter logic
+            const filters = {
+                'class': { vals: getChecked('class-checkbox'), field: 'heroClass' },
+                'cost': { vals: getChecked('cost-checkbox'), field: 'cost' },
+                'rarity': { vals: getChecked('rarity-checkbox'), field: 'rarity' },
+                'type': { vals: getChecked('type-checkbox'), field: 'types' },
+                'aura': { vals: getChecked('aura-checkbox'), field: 'auras' },
+                'curse': { vals: getChecked('curse-checkbox'), field: 'curses' },
+                'item-type': { vals: getChecked('item-type-checkbox'), field: 'itemType' },
+                'item-rarity': { vals: getChecked('item-rarity-checkbox'), field: 'itemRarity' },
+                'item-basics': { vals: getChecked('item-basics-checkbox'), field: 'itemBasics' },
+                'item-damage': { vals: getChecked('item-damage-checkbox'), field: 'itemDamage' },
+                'item-resist': { vals: getChecked('item-resist-checkbox'), field: 'itemResist' },
+                'item-aura': { vals: getChecked('item-aura-checkbox'), field: 'itemAuras' },
+                'item-curse': { vals: getChecked('item-curse-checkbox'), field: 'itemCurses' }
+            };
 
-            // Item Filters
-            const selectedItemTypes = getChecked('item-type-checkbox');
-            const selectedItemRarities = getChecked('item-rarity-checkbox');
-            const selectedItemBasics = getChecked('item-basics-checkbox');
-            const selectedItemDamage = getChecked('item-damage-checkbox');
-            const selectedItemResist = getChecked('item-resist-checkbox');
-            const selectedItemAuras = getChecked('item-aura-checkbox');
-            const selectedItemCurses = getChecked('item-curse-checkbox');
-
-            const filtered = allCards.filter(card => {
+            // Re-usable logic gate so we can simulate filters for the "gray out" feature
+            function passesFilters(card, skipKey = null) {
                 const matchesSearch = card.idKey.toLowerCase().includes(searchTerm) || 
                                       card.variants.join(' ').toLowerCase().includes(searchTerm);
                 if (!matchesSearch) return false;
                 if (selectedCategory !== 'all' && card.category !== selectedCategory) return false;
 
-                // Card Specific Filtering
-                if (selectedCategory === 'normal') {
-                    if (selectedClasses.length > 0 && !selectedClasses.includes(card.heroClass)) return false;
+                if (selectedCategory === 'normal' || selectedCategory === 'all') {
+                    // Scalar fields (OR logic)
+                    if (skipKey !== 'class' && filters['class'].vals.length > 0 && !filters['class'].vals.includes(card.heroClass)) return false;
+                    if (skipKey !== 'cost' && filters['cost'].vals.length > 0 && !filters['cost'].vals.includes(card.cost.toString())) return false;
+                    if (skipKey !== 'rarity' && filters['rarity'].vals.length > 0 && !filters['rarity'].vals.includes(card.rarity)) return false;
                     
-                    if (selectedCosts.length > 0) {
-                        let matchCost = false;
-                        for (let c of selectedCosts) {
-                            if (card.cost.toString() === c) { matchCost = true; break; }
-                        }
-                        if (!matchCost) return false;
-                    }
-                    
-                    if (selectedRarities.length > 0 && !selectedRarities.includes(card.rarity)) return false;
-                    if (selectedTypes.length > 0 && !selectedTypes.some(t => card.types.includes(t))) return false;
-                    if (selectedAuras.length > 0 && !selectedAuras.some(a => card.auras.includes(a))) return false;
-                    if (selectedCurses.length > 0 && !selectedCurses.some(c => card.curses.includes(c))) return false;
+                    // Array fields (AND logic - must contain EVERY selected tag)
+                    if (skipKey !== 'type' && filters['type'].vals.length > 0 && !filters['type'].vals.every(t => card.types.includes(t))) return false;
+                    if (skipKey !== 'aura' && filters['aura'].vals.length > 0 && !filters['aura'].vals.every(a => card.auras.includes(a))) return false;
+                    if (skipKey !== 'curse' && filters['curse'].vals.length > 0 && !filters['curse'].vals.every(c => card.curses.includes(c))) return false;
                 }
 
-                // Item Specific Filtering
-                if (selectedCategory === 'item') {
-                    if (selectedItemTypes.length > 0 && !selectedItemTypes.includes(card.itemType)) return false;
-                    if (selectedItemRarities.length > 0 && !selectedItemRarities.includes(card.itemRarity)) return false;
+                if (selectedCategory === 'item' || selectedCategory === 'all') {
+                    // Scalar fields (OR logic)
+                    if (skipKey !== 'item-type' && filters['item-type'].vals.length > 0 && !filters['item-type'].vals.includes(card.itemType)) return false;
+                    if (skipKey !== 'item-rarity' && filters['item-rarity'].vals.length > 0 && !filters['item-rarity'].vals.includes(card.itemRarity)) return false;
                     
-                    if (selectedItemBasics.length > 0 && !selectedItemBasics.some(t => card.itemBasics.includes(t))) return false;
-                    if (selectedItemDamage.length > 0 && !selectedItemDamage.some(t => card.itemDamage.includes(t))) return false;
-                    if (selectedItemResist.length > 0 && !selectedItemResist.some(t => card.itemResist.includes(t))) return false;
-                    if (selectedItemAuras.length > 0 && !selectedItemAuras.some(t => card.itemAuras.includes(t))) return false;
-                    if (selectedItemCurses.length > 0 && !selectedItemCurses.some(t => card.itemCurses.includes(t))) return false;
+                    // Array fields (AND logic - must contain EVERY selected tag)
+                    if (skipKey !== 'item-basics' && filters['item-basics'].vals.length > 0 && !filters['item-basics'].vals.every(t => card.itemBasics.includes(t))) return false;
+                    if (skipKey !== 'item-damage' && filters['item-damage'].vals.length > 0 && !filters['item-damage'].vals.every(t => card.itemDamage.includes(t))) return false;
+                    if (skipKey !== 'item-resist' && filters['item-resist'].vals.length > 0 && !filters['item-resist'].vals.every(t => card.itemResist.includes(t))) return false;
+                    if (skipKey !== 'item-aura' && filters['item-aura'].vals.length > 0 && !filters['item-aura'].vals.every(t => card.itemAuras.includes(t))) return false;
+                    if (skipKey !== 'item-curse' && filters['item-curse'].vals.length > 0 && !filters['item-curse'].vals.every(t => card.itemCurses.includes(t))) return false;
                 }
-
                 return true;
+            }
+
+            // 1. Calculate actual results
+            const filtered = allCards.filter(c => passesFilters(c));
+            renderCards(filtered);
+
+            // 2. Highlight active dropdown menus
+            document.querySelectorAll('.multi-select').forEach(ms => {
+                const hasChecked = ms.querySelectorAll('input:checked').length > 0;
+                const box = ms.querySelector('.select-box');
+                if(hasChecked) box.classList.add('has-selections');
+                else box.classList.remove('has-selections');
             });
 
-            renderCards(filtered);
+            // 3. Dynamic Facet Math (Gray out invalid options)
+            Object.keys(filters).forEach(key => {
+                // If it is an OR filter, we must ignore itself to see sibling options. If AND, we enforce everything.
+                const isOrFilter = ['class', 'cost', 'rarity', 'item-type', 'item-rarity'].includes(key);
+                
+                // Get all cards that pass the test for this specific dropdown calculation
+                const validCards = allCards.filter(c => passesFilters(c, isOrFilter ? key : null));
+                
+                // Extract every available property from that subset
+                const validValues = new Set();
+                validCards.forEach(c => {
+                    let val = c[filters[key].field];
+                    if (Array.isArray(val)) {
+                        val.forEach(v => validValues.add(v));
+                    } else {
+                        validValues.add(val !== undefined && val !== null ? val.toString() : '');
+                    }
+                });
+
+                // Disable checkboxes that are not present in the valid subset
+                document.querySelectorAll(`.${key}-checkbox`).forEach(cb => {
+                    const label = cb.parentElement;
+                    if (!validValues.has(cb.value)) {
+                        label.classList.add('disabled-option');
+                        cb.disabled = true;
+                    } else {
+                        label.classList.remove('disabled-option');
+                        cb.disabled = false;
+                    }
+                });
+            });
         }
 
         loadData();
