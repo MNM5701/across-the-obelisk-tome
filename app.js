@@ -101,10 +101,13 @@ let allCards = [];
                 const variantId = img.getAttribute('data-id');
                 const d = getVariantDetails(variantId);
                 if (d && d.card.category === 'item' && d.card.itemType) {
+                    const newType = d.card.itemType.trim().toLowerCase();
                     // Remove existing item of same type
                     currentBuild = currentBuild.filter(id => {
                         let existing = getVariantDetails(id);
-                        return !(existing && existing.card.category === 'item' && existing.card.itemType.toLowerCase() === d.card.itemType.toLowerCase());
+                        if (!existing || existing.card.category !== 'item') return true;
+                        const existingType = (existing.card.itemType || '').trim().toLowerCase();
+                        return existingType !== newType;
                     });
                 }
                 currentBuild.push(variantId);
@@ -161,11 +164,18 @@ let allCards = [];
                 `;
 
                 if (d.card.category === 'item') {
-                    const capitalizedType = d.card.itemType.charAt(0).toUpperCase() + d.card.itemType.slice(1).toLowerCase();
+                    const cleanType = (d.card.itemType || 'Unknown').trim();
+                    const capitalizedType = cleanType.charAt(0).toUpperCase() + cleanType.slice(1).toLowerCase();
                     const slot = equipmentGrid.querySelector(`.equipment-slot[data-type="${capitalizedType}"]`);
                     if (slot) {
                         slot.innerHTML = itemHtml;
                         slot.classList.add('filled');
+                    } else {
+                        // Fallback if itemType is Unknown or invalid
+                        const div = document.createElement('div');
+                        div.innerHTML = itemHtml;
+                        deckGrid.appendChild(div.firstElementChild);
+                        deckCount++;
                     }
                 } else {
                     const div = document.createElement('div');
