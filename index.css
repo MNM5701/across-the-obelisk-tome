@@ -234,3 +234,19 @@ input[type="text"]:focus, select:focus {
 .app-header { text-align: center; margin-bottom: 30px; padding: 20px; }
 .app-header h1 { font-size: 2.5em; font-weight: 800; background: linear-gradient(135deg, var(--accent-green), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 5px; }
 .app-header p { color: var(--text-muted); font-size: 1.1em; }
+
+
+/* Section Toggles */
+.build-section-toggle { display: flex; justify-content: space-between; align-items: center; background: var(--bg-panel-solid); padding: 10px 15px; border-radius: var(--border-radius-md); cursor: pointer; margin-top: 20px; border: 1px solid var(--border-light); transition: background 0.2s; }
+.build-section-toggle:hover { background: rgba(255,255,255,0.05); }
+.build-section-toggle h3 { font-size: 1.1em; font-weight: 600; color: var(--accent-green); margin: 0; }
+.build-section-toggle .toggle-icon { transition: transform 0.3s; }
+.collapsed { display: none !important; }
+.build-section-toggle.collapsed .toggle-icon { transform: rotate(-90deg); }
+
+/* Equipment Slots */
+.equipment-slots { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; background: transparent; border: none; padding: 0; margin-top: 15px; min-height: auto; }
+.equipment-slot { background: rgba(0,0,0,0.3); border: 2px dashed var(--border-light); border-radius: var(--border-radius-md); height: 100px; display: flex; justify-content: center; align-items: center; color: var(--text-muted); font-weight: 600; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s; position: relative; }
+.equipment-slot.filled { border-style: solid; border-color: var(--accent-blue); background: transparent; }
+.equipment-slot .build-item { position: absolute; width: 100%; height: 100%; top: 0; left: 0; display: flex; justify-content: center; }
+.equipment-slot .build-item img { height: 100%; width: auto; max-width: 100%; object-fit: contain; border-radius: var(--border-radius-md); margin: 0 auto; display: block; box-shadow: none; }

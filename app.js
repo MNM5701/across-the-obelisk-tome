@@ -1,4 +1,4 @@
-﻿let allCards = []; 
+let allCards = []; 
         let currentBuild = []; 
 
         // ------------------------------------------------------------------
@@ -99,6 +99,14 @@
             const img = document.getElementById(`main-img-${baseId}`);
             if (img) {
                 const variantId = img.getAttribute('data-id');
+                const d = getVariantDetails(variantId);
+                if (d && d.card.category === 'item' && d.card.itemType) {
+                    // Remove existing item of same type
+                    currentBuild = currentBuild.filter(id => {
+                        let existing = getVariantDetails(id);
+                        return !(existing && existing.card.category === 'item' && existing.card.itemType === d.card.itemType);
+                    });
+                }
                 currentBuild.push(variantId);
                 renderBuild();
             }
@@ -110,12 +118,17 @@
         }
 
         function renderBuild() {
-            const grid = document.getElementById('buildGrid');
+            const equipmentGrid = document.getElementById('equipmentSection');
+            const deckGrid = document.getElementById('deckSection');
             const metricsPanel = document.getElementById('buildMetrics');
-            grid.innerHTML = '';
+            
+            deckGrid.innerHTML = '';
+            
+            const equipTypes = ['Weapon', 'Armor', 'Ring', 'Trinket', 'Pet'];
+            equipmentGrid.innerHTML = equipTypes.map(t => `<div class="equipment-slot" data-type="${t}"><span>${t}</span></div>`).join('');
             
             if(currentBuild.length === 0) {
-                grid.innerHTML = '<div style="color:#666; font-style:italic; padding: 10px;">Select cards to start building...</div>';
+                deckGrid.innerHTML = '<div style="color:#666; font-style:italic; padding: 10px;">Select cards to start building...</div>';
                 if(metricsPanel) metricsPanel.style.display = 'none';
                 return;
             }
@@ -130,23 +143,35 @@
                 return d1.card.idKey.localeCompare(d2.card.idKey);
             });
 
-            let totalCards = currentBuild.length;
             let totalCost = 0;
             let costCurve = {};
             let typeCounts = {};
             let allEffects = new Set();
+            let deckCount = 0;
 
             currentBuild.forEach((cardId, index) => {
-                const div = document.createElement('div');
-                div.className = 'build-item';
-                div.innerHTML = `
-                    <img src="./card_images/${cardId}_result.png" alt="${cardId}" title="${cardId}">
-                    <button class="remove-btn" onclick="removeFromBuild(${index})">x</button>
-                `;
-                grid.appendChild(div);
-
                 let d = getVariantDetails(cardId);
-                if (d) {
+                if (!d) return;
+
+                const itemHtml = `
+                    <div class="build-item">
+                        <img src="./card_images/${cardId}_result.png" alt="${cardId}" title="${cardId}">
+                        <button class="remove-btn" onclick="removeFromBuild(${index})">x</button>
+                    </div>
+                `;
+
+                if (d.card.category === 'item') {
+                    const slot = equipmentGrid.querySelector(`.equipment-slot[data-type="${d.card.itemType}"]`);
+                    if (slot) {
+                        slot.innerHTML = itemHtml;
+                        slot.classList.add('filled');
+                    }
+                } else {
+                    const div = document.createElement('div');
+                    div.innerHTML = itemHtml;
+                    deckGrid.appendChild(div.firstElementChild);
+                    deckCount++;
+                    
                     totalCost += d.cost;
                     costCurve[d.cost] = (costCurve[d.cost] || 0) + 1;
                     if(d.card.types) d.card.types.forEach(t => { typeCounts[t] = (typeCounts[t] || 0) + 1; });
@@ -155,8 +180,8 @@
                 }
             });
 
-            if(document.getElementById('metricTotal')) document.getElementById('metricTotal').textContent = totalCards;
-            if(document.getElementById('metricAvg')) document.getElementById('metricAvg').textContent = totalCards > 0 ? (totalCost / totalCards).toFixed(1) : "0.0";
+            if(document.getElementById('metricTotal')) document.getElementById('metricTotal').textContent = deckCount;
+            if(document.getElementById('metricAvg')) document.getElementById('metricAvg').textContent = deckCount > 0 ? (totalCost / deckCount).toFixed(1) : "0.0";
             
             let curveHtml = '';
             Object.keys(costCurve).sort((a,b)=>a-b).forEach(cost => {
@@ -217,7 +242,9 @@
         function generateShareLink() {
             if (currentBuild.length === 0) { alert("Add some cards to generate a link!"); return; }
             const name = encodeURIComponent(document.getElementById('buildName').value.trim() || 'Untitled');
-            const cards = currentBuild.join(',');
+            const counts = {};
+            currentBuild.forEach(c => counts[c] = (counts[c] || 0) + 1);
+            const cards = Object.entries(counts).map(([c, count]) => count > 1 ? `${c}-${count}` : c).join(',');
             const baseUrl = window.location.origin + window.location.pathname;
             const finalUrl = `${baseUrl}?buildName=${name}&cards=${cards}`;
             
@@ -235,7 +262,15 @@
             const name = params.get('buildName');
             
             if (cards) {
-                currentBuild = cards.split(',').filter(c => c);
+                currentBuild = [];
+                cards.split(',').filter(c => c).forEach(item => {
+                    const parts = item.split('-');
+                    if (parts.length === 2 && !isNaN(parts[1])) {
+                        for(let i = 0; i < parseInt(parts[1]); i++) currentBuild.push(parts[0]);
+                    } else {
+                        currentBuild.push(item);
+                    }
+                });
                 if (name) document.getElementById('buildName').value = decodeURIComponent(name);
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
@@ -399,6 +434,7 @@
                         category = match[1].toLowerCase();
                         cleanName = key.replace(/\([^)]+\)/g, '').trim();
                     }
+                    if (category === 'items') category = 'item';
                     categories.add(category);
                     
                     const sheetData = statsMap[cleanName.toLowerCase()] || { 

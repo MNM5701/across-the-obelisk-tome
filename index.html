@@ -32,8 +32,20 @@
             <small style="color: #aaa; display: block; margin-top: 5px;">Link copied to clipboard! Share this URL to send your build.</small>
         </div>
 
-        <div class="build-grid" id="buildGrid">
-            <!-- Selected cards inject here -->
+        <div class="build-section-toggle" onclick="this.classList.toggle('collapsed'); document.getElementById('equipmentSection').classList.toggle('collapsed')">
+            <h3>Equipment</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="build-grid equipment-slots" id="equipmentSection">
+            <!-- Equipment injected here -->
+        </div>
+
+        <div class="build-section-toggle" onclick="this.classList.toggle('collapsed'); document.getElementById('deckSection').classList.toggle('collapsed')">
+            <h3>Deck</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="build-grid" id="deckSection">
+            <!-- Deck cards injected here -->
         </div>
 
         <!-- Metrics Dashboard -->
