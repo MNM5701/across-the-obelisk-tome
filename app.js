@@ -104,7 +104,7 @@ let allCards = [];
                     // Remove existing item of same type
                     currentBuild = currentBuild.filter(id => {
                         let existing = getVariantDetails(id);
-                        return !(existing && existing.card.category === 'item' && existing.card.itemType === d.card.itemType);
+                        return !(existing && existing.card.category === 'item' && existing.card.itemType.toLowerCase() === d.card.itemType.toLowerCase());
                     });
                 }
                 currentBuild.push(variantId);
@@ -161,7 +161,8 @@ let allCards = [];
                 `;
 
                 if (d.card.category === 'item') {
-                    const slot = equipmentGrid.querySelector(`.equipment-slot[data-type="${d.card.itemType}"]`);
+                    const capitalizedType = d.card.itemType.charAt(0).toUpperCase() + d.card.itemType.slice(1).toLowerCase();
+                    const slot = equipmentGrid.querySelector(`.equipment-slot[data-type="${capitalizedType}"]`);
                     if (slot) {
                         slot.innerHTML = itemHtml;
                         slot.classList.add('filled');

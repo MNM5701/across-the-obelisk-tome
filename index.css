@@ -241,7 +241,7 @@ input[type="text"]:focus, select:focus {
 .build-section-toggle:hover { background: rgba(255,255,255,0.05); }
 .build-section-toggle h3 { font-size: 1.1em; font-weight: 600; color: var(--accent-green); margin: 0; }
 .build-section-toggle .toggle-icon { transition: transform 0.3s; }
-.collapsed { display: none !important; }
+.build-grid.collapsed { display: none !important; }
 .build-section-toggle.collapsed .toggle-icon { transform: rotate(-90deg); }
 
 /* Equipment Slots */
