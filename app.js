@@ -23,12 +23,22 @@ let allCards = [];
             }
         }
 
-        function toggleDropdown(id, event) {
-            event.stopPropagation();
-            document.querySelectorAll('.dropdown-content').forEach(el => {
-                if(el.id !== id) el.classList.remove('show');
-            });
-            document.getElementById(id).classList.toggle('show');
+        function toggleDropdown(el, event) {
+            if (event) event.stopPropagation();
+            
+            if (typeof el === 'string') {
+                document.querySelectorAll('.dropdown-content').forEach(c => {
+                    if(c.id !== el) c.classList.remove('show');
+                });
+                const content = document.getElementById(el);
+                if (content) content.classList.toggle('show');
+            } else {
+                const content = el.nextElementSibling;
+                document.querySelectorAll('.dropdown-content').forEach(c => {
+                    if(c !== content) c.classList.remove('show');
+                });
+                if (content) content.classList.toggle('show');
+            }
         }
 
         function resetFilters() {
@@ -65,7 +75,7 @@ let allCards = [];
             }
 
             let html = `<div class="multi-select">`;
-            html += `<div class="select-box" onclick="toggleDropdown(this)">${title}</div>`;
+            html += `<div class="select-box" onclick="toggleDropdown(this, event)">${title}</div>`;
             html += `<div class="dropdown-content">`;
             html += `<div style="padding: 6px;"><input type="text" class="dropdown-search" placeholder="Search..." onkeyup="filterDropdown(this)" style="width:100%; padding: 6px; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border-light); color: var(--text-bright); border-radius: 4px;"></div>`;
             
