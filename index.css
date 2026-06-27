@@ -142,6 +142,7 @@ input[type="text"]:focus, select:focus {
     background: var(--bg-panel); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
     padding: 20px; border-radius: var(--border-radius-lg);
     border: 1px solid var(--border-light); box-shadow: var(--glass-shadow); align-items: center;
+    position: relative; z-index: 60;
 }
 .controls input[type="text"] { flex: 2; min-width: 250px; font-size: 1.05em; }
 .main-select { flex: 1; min-width: 180px; }
@@ -151,6 +152,7 @@ input[type="text"]:focus, select:focus {
     display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 30px;
     background: rgba(18, 20, 28, 0.5); backdrop-filter: blur(8px);
     padding: 20px; border-radius: var(--border-radius-lg); border: 1px solid var(--border-light);
+    position: relative; z-index: 50;
 }
 .hidden { display: none !important; }
 
