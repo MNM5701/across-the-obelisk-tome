@@ -72,6 +72,9 @@ button:active { transform: translateY(2px); box-shadow: none; }
 .btn-blue { background: linear-gradient(135deg, var(--accent-blue), #1d4ed8); color: white; padding: 10px 20px; }
 .btn-blue:hover { background: linear-gradient(135deg, var(--accent-blue-hover), #1e3a8a); box-shadow: 0 0 15px var(--accent-blue-glow); transform: translateY(-2px); }
 
+.btn-red { background: linear-gradient(135deg, var(--accent-red), #b91c1c); color: white; padding: 10px 20px; }
+.btn-red:hover { background: linear-gradient(135deg, var(--accent-red-hover), #991b1b); box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); transform: translateY(-2px); }
+
 /* Inputs */
 input[type="text"], select {
     font-family: var(--font-main);
@@ -98,6 +101,15 @@ input[type="text"]:focus, select:focus {
     margin-bottom: 30px;
     border: 1px solid var(--border-light);
     box-shadow: var(--glass-shadow);
+    transition: all 0.3s ease;
+}
+.build-manager.pinned {
+    position: sticky;
+    top: 10px;
+    z-index: 1000;
+    max-height: 95vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
 }
 .build-header { display: flex; gap: 15px; flex-wrap: wrap; align-items: center; }
 .build-header input[type="text"] { flex: 1; min-width: 250px; font-size: 1.1em; }

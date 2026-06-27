@@ -64,9 +64,10 @@ let allCards = [];
                 sortedOptions.sort();
             }
 
-            let html = `<div class="multi-select">
-                <div class="select-box" onclick="toggleDropdown('${containerId}-drop', event)">${title}</div>
-                <div class="dropdown-content" id="${containerId}-drop">`;
+            let html = `<div class="multi-select">`;
+            html += `<div class="select-box" onclick="toggleDropdown(this)">${title}</div>`;
+            html += `<div class="dropdown-content">`;
+            html += `<div style="padding: 6px;"><input type="text" class="dropdown-search" placeholder="Search..." onkeyup="filterDropdown(this)" style="width:100%; padding: 6px; box-sizing: border-box; background: var(--bg-input); border: 1px solid var(--border-light); color: var(--text-bright); border-radius: 4px;"></div>`;
             
             sortedOptions.forEach(opt => {
                 html += `<label><input type="checkbox" value="${opt}" class="${filterKey}-checkbox" onchange="filterData()"> ${opt}</label>`;
@@ -138,14 +139,6 @@ let allCards = [];
 
             if(metricsPanel) metricsPanel.style.display = 'flex';
 
-            currentBuild.sort((id1, id2) => {
-                let d1 = getVariantDetails(id1);
-                let d2 = getVariantDetails(id2);
-                if (!d1 || !d2) return 0;
-                if (d1.cost !== d2.cost) return d1.cost - d2.cost;
-                return d1.card.idKey.localeCompare(d2.card.idKey);
-            });
-
             let totalCost = 0;
             let costCurve = {};
             let typeCounts = {};
@@ -157,7 +150,7 @@ let allCards = [];
                 if (!d) return;
 
                 const itemHtml = `
-                    <div class="build-item">
+                    <div class="build-item" draggable="true" ondragstart="drag(event, '${cardId}')" ondragover="allowDrop(event)" ondrop="drop(event, ${index})" ondragend="document.getElementById('trashZone').style.display = 'none'">
                         <img src="./card_images/${cardId}_result.png" alt="${cardId}" title="${cardId}">
                         <button class="remove-btn" onclick="removeFromBuild(${index})">x</button>
                     </div>
@@ -248,6 +241,86 @@ let allCards = [];
                 renderBuild();
                 document.getElementById('shareLinkContainer').style.display = 'none';
             }
+        }
+
+        function clearBuild() {
+            if(confirm("Are you sure you want to clear the entire build?")) {
+                currentBuild = [];
+                document.getElementById('buildName').value = "";
+                renderBuild();
+            }
+        }
+
+        function deleteSavedBuild() {
+            const dropdown = document.getElementById('savedBuildsDropdown');
+            const name = dropdown.value;
+            if (!name) return;
+            if(confirm(`Are you sure you want to delete the saved build "${name}"?`)) {
+                let savedBuilds = JSON.parse(localStorage.getItem('ato_builds') || '{}');
+                delete savedBuilds[name];
+                localStorage.setItem('ato_builds', JSON.stringify(savedBuilds));
+                updateSavedBuildsDropdown();
+                if (document.getElementById('buildName').value === name) {
+                    document.getElementById('buildName').value = "";
+                    currentBuild = [];
+                    renderBuild();
+                }
+            }
+        }
+
+        function sortBuildByCost(event) {
+            if(event) event.stopPropagation();
+            currentBuild.sort((id1, id2) => {
+                let d1 = getVariantDetails(id1);
+                let d2 = getVariantDetails(id2);
+                if (!d1 || !d2) return 0;
+                if (d1.cost !== d2.cost) return d1.cost - d2.cost;
+                return d1.card.idKey.localeCompare(d2.card.idKey);
+            });
+            renderBuild();
+        }
+
+        let dragCardId = null;
+
+        function drag(ev, cardId) {
+            dragCardId = cardId;
+            ev.dataTransfer.setData("text", cardId);
+            document.getElementById('trashZone').style.display = 'block';
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drop(ev, dropIndex) {
+            ev.preventDefault();
+            document.getElementById('trashZone').style.display = 'none';
+            if (!dragCardId) return;
+            
+            // Extract all copies of the dragged card
+            const copies = currentBuild.filter(id => id === dragCardId);
+            currentBuild = currentBuild.filter(id => id !== dragCardId);
+            
+            // Insert them at the target index
+            let newIndex = dropIndex;
+            // Bound check just in case
+            if (newIndex < 0) newIndex = 0;
+            if (newIndex > currentBuild.length) newIndex = currentBuild.length;
+            
+            currentBuild.splice(newIndex, 0, ...copies);
+            dragCardId = null;
+            renderBuild();
+        }
+
+        function dropTrash(ev) {
+            ev.preventDefault();
+            document.getElementById('trashZone').style.display = 'none';
+            if (!dragCardId) return;
+            
+            // Delete all copies
+            currentBuild = currentBuild.filter(id => id !== dragCardId);
+            dragCardId = null;
+            renderBuild();
         }
 
         function generateShareLink() {
