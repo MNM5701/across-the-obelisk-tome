@@ -110,14 +110,14 @@ input[type="text"]:focus, select:focus {
     border-radius: var(--border-radius-md);
     border: 1px dashed var(--border-light);
 }
-.build-item { position: relative; width: 75px; transition: transform 0.2s; }
+.build-item { position: relative; width: 120px; transition: transform 0.2s; }
 .build-item:hover { transform: translateY(-4px) scale(1.05); z-index: 10; }
 .build-item img { width: 100%; border-radius: 6px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); }
 .remove-btn {
-    position: absolute; top: -8px; right: -8px;
+    position: absolute; top: -10px; right: -10px;
     background: var(--accent-red); color: white;
-    border-radius: 50%; width: 22px; height: 22px;
-    font-size: 12px; line-height: 22px; text-align: center;
+    border-radius: 50%; width: 26px; height: 26px;
+    font-size: 14px; line-height: 26px; text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.3); padding: 0;
 }
 .remove-btn:hover { background: var(--accent-red-hover); transform: scale(1.15); }
@@ -246,7 +246,7 @@ input[type="text"]:focus, select:focus {
 
 /* Equipment Slots */
 .equipment-slots { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; background: transparent; border: none; padding: 0; margin-top: 15px; min-height: auto; }
-.equipment-slot { background: rgba(0,0,0,0.3); border: 2px dashed var(--border-light); border-radius: var(--border-radius-md); height: 100px; display: flex; justify-content: center; align-items: center; color: var(--text-muted); font-weight: 600; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s; position: relative; }
+.equipment-slot { background: rgba(0,0,0,0.3); border: 2px dashed var(--border-light); border-radius: var(--border-radius-md); height: 160px; display: flex; justify-content: center; align-items: center; color: var(--text-muted); font-weight: 600; font-size: 0.9em; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s; position: relative; }
 .equipment-slot.filled { border-style: solid; border-color: var(--accent-blue); background: transparent; }
 .equipment-slot .build-item { position: absolute; width: 100%; height: 100%; top: 0; left: 0; display: flex; justify-content: center; }
 .equipment-slot .build-item img { height: 100%; width: auto; max-width: 100%; object-fit: contain; border-radius: var(--border-radius-md); margin: 0 auto; display: block; box-shadow: none; }
