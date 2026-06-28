@@ -87,6 +87,15 @@ let allCards = [];
             container.innerHTML = html;
         }
 
+        function filterDropdown(input) {
+            const query = input.value.toLowerCase();
+            const labels = input.parentElement.parentElement.querySelectorAll('label');
+            labels.forEach(label => {
+                const text = label.textContent.toLowerCase();
+                label.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        }
+
         // ------------------------------------------------------------------
         // Build Manager Logic
         // ------------------------------------------------------------------
