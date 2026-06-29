@@ -2,7 +2,7 @@
     {
         "id": "bree",
         "name": "Bree",
-        "class": "Warrior",
+        "classes": ["Warrior"],
         "traits": {
             "innate": "Spiky",
             "level2": ["Unforgiving Nature", "Defensive Strategy"],
@@ -14,7 +14,7 @@
     {
         "id": "althea",
         "name": "Althea",
-        "class": "Mage",
+        "classes": ["Mage"],
         "traits": {
             "innate": "Echo Magic",
             "level2": ["Into the Void", "Echoes of Power"],
@@ -26,7 +26,7 @@
     {
         "id": "amelia",
         "name": "Amelia",
-        "class": "Mage",
+        "classes": ["Mage"],
         "traits": {
             "innate": "Eldritch",
             "level2": ["Arcane Reflux", "Regal Cold"],
@@ -38,7 +38,7 @@
     {
         "id": "andrin",
         "name": "Andrin",
-        "class": "Scout",
+        "classes": ["Scout"],
         "traits": {
             "innate": "Trailblazer",
             "level2": ["Maneuver", "Wild Hunt"],
@@ -50,7 +50,7 @@
     {
         "id": "bernard",
         "name": "Bernard",
-        "class": "Healer",
+        "classes": ["Healer", "Scout"],
         "traits": {
             "innate": "Hermit",
             "level2": ["Healing Flasks", "Salt Water"],
@@ -62,13 +62,133 @@
     {
         "id": "cornelius",
         "name": "Cornelius",
-        "class": "Mage",
+        "classes": ["Mage"],
         "traits": {
             "innate": "Ardent",
             "level2": ["Hellflame", "Fireproof"],
             "level3": ["Incendiary", "Firestarter"],
             "level4": ["World in Flames", "Phoenix"],
             "level5": ["Wildfire", "Avatar of Fire"]
+        }
+    },
+    {
+        "id": "evelyn",
+        "name": "Evelyn",
+        "classes": ["Mage"],
+        "traits": {
+            "innate": "Temperate",
+            "level2": ["Elemental Proliferation", "Enchant Weapons"],
+            "level3": ["Elemental Amplifier", "Versatile"],
+            "level4": ["Spell Echo", "Arcane Conduit"],
+            "level5": ["Glass Cannon", "Elemental Weaver"]
+        }
+    },
+    {
+        "id": "grukli",
+        "name": "Grukli",
+        "classes": ["Warrior"],
+        "traits": {
+            "innate": "Furious",
+            "level2": ["Onslaught", "Grudge"],
+            "level3": ["Bloody", "Offense Mastery"],
+            "level4": ["Red Storm", "Dual Wield"],
+            "level5": ["Endless Fury", "Armor Expert"]
+        }
+    },
+    {
+        "id": "gustav",
+        "name": "Gustav",
+        "classes": ["Scout"],
+        "traits": {
+            "innate": "Cantor",
+            "level2": ["Heavy Metal", "Melodic Rhythm"],
+            "level3": ["Shrill Tone", "Fanfare"],
+            "level4": ["Ethereal Weapons", "Encore"],
+            "level5": ["Wide Sleeves", "Choir"]
+        }
+    },
+    {
+        "id": "heiner",
+        "name": "Heiner",
+        "classes": ["Warrior"],
+        "traits": {
+            "innate": "Unbreakable",
+            "level2": ["Reactive Laser", "Steel Forge"],
+            "level3": ["Iron Furnace", "Defense Mastery"],
+            "level4": ["Fusion Laser", "Last Guardian"],
+            "level5": ["Armor Expert", "Indomitable"]
+        }
+    },
+    {
+        "id": "laia",
+        "name": "Laia",
+        "classes": ["Healer", "Warrior"],
+        "traits": {
+            "innate": "Overflow",
+            "level2": ["Purrification", "Excaliburn"],
+            "level3": ["Warrior Duality", "Zealotry"],
+            "level4": ["Heavenly Protection", "Heavenly Justice"],
+            "level5": ["Beacon of Light", "Righteous Flame"]
+        }
+    },
+    {
+        "id": "magnus",
+        "name": "Magnus",
+        "classes": ["Warrior"],
+        "traits": {
+            "innate": "Well Trained",
+            "level2": ["Follow-up", "Wolf Guard"],
+            "level3": ["Offensive Training", "Defensive Training"],
+            "level4": ["Thunderclap", "Valiant Defender"],
+            "level5": ["Weapons Expert", "Armor Expert"]
+        }
+    },
+    {
+        "id": "malukah",
+        "name": "Malukah",
+        "classes": ["Healer"],
+        "traits": {
+            "innate": "Voodoo",
+            "level2": ["Yin Ritual", "Yang Ritual"],
+            "level3": ["Jinx", "Healing Brew"],
+            "level4": ["Vaccine", "Love Enhancer"],
+            "level5": ["Shadowform", "Mojo"]
+        }
+    },
+    {
+        "id": "navalea",
+        "name": "Navalea",
+        "classes": ["Warrior", "Mage"],
+        "traits": {
+            "innate": "Hatred",
+            "level2": ["Shattering Fists", "Shadow Imbuement"],
+            "level3": ["Mage Duality", "Aura of Despair"],
+            "level4": ["Undying Will", "Defiled Legacy"],
+            "level5": ["Unrelenting Resentment", "Unholy Blight"]
+        }
+    },
+    {
+        "id": "nenukil",
+        "name": "Nenukil",
+        "classes": ["Scout"],
+        "traits": {
+            "innate": "Loaded Gun",
+            "level2": ["Extra Gunpowder", "Proximity Mines"],
+            "level3": ["Double Barrel", "Mounted Cannon"],
+            "level4": ["Fast and Furious", "Repair Kit"],
+            "level5": ["Greased Gears", "Exoskeleton"]
+        }
+    },
+    {
+        "id": "nevermoor",
+        "name": "Nevermoor",
+        "classes": ["Warrior", "Healer"],
+        "traits": {
+            "innate": "Runeweaver",
+            "level2": ["Obsidian Imprint", "Death's Caress"],
+            "level3": ["Reaping", "Replenishing"],
+            "level4": ["Cataclysm", "Dark Succor"],
+            "level5": ["Glare Of Doom", "Runic Empowerment"]
         }
     }
 ]

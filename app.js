@@ -293,7 +293,7 @@ let allCards = [];
             // Lock class filter
             const classCheckboxes = document.querySelectorAll('.class-checkbox');
             classCheckboxes.forEach(cb => {
-                cb.checked = (cb.value === currentHero.class);
+                cb.checked = (currentHero.classes.includes(cb.value));
             });
             filterData();
             
@@ -463,7 +463,7 @@ let allCards = [];
                     // Lock class filter
                     const classCheckboxes = document.querySelectorAll('.class-checkbox');
                     classCheckboxes.forEach(cb => {
-                        cb.checked = (cb.value === currentHero.class);
+                        cb.checked = (currentHero.classes.includes(cb.value));
                     });
                 }
             }
@@ -677,18 +677,21 @@ let allCards = [];
                 updateSavedBuildsDropdown();
                 
                 try {
-                    const heroRes = await fetch('./heroes.json');
+                    const heroRes = await fetch('./heroes.json?v=' + new Date().getTime());
                     if (heroRes.ok) {
                         allHeroes = await heroRes.json();
                         const heroSelect = document.getElementById('heroSelect');
+                        heroSelect.innerHTML = '<option value="">-- Select Hero --</option>';
                         allHeroes.forEach(h => {
                             const opt = document.createElement('option');
                             opt.value = h.id;
                             opt.textContent = h.name;
                             heroSelect.appendChild(opt);
                         });
+                    } else {
+                        console.error("HTTP error fetching heroes.json:", heroRes.status);
                     }
-                } catch(e) { console.log("heroes.json not found or invalid."); }
+                } catch(e) { console.error("heroes.json not found or invalid:", e); }
 
                 checkUrlForBuild();
                 renderBuild();
