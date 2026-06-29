@@ -1,0 +1,74 @@
+[
+    {
+        "id": "bree",
+        "name": "Bree",
+        "class": "Warrior",
+        "traits": {
+            "innate": "Spiky",
+            "level2": ["Unforgiving Nature", "Defensive Strategy"],
+            "level3": ["Countermeasures", "Tactician"],
+            "level4": ["Stampede", "Command and Conquer"],
+            "level5": ["Queen of Thorns", "Tireless"]
+        }
+    },
+    {
+        "id": "althea",
+        "name": "Althea",
+        "class": "Mage",
+        "traits": {
+            "innate": "Echo Magic",
+            "level2": ["Into the Void", "Echoes of Power"],
+            "level3": ["Energetic Resonance", "Resonant Mind"],
+            "level4": ["Recollection", "Shard Cannon"],
+            "level5": ["Madness Feeds", "Fractured Minds"]
+        }
+    },
+    {
+        "id": "amelia",
+        "name": "Amelia",
+        "class": "Mage",
+        "traits": {
+            "innate": "Eldritch",
+            "level2": ["Arcane Reflux", "Regal Cold"],
+            "level3": ["Time Loop", "Frost Swords"],
+            "level4": ["Rift Force", "Ice Palace"],
+            "level5": ["Time Paradox", "Unlimited Blades"]
+        }
+    },
+    {
+        "id": "andrin",
+        "name": "Andrin",
+        "class": "Scout",
+        "traits": {
+            "innate": "Trailblazer",
+            "level2": ["Maneuver", "Wild Hunt"],
+            "level3": ["Master Ranger", "Finesse"],
+            "level4": ["Serrated Weapons", "Riposte"],
+            "level5": ["Sharp Shooting", "Mark For Death"]
+        }
+    },
+    {
+        "id": "bernard",
+        "name": "Bernard",
+        "class": "Healer",
+        "traits": {
+            "innate": "Hermit",
+            "level2": ["Healing Flasks", "Salt Water"],
+            "level3": ["Healer Duality", "Corrosion"],
+            "level4": ["Ancient Shell", "Dark Tide"],
+            "level5": ["Philosopher's Stone", "Alkahest"]
+        }
+    },
+    {
+        "id": "cornelius",
+        "name": "Cornelius",
+        "class": "Mage",
+        "traits": {
+            "innate": "Ardent",
+            "level2": ["Hellflame", "Fireproof"],
+            "level3": ["Incendiary", "Firestarter"],
+            "level4": ["World in Flames", "Phoenix"],
+            "level5": ["Wildfire", "Avatar of Fire"]
+        }
+    }
+]

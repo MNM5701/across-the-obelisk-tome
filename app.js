@@ -1,5 +1,8 @@
 let allCards = []; 
         let currentBuild = []; 
+        let allHeroes = [];
+        let currentHero = null;
+        let currentTraits = [0, 0, 0, 0]; // Options for levels 2, 3, 4, 5 (0 = A, 1 = B) 
 
         // ------------------------------------------------------------------
         // UI & Dropdown Logic
@@ -265,9 +268,84 @@ let allCards = [];
         function clearBuild() {
             if(confirm("Are you sure you want to clear the entire build?")) {
                 currentBuild = [];
+                currentHero = null;
+                currentTraits = [0, 0, 0, 0];
                 document.getElementById('buildName').value = "";
+                document.getElementById('heroSelect').value = "";
+                document.getElementById('traitsToggle').style.display = 'none';
+                document.getElementById('traitsSection').style.display = 'none';
                 renderBuild();
             }
+        }
+
+        function changeHero() {
+            const heroId = document.getElementById('heroSelect').value;
+            if (!heroId) {
+                currentHero = null;
+                document.getElementById('traitsToggle').style.display = 'none';
+                document.getElementById('traitsSection').style.display = 'none';
+                return;
+            }
+            
+            currentHero = allHeroes.find(h => h.id === heroId);
+            currentTraits = [0, 0, 0, 0];
+            
+            // Lock class filter
+            const classCheckboxes = document.querySelectorAll('.class-checkbox');
+            classCheckboxes.forEach(cb => {
+                cb.checked = (cb.value === currentHero.class);
+            });
+            filterData();
+            
+            renderTraitsUI();
+        }
+
+        function selectTrait(levelIndex, optionIndex) {
+            currentTraits[levelIndex] = optionIndex;
+            renderTraitsUI();
+        }
+
+        function renderTraitsUI() {
+            const toggle = document.getElementById('traitsToggle');
+            const section = document.getElementById('traitsSection');
+            if (!currentHero) {
+                toggle.style.display = 'none';
+                section.style.display = 'none';
+                return;
+            }
+            
+            toggle.style.display = 'flex';
+            if (!toggle.classList.contains('collapsed')) {
+                section.style.display = 'flex';
+            }
+            
+            let html = `
+                <div class="trait-level">
+                    <span class="trait-level-label">Innate</span>
+                    <div class="trait-innate">${currentHero.traits.innate}</div>
+                </div>
+            `;
+            
+            for (let i = 2; i <= 5; i++) {
+                const levelKey = 'level' + i;
+                const opts = currentHero.traits[levelKey];
+                const selectedOpt = currentTraits[i - 2];
+                // Level 2 and Level 4 usually grant cards
+                const iconHtml = (i === 2 || i === 4) ? '<span class="trait-card-icon">🎴</span>' : '';
+                
+                html += `
+                    <div class="trait-level">
+                        <span class="trait-level-label">Level ${i}</span>
+                        <button class="trait-btn ${selectedOpt === 0 ? 'active' : ''}" onclick="selectTrait(${i - 2}, 0)">
+                            ${iconHtml}${opts[0]}
+                        </button>
+                        <button class="trait-btn ${selectedOpt === 1 ? 'active' : ''}" onclick="selectTrait(${i - 2}, 1)">
+                            ${iconHtml}${opts[1]}
+                        </button>
+                    </div>
+                `;
+            }
+            section.innerHTML = html;
         }
 
         function deleteSavedBuild() {
@@ -343,13 +421,16 @@ let allCards = [];
         }
 
         function generateShareLink() {
-            if (currentBuild.length === 0) { alert("Add some cards to generate a link!"); return; }
-            const name = encodeURIComponent(document.getElementById('buildName').value.trim() || 'Untitled');
+            const name = encodeURIComponent(document.getElementById('buildName').value.trim() || 'My Build');
             const counts = {};
             currentBuild.forEach(c => counts[c] = (counts[c] || 0) + 1);
             const cards = Object.entries(counts).map(([c, count]) => count > 1 ? `${c}-${count}` : c).join(',');
             const baseUrl = window.location.origin + window.location.pathname;
-            const finalUrl = `${baseUrl}?buildName=${name}&cards=${cards}`;
+            
+            let finalUrl = `${baseUrl}?buildName=${name}&cards=${cards}`;
+            if (currentHero) {
+                finalUrl += `&hero=${currentHero.id}&traits=${currentTraits.join(',')}`;
+            }
             
             const container = document.getElementById('shareLinkContainer');
             const input = document.getElementById('shareLinkInput');
@@ -363,7 +444,30 @@ let allCards = [];
             const params = new URLSearchParams(window.location.search);
             const cards = params.get('cards');
             const name = params.get('buildName');
+            const heroParam = params.get('hero');
+            const traitsParam = params.get('traits');
             
+            if (heroParam) {
+                const heroSelect = document.getElementById('heroSelect');
+                if (heroSelect) heroSelect.value = heroParam;
+                currentHero = allHeroes.find(h => h.id === heroParam);
+                
+                if (traitsParam) {
+                    const t = traitsParam.split(',').map(Number);
+                    if (t.length === 4) currentTraits = t;
+                }
+                
+                if (currentHero) {
+                    renderTraitsUI();
+                    
+                    // Lock class filter
+                    const classCheckboxes = document.querySelectorAll('.class-checkbox');
+                    classCheckboxes.forEach(cb => {
+                        cb.checked = (cb.value === currentHero.class);
+                    });
+                }
+            }
+
             if (cards) {
                 currentBuild = [];
                 cards.split(',').filter(c => c).forEach(item => {
@@ -571,6 +675,21 @@ let allCards = [];
                 });
 
                 updateSavedBuildsDropdown();
+                
+                try {
+                    const heroRes = await fetch('./heroes.json');
+                    if (heroRes.ok) {
+                        allHeroes = await heroRes.json();
+                        const heroSelect = document.getElementById('heroSelect');
+                        allHeroes.forEach(h => {
+                            const opt = document.createElement('option');
+                            opt.value = h.id;
+                            opt.textContent = h.name;
+                            heroSelect.appendChild(opt);
+                        });
+                    }
+                } catch(e) { console.log("heroes.json not found or invalid."); }
+
                 checkUrlForBuild();
                 renderBuild();
                 filterData(); 

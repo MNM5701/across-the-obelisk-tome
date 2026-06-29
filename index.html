@@ -20,6 +20,9 @@
     <div class="build-manager" id="buildManager">
         <div class="build-header">
             <input type="text" id="buildName" placeholder="Name your build...">
+            <select id="heroSelect" onchange="changeHero()" style="padding: 10px; border-radius: var(--border-radius-md); border: 1px solid var(--border-light); background: var(--bg-input); color: var(--text-bright); font-weight: 600;">
+                <option value="">-- Select Hero --</option>
+            </select>
             <button class="btn-green" onclick="saveBuildToLocal()">Save to Computer</button>
             <button class="btn-blue" onclick="generateShareLink()">Generate Link</button>
             <button class="btn-red" onclick="clearBuild()">Clear Build</button>
@@ -33,6 +36,14 @@
         <div id="shareLinkContainer" style="display:none; margin-top: 15px;">
             <input type="text" id="shareLinkInput" readonly style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #555; background: #111; color: #4ade80;" onclick="this.select()">
             <small style="color: #aaa; display: block; margin-top: 5px;">Link copied to clipboard! Share this URL to send your build.</small>
+        </div>
+
+        <div class="build-section-toggle" id="traitsToggle" onclick="this.classList.toggle('collapsed'); document.getElementById('traitsSection').classList.toggle('collapsed')" style="display:none;">
+            <h3>Hero Traits</h3>
+            <span class="toggle-icon">▼</span>
+        </div>
+        <div class="build-grid traits-grid" id="traitsSection" style="display:none;">
+            <!-- Traits injected here -->
         </div>
 
         <div class="build-section-toggle" onclick="this.classList.toggle('collapsed'); document.getElementById('equipmentSection').classList.toggle('collapsed')">
