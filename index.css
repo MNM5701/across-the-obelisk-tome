@@ -237,8 +237,41 @@ input[type="text"]:focus, select:focus {
     width: 100%; transition: all 0.2s; font-size: 0.95em;
 }
 .add-btn:hover { background: var(--accent-green); color: white; border-color: var(--accent-green); box-shadow: 0 0 15px var(--accent-green-glow); }
+.trait-option.active {
+    background: var(--bg-surface-hover);
+    border-color: var(--primary);
+    box-shadow: inset 0 0 10px rgba(52, 211, 153, 0.1);
+}
 
-/* Error States */
+.trait-tooltip {
+    visibility: hidden;
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--bg-card);
+    color: var(--text-bright);
+    padding: 12px;
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-md);
+    white-space: pre-wrap;
+    z-index: 100;
+    width: max-content;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.2s, visibility 0.2s;
+    pointer-events: none;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.trait-btn:hover .trait-tooltip, .trait-innate:hover .trait-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Equipment Grid */
 .error-state { padding: 40px 10px; background: rgba(0,0,0,0.2); border-radius: var(--border-radius-md); color: var(--accent-red); font-size: 0.9em; display: flex; align-items: center; justify-content: center; flex-direction: column; min-height: 200px; border: 1px dashed var(--accent-red); }
 #error-message { display: none; color: #f87171; background: rgba(239, 68, 68, 0.1); padding: 20px; border-radius: var(--border-radius-lg); text-align: center; margin-bottom: 25px; border: 1px solid rgba(239, 68, 68, 0.3); backdrop-filter: blur(8px); }
 
@@ -273,4 +306,4 @@ input[type="text"]:focus, select:focus {
 .trait-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--accent-blue); }
 .trait-btn.active { background: rgba(16, 185, 129, 0.15); border-color: var(--accent-green); color: var(--accent-green); font-weight: 600; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
 .trait-card-icon { font-size: 0.8em; margin-right: 8px; vertical-align: middle; }
-.trait-innate { padding: 12px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--border-radius-md); color: #60a5fa; font-weight: 600; text-align: center; flex: 1; }
+.trait-innate { padding: 12px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: var(--border-radius-md); color: #60a5fa; font-weight: 600; text-align: center; flex: 1; position: relative; }

@@ -3,6 +3,7 @@ let allCards = [];
         let allHeroes = [];
         let currentHero = null;
         let currentTraits = [0, 0, 0, 0]; // Options for levels 2, 3, 4, 5 (0 = A, 1 = B) 
+        let traitData = [];
 
         // ------------------------------------------------------------------
         // UI & Dropdown Logic
@@ -319,10 +320,16 @@ let allCards = [];
                 section.style.display = 'flex';
             }
             
+            const heroTraitsData = traitData.find(t => t.H1 === currentHero.name);
+            let tooltipInnate = '';
+            if (heroTraitsData && heroTraitsData["1"]) {
+                tooltipInnate = `<div class="trait-tooltip">${heroTraitsData["1"]}</div>`;
+            }
+
             let html = `
                 <div class="trait-level">
                     <span class="trait-level-label">Innate</span>
-                    <div class="trait-innate">${currentHero.traits.innate}</div>
+                    <div class="trait-innate">${currentHero.traits.innate}${tooltipInnate}</div>
                 </div>
             `;
             
@@ -333,14 +340,21 @@ let allCards = [];
                 // Level 2 and Level 4 usually grant cards
                 const iconHtml = (i === 2 || i === 4) ? '<span class="trait-card-icon">🎴</span>' : '';
                 
+                let tooltipA = '';
+                let tooltipB = '';
+                if (heroTraitsData && (i === 3 || i === 5)) {
+                    if (heroTraitsData[i + "a"]) tooltipA = `<div class="trait-tooltip">${heroTraitsData[i + "a"]}</div>`;
+                    if (heroTraitsData[i + "b"]) tooltipB = `<div class="trait-tooltip">${heroTraitsData[i + "b"]}</div>`;
+                }
+
                 html += `
                     <div class="trait-level">
                         <span class="trait-level-label">Level ${i}</span>
                         <button class="trait-btn ${selectedOpt === 0 ? 'active' : ''}" onclick="selectTrait(${i - 2}, 0)">
-                            ${iconHtml}${opts[0]}
+                            ${iconHtml}${opts[0]}${tooltipA}
                         </button>
                         <button class="trait-btn ${selectedOpt === 1 ? 'active' : ''}" onclick="selectTrait(${i - 2}, 1)">
-                            ${iconHtml}${opts[1]}
+                            ${iconHtml}${opts[1]}${tooltipB}
                         </button>
                     </div>
                 `;
@@ -675,6 +689,13 @@ let allCards = [];
                 });
 
                 updateSavedBuildsDropdown();
+
+                try {
+                    const traitsRes = await fetch('./traits.json?v=' + new Date().getTime());
+                    if (traitsRes.ok) {
+                        traitData = await traitsRes.json();
+                    }
+                } catch(e) { console.error("traits.json not found or invalid:", e); }
                 
                 try {
                     const heroRes = await fetch('./heroes.json?v=' + new Date().getTime());
