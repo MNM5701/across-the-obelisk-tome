@@ -320,7 +320,7 @@ let allCards = [];
                 section.style.display = 'flex';
             }
             
-            const heroTraitsData = traitData.find(t => t.H1 === currentHero.name);
+            const heroTraitsData = traitData.find(t => t.H1 && t.H1.trim().toLowerCase() === currentHero.name.trim().toLowerCase());
             let tooltipInnate = '';
             if (heroTraitsData && heroTraitsData["1"]) {
                 tooltipInnate = `<div class="trait-tooltip">${heroTraitsData["1"]}</div>`;
@@ -693,7 +693,9 @@ let allCards = [];
                 try {
                     const traitsRes = await fetch('./traits.json?v=' + new Date().getTime());
                     if (traitsRes.ok) {
-                        traitData = await traitsRes.json();
+                        const rawText = await traitsRes.text();
+                        const cleanText = rawText.replace(/^\uFEFF/, '');
+                        traitData = JSON.parse(cleanText);
                     }
                 } catch(e) { console.error("traits.json not found or invalid:", e); }
                 
