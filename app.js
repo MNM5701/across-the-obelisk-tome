@@ -682,10 +682,18 @@ let allCards = [];
                         allHeroes = await heroRes.json();
                         const heroSelect = document.getElementById('heroSelect');
                         heroSelect.innerHTML = '<option value="">-- Select Hero --</option>';
+                        const classEmojis = {
+                            "Warrior": "🛡️",
+                            "Mage": "🔥",
+                            "Healer": "➕",
+                            "Scout": "🏹"
+                        };
                         allHeroes.forEach(h => {
                             const opt = document.createElement('option');
                             opt.value = h.id;
-                            opt.textContent = h.name;
+                            const primaryClass = h.classes[0];
+                            const emoji = classEmojis[primaryClass] || "";
+                            opt.textContent = `${h.name} ${emoji}`;
                             heroSelect.appendChild(opt);
                         });
                     } else {
