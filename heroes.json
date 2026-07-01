@@ -190,5 +190,149 @@
             "level4": ["Cataclysm", "Dark Succor"],
             "level5": ["Glare Of Doom", "Runic Empowerment"]
         }
+    },
+    {
+        "id": "nezglekt",
+        "name": "Nezglekt",
+        "classes": ["Healer"],
+        "traits": {
+            "innate": "Mental Leech",
+            "level2": ["Night Terror", "Chilling Gaze"],
+            "level3": ["Mind Devourer", "Resourceful"],
+            "level4": ["The Chosen One", "Fated Future"],
+            "level5": ["Incubation", "Omniscient"]
+        }
+    },
+    {
+        "id": "nyrada",
+        "name": "Nyrada",
+        "classes": ["Healer", "Mage"],
+        "traits": {
+            "innate": "Revealed Dreams",
+            "level2": ["Purifying Resonance", "Cursed Mirror"],
+            "level3": ["Dark Mercy", "Rhythm of Magic"],
+            "level4": ["Dream Harmony", "Nightmare Storm"],
+            "level5": ["Mind Collapse", "Dark Overflow"]
+        }
+    },
+    {
+        "id": "ottis",
+        "name": "Ottis",
+        "classes": ["Healer"],
+        "traits": {
+            "innate": "Shielder",
+            "level2": ["Praise the Sun", "Unwavering Faith"],
+            "level3": ["Sacred Fire", "Defense Mastery"],
+            "level4": ["Solar Flare", "Double Bubble"],
+            "level5": ["Reverberation", "Dome Of Light"]
+        }
+    },
+    {
+        "id": "reginald",
+        "name": "Reginald",
+        "classes": ["Healer"],
+        "traits": {
+            "innate": "Blessed",
+            "level2": ["Divine Retribution", "Focus Heal"],
+            "level3": ["Chastise", "Healing Surge"],
+            "level4": ["Holy Crusader", "Holy Symbol"],
+            "level5": ["Reverberation", "Archangel"]
+        }
+    },
+    {
+        "id": "sigrun",
+        "name": "Sigrun",
+        "classes": ["Mage", "Scout"],
+        "traits": {
+            "innate": "War Maiden",
+            "level2": ["Storm Channeler", "Magic Rune"],
+            "level3": ["Scout Duality", "Spell Singer"],
+            "level4": ["Thor's Might", "Odin's Wisdom"],
+            "level5": ["Valhalla", "Ragnarok"]
+        }
+    },
+    {
+        "id": "sylvie",
+        "name": "Sylvie",
+        "classes": ["Scout"],
+        "traits": {
+            "innate": "Keen Sight",
+            "level2": ["Target Shooting", "Elven Agility"],
+            "level3": ["Accurate Shots", "Master Ranger"],
+            "level4": ["Hawkeye", "Double Shot"],
+            "level5": ["Eternal Bond", "Perforating Shots"]
+        }
+    },
+    {
+        "id": "thuls",
+        "name": "Thuls",
+        "classes": ["Scout"],
+        "traits": {
+            "innate": "Nightstalker",
+            "level2": ["Black Talons", "Subterfuge"],
+            "level3": ["Envenom", "Momentum"],
+            "level4": ["Hidden Hand", "Deadly Strikes"],
+            "level5": ["Wide Sleeves", "Veil of Shadows"]
+        }
+    },
+    {
+        "id": "tulah",
+        "name": "Tulah",
+        "classes": ["Healer"],
+        "traits": {
+            "innate": "Broodmother",
+            "level2": ["Holy Hatchery", "Premature Hatching"],
+            "level3": ["Temple Lurkers", "Mental Scavengers"],
+            "level4": ["Cleansing Prayer", "Pendulum"],
+            "level5": ["Spider Queen", "Webweaver"]
+        }
+    },
+    {
+        "id": "velarion",
+        "name": "Velarion",
+        "classes": ["Healer", "Mage"],
+        "traits": {
+            "innate": "Bloodbound",
+            "level2": ["Bleeding Blight", "Life Surge"],
+            "level3": ["Crimson Ripple", "Voracious"],
+            "level4": ["Blood Bargain", "Forbidden Feast"],
+            "level5": ["Energy Spike", "Hemostasis"]
+        }
+    },
+    {
+        "id": "wilbur",
+        "name": "Wilbur",
+        "classes": ["Mage"],
+        "traits": {
+            "innate": "Inventor",
+            "level2": ["Circuit Overload", "Skillful"],
+            "level3": ["Voltaic Arc", "Scholar"],
+            "level4": ["Tesla Coil", "Transcribe"],
+            "level5": ["Quantum Reactor", "Energizer"]
+        }
+    },
+    {
+        "id": "yogger",
+        "name": "Yogger",
+        "classes": ["Warrior"],
+        "traits": {
+            "innate": "Butcher",
+            "level2": ["Pillage", "Sausage Factory"],
+            "level3": ["Big Bad Wolf", "Dinner is Ready"],
+            "level4": ["Feed The Rich", "Give To The Poor"],
+            "level5": ["Gluttony", "Three Star Chef"]
+        }
+    },
+    {
+        "id": "zek",
+        "name": "Zek",
+        "classes": ["Mage"],
+        "traits": {
+            "innate": "Pestilent",
+            "level2": ["Cursemancy", "Soul Harvest"],
+            "level3": ["Putrefaction", "Dark Feast"],
+            "level4": ["Infestation", "Death's Embrace"],
+            "level5": ["Absolute Darkness", "Vampirism"]
+        }
     }
 ]
