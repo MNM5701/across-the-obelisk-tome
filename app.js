@@ -691,9 +691,8 @@ let allCards = [];
                         allHeroes.forEach(h => {
                             const opt = document.createElement('option');
                             opt.value = h.id;
-                            const primaryClass = h.classes[0];
-                            const emoji = classEmojis[primaryClass] || "";
-                            opt.textContent = `${h.name} ${emoji}`;
+                            const emojiStr = h.classes.map(c => classEmojis[c] || "").join('');
+                            opt.textContent = `${h.name} ${emojiStr}`;
                             heroSelect.appendChild(opt);
                         });
                     } else {
