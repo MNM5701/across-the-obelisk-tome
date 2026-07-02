@@ -359,7 +359,17 @@ let allCards = [];
                     </div>
                 `;
             }
-            section.innerHTML = html;
+            let finalHtml = `
+                <div style="display: flex; gap: 20px; align-items: stretch; width: 100%;">
+                    <div style="flex: 0 0 180px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.2); border-radius: var(--border-radius-md); border: 1px solid var(--border-light);">
+                        <img src="./hero_images/${currentHero.name}.png" alt="${currentHero.name}" style="max-width: 100%; max-height: 250px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));" onerror="this.parentElement.style.display='none'">
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 10px;">
+                        ${html}
+                    </div>
+                </div>
+            `;
+            section.innerHTML = finalHtml;
         }
 
         function deleteSavedBuild() {
