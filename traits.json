@@ -136,12 +136,12 @@
         "1":  "At the start of the combat gain 2 Reinforce. When you play a 0 cost Attack, Spell, or Defense, cast it again (1 time/turn).",
         "2a":  "Follow-up",
         "2b":  "Wolf Guard",
-        "3a":  "At the start of your turn, reduce the cost of the melee attack cards in your hand by 1",
-        "3b":  "At the start of your turn, reduce the cost of the defense cards in your hand by 1",
-        "4a":  "Gain a copy of Thunderclap: All damage +175%, the next attack deal 14 lightning apply 6 spark to all mosters",
-        "4b":  "Gain a copy of Valiant Defender: Block charges +6, the next 7 defense a random hero gains 12 block 1 inspire 1 fortify",
-        "5a":  "All damage +7 ",
-        "5b":  "Enegery regen +1, immune to fatigue"
+        "3a":  "At the start of your turn, reduce the cost of the "Melee Attack" cards in your hand by 1 until they are discarded. Well Trained can activate one additional time each turn.",
+        "3b":  "At the start of your turn, reduce the cost of the "Defense" cards in your hand by 1 until they are discarded. Well Trained can activate one additional time each turn.",
+        "4a":  "Thunderclap",
+        "4b":  "Valiant Defender",
+        "5a":  "All damage done +7. All Curses applied +1 (except Disarm, Silence, and Doom). Immune to Fatigue. Well Trained can activate one additional time each turn.",
+        "5b":  "Energy regeneration +1. At the start of your turn, reduce the cost of the highest cost "Defense" in your hand by 3 until discarded. Well Trained can activate one additional time each turn."
     },
     {
         "H1":  "Malukah",
