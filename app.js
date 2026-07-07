@@ -235,7 +235,11 @@ let allCards = [];
             if (currentBuild.length === 0) { alert("Add some cards before saving."); return; }
 
             let savedBuilds = JSON.parse(localStorage.getItem('ato_builds') || '{}');
-            savedBuilds[name] = currentBuild;
+            savedBuilds[name] = {
+                cards: currentBuild,
+                hero: currentHero ? currentHero.id : null,
+                traits: currentTraits
+            };
             localStorage.setItem('ato_builds', JSON.stringify(savedBuilds));
             
             updateSavedBuildsDropdown();
@@ -259,8 +263,38 @@ let allCards = [];
             if (!name) return;
             const savedBuilds = JSON.parse(localStorage.getItem('ato_builds') || '{}');
             if (savedBuilds[name]) {
-                currentBuild = [...savedBuilds[name]];
+                const buildData = savedBuilds[name];
+                
+                currentHero = null;
+                currentTraits = [0, 0, 0, 0];
+                document.getElementById('heroSelect').value = "";
+                document.getElementById('traitsToggle').style.display = 'none';
+                document.getElementById('traitsSection').style.display = 'none';
+                
+                if (Array.isArray(buildData)) {
+                    currentBuild = [...buildData];
+                } else {
+                    currentBuild = [...(buildData.cards || [])];
+                    if (buildData.hero) {
+                        const heroSelect = document.getElementById('heroSelect');
+                        heroSelect.value = buildData.hero;
+                        currentHero = allHeroes.find(h => h.id === buildData.hero);
+                        if (buildData.traits) {
+                            currentTraits = [...buildData.traits];
+                        }
+                        
+                        if (currentHero) {
+                            renderTraitsUI();
+                            const classCheckboxes = document.querySelectorAll('.class-checkbox');
+                            classCheckboxes.forEach(cb => {
+                                cb.checked = (currentHero.classes.includes(cb.value));
+                            });
+                        }
+                    }
+                }
+                
                 document.getElementById('buildName').value = name;
+                filterData();
                 renderBuild();
                 document.getElementById('shareLinkContainer').style.display = 'none';
             }
